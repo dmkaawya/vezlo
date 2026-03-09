@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Vezlo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="hero-bg"></div>
+<div class="grid-overlay"></div>
+
+<!-- NAVIGATION (Same as home.html) -->
+<nav class="fixed top-0 left-0 w-full z-50 bg-opacity-80 backdrop-blur-xl" style="background: var(--bg-alt); border-bottom: 1px solid var(--border);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 sm:h-20">
+            <a href="home.html" class="text-xl sm:text-2xl font-bold" style="font-family: 'Space Grotesk', sans-serif; color: var(--accent);">VEZLO</a>
+            <div class="nav-links hidden md:flex items-center gap-1">
+                <a href="home.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="project.html" class="nav-link">View Projects</a>
+                <a href="proposals.html" class="nav-link">Proposals</a>
+                <a href="team.html" class="nav-link">Crew Team</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="mode-toggle" id="modeToggle" title="Toggle Dark/Light Mode"></div>
+                <div class="hamburger" id="hamburger">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+    <a href="home.html">Home</a>
+    <a href="about.html">About Us</a>
+    <a href="project.html">View Projects</a>
+    <a href="proposals.html">Proposals</a>
+    <a href="team.html">Crew Team</a>
+    <a href="contact.html">Contact</a>
+</div>
+
+<main class="pt-20 sm:pt-24">
+    <div class="min-h-screen py-12 sm:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <p class="fade-in text-sm uppercase tracking-widest mb-4" style="color: var(--accent);">About Us</p>
+                <h2 class="fade-in stagger-1 text-3xl sm:text-5xl font-bold mb-6">Who We Are</h2>
+                <p class="fade-in stagger-2 text-lg max-w-2xl mx-auto" style="color: var(--fg-muted);">We are a passionate team of designers and developers dedicated to creating exceptional digital experiences.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 mb-16">
+                <div class="fade-in stagger-3 card p-8">
+                    <h3 class="text-2xl font-bold mb-4">Our Mission</h3>
+                    <p style="color: var(--fg-muted);">To empower businesses with cutting-edge web solutions that drive growth, engagement, and success in the digital landscape.</p>
+                </div>
+                <div class="fade-in stagger-4 card p-8">
+                    <h3 class="text-2xl font-bold mb-4">Our Vision</h3>
+                    <p style="color: var(--fg-muted);">To become the leading web design agency recognized for innovation, quality, and exceptional client satisfaction worldwide.</p>
+                </div>
+            </div>
+            <div class="fade-in stagger-5 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style="background: var(--glow);"><svg class="w-8 h-8" fill="none" stroke="var(--accent)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+                    <h4 class="font-semibold mb-2">Responsive Design</h4>
+                    <p class="text-sm" style="color: var(--fg-muted);">Pixel-perfect on every device</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style="background: var(--glow);"><svg class="w-8 h-8" fill="none" stroke="var(--accent)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+                    <h4 class="font-semibold mb-2">Fast Performance</h4>
+                    <p class="text-sm" style="color: var(--fg-muted);">Optimized for speed</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style="background: var(--glow);"><svg class="w-8 h-8" fill="none" stroke="var(--accent)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg></div>
+                    <h4 class="font-semibold mb-2">SEO Friendly</h4>
+                    <p class="text-sm" style="color: var(--fg-muted);">Rank higher on search</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <div class="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style="background: var(--glow);"><svg class="w-8 h-8" fill="none" stroke="var(--accent)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg></div>
+                    <h4 class="font-semibold mb-2">User Focused</h4>
+                    <p class="text-sm" style="color: var(--fg-muted);">Exceptional UX design</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="footer-bottom pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-sm" style="color: var(--fg-muted);">2026 Copyright. All rights reserved.</p>
+            <div class="flex flex-wrap items-center justify-center gap-2 text-sm">
+                <span style="color: var(--fg-muted);">Powered by</span>
+                <a href="https://vezlo-web.vercel.app/" target="_blank" rel="noopener" class="font-semibold" style="color: var(--accent);">Vezlo</a>
+            </div>
+        </div>
+    </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
