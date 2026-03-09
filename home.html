@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Vezlo Web Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="hero-bg"></div>
+<div class="grid-overlay"></div>
+
+<nav class="fixed top-0 left-0 w-full z-50 bg-opacity-80 backdrop-blur-xl" style="background: var(--bg-alt); border-bottom: 1px solid var(--border);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 sm:h-20">
+            <a href="home.html" class="text-xl sm:text-2xl font-bold" style="font-family: 'Space Grotesk', sans-serif; color: var(--accent);">VEZLO</a>
+            <div class="nav-links hidden md:flex items-center gap-1">
+                <a href="home.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="project.html" class="nav-link">View Projects</a>
+                <a href="proposals.html" class="nav-link">Proposals</a>
+                <a href="team.html" class="nav-link">Crew Team</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="mode-toggle" id="modeToggle" title="Toggle Dark/Light Mode"></div>
+                <div class="hamburger" id="hamburger">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+    <a href="home.html">Home</a>
+    <a href="about.html">About Us</a>
+    <a href="project.html">View Projects</a>
+    <a href="proposals.html">Proposals</a>
+    <a href="team.html">Crew Team</a>
+    <a href="contact.html">Contact</a>
+</div>
+
+<main class="pt-20 sm:pt-24">
+    <!-- HERO SECTION -->
+    <section class="min-h-screen flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <p class="fade-in text-sm sm:text-base uppercase tracking-widest mb-4" style="color: var(--accent);">Web Design Agency</p>
+                    <h1 class="fade-in stagger-1 text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight mb-6">We Build Digital Experiences</h1>
+                    <p class="fade-in stagger-2 text-lg sm:text-xl mb-8" style="color: var(--fg-muted);">Transform your vision into stunning websites. We craft modern, responsive, and performance-driven web solutions for businesses worldwide.</p>
+                    <div class="fade-in stagger-3 flex flex-col sm:flex-row gap-4">
+                        <a href="project.html" class="btn-primary">View Our Work</a>
+                        <a href="contact.html" class="btn-secondary">Get Started</a>
+                    </div>
+                    <div class="fade-in stagger-4 grid grid-cols-3 gap-8 mt-12 pt-8" style="border-top: 1px solid var(--border);">
+                        <div><p class="text-3xl sm:text-4xl font-bold" style="color: var(--accent);">150+</p><p class="text-sm" style="color: var(--fg-muted);">Projects</p></div>
+                        <div><p class="text-3xl sm:text-4xl font-bold" style="color: var(--accent);">98%</p><p class="text-sm" style="color: var(--fg-muted);">Satisfaction</p></div>
+                        <div><p class="text-3xl sm:text-4xl font-bold" style="color: var(--accent);">5+</p><p class="text-sm" style="color: var(--fg-muted);">Years</p></div>
+                    </div>
+                </div>
+                <div class="fade-in stagger-5 relative hidden lg:block">
+                    <div class="float">
+                        <svg viewBox="0 0 400 400" class="w-full h-auto">
+                            <defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#00d4aa"/><stop offset="100%" style="stop-color:#00b4d8"/></linearGradient></defs>
+                            <rect x="40" y="40" width="320" height="240" rx="12" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+                            <rect x="40" y="40" width="320" height="40" rx="12" fill="var(--border)"/>
+                            <circle cx="70" cy="60" r="8" fill="#ff5f57"/><circle cx="95" cy="60" r="8" fill="#ffbd2e"/><circle cx="120" cy="60" r="8" fill="#28ca42"/>
+                            <rect x="60" y="100" width="120" height="12" rx="4" fill="var(--accent)" opacity="0.3"/>
+                            <rect x="60" y="125" width="80" height="8" rx="4" fill="var(--fg-muted)" opacity="0.3"/>
+                            <rect x="60" y="145" width="200" height="8" rx="4" fill="var(--fg-muted)" opacity="0.3"/>
+                            <rect x="240" y="100" width="100" height="80" rx="8" fill="var(--accent)" opacity="0.15"/>
+                            <rect x="60" y="200" width="280" height="60" rx="8" fill="url(#grad1)" opacity="0.2"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CUSTOMIZE PACKAGE SECTION -->
+    <div class="py-16 sm:py-24" style="background: var(--bg);">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <p class="fade-in text-sm uppercase tracking-widest mb-4" style="color: var(--accent);">Get A Quote</p>
+                <h2 class="fade-in stagger-1 text-3xl sm:text-4xl font-bold mb-4">Customize Your Package</h2>
+                <p class="fade-in stagger-2" style="color: var(--fg-muted);">Tell us about your project and we'll get back to you with a custom quote.</p>
+            </div>
+            <div class="fade-in stagger-3 card p-6 sm:p-10">
+                <form id="customPackageForm">
+                    <div class="grid sm:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block mb-2 text-sm font-medium">Your Name</label>
+                            <input type="text" id="pkgName" placeholder="John Doe" required>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium">Email Address</label>
+                            <input type="email" id="pkgEmail" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+                    <div class="grid sm:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block mb-2 text-sm font-medium">Budget Range (LKR)</label>
+                            <select id="pkgBudget" required>
+                                <option value="" disabled selected>Select Budget</option>
+                                <option value="10k-25k">10,000 - 25,000</option>
+                                <option value="25k-50k">25,000 - 50,000</option>
+                                <option value="50k-100k">50,000 - 100,000</option>
+                                <option value="100k+">100,000+</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium">Project Type</label>
+                            <select id="pkgType" required>
+                                <option value="" disabled selected>Select Type</option>
+                                <option value="Business Website">Business Website</option>
+                                <option value="E-Commerce">E-Commerce Store</option>
+                                <option value="Portfolio">Portfolio Website</option>
+                                <option value="Web Application">Web Application</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block mb-2 text-sm font-medium">Project Requirements</label>
+                        <textarea id="pkgRequirements" rows="4" placeholder="Describe your project requirements..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary w-full text-center">Send Request via WhatsApp</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="footer-bottom pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-sm" style="color: var(--fg-muted);">2026 Copyright. All rights reserved.</p>
+            <div class="flex flex-wrap items-center justify-center gap-2 text-sm">
+                <span style="color: var(--fg-muted);">Powered by</span>
+                <a href="https://vezlo-web.vercel.app/" target="_blank" rel="noopener" class="font-semibold" style="color: var(--accent);">Vezlo</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        initForms();
+    });
+</script>
+</body>
+</html>
