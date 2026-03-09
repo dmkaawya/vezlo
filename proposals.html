@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposals - Vezlo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="hero-bg"></div>
+<div class="grid-overlay"></div>
+
+<!-- NAVIGATION -->
+<nav class="fixed top-0 left-0 w-full z-50 bg-opacity-80 backdrop-blur-xl" style="background: var(--bg-alt); border-bottom: 1px solid var(--border);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 sm:h-20">
+            <a href="home.html" class="text-xl sm:text-2xl font-bold" style="font-family: 'Space Grotesk', sans-serif; color: var(--accent);">VEZLO</a>
+            <div class="nav-links hidden md:flex items-center gap-1">
+                <a href="home.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="project.html" class="nav-link">View Projects</a>
+                <a href="proposals.html" class="nav-link">Proposals</a>
+                <a href="team.html" class="nav-link">Crew Team</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="mode-toggle" id="modeToggle"></div>
+                <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+    <a href="home.html">Home</a><a href="about.html">About Us</a><a href="project.html">View Projects</a>
+    <a href="proposals.html">Proposals</a><a href="team.html">Crew Team</a><a href="contact.html">Contact</a>
+</div>
+
+<main class="pt-20 sm:pt-24">
+    <div class="min-h-screen py-12 sm:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <p class="fade-in text-sm uppercase tracking-widest mb-4" style="color: var(--accent);">Client Proposals</p>
+                <h2 class="fade-in stagger-1 text-3xl sm:text-5xl font-bold mb-6">Project Proposals</h2>
+                <p class="fade-in stagger-2 text-lg max-w-2xl mx-auto" style="color: var(--fg-muted);">View and manage project proposals. Password protected for privacy.</p>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="proposalsGrid"></div>
+        </div>
+    </div>
+</main>
+
+<!-- MODAL -->
+<div class="proposal-modal" id="proposalModal">
+    <div class="modal-content">
+        <h3 class="text-xl font-bold mb-4">Enter Password</h3>
+        <p class="mb-4" style="color: var(--fg-muted);">This proposal is password protected.</p>
+        <input type="password" id="proposalPassword" placeholder="Enter password" class="mb-4">
+        <div class="flex gap-3">
+            <button class="btn-secondary flex-1" id="cancelModal">Cancel</button>
+            <button class="btn-primary flex-1" id="submitPassword">Submit</button>
+        </div>
+        <p id="passwordError" class="hidden text-sm mt-2" style="color: #ff6b6b;">Incorrect password. Please try again.</p>
+    </div>
+</div>
+
+<footer class="mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="footer-bottom pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-sm" style="color: var(--fg-muted);">2026 Copyright. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        renderProposals();
+        initModalListeners();
+    });
+</script>
+</body>
+</html>
