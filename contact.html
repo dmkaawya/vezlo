@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Vezlo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="hero-bg"></div>
+<div class="grid-overlay"></div>
+
+<!-- NAVIGATION -->
+<nav class="fixed top-0 left-0 w-full z-50 bg-opacity-80 backdrop-blur-xl" style="background: var(--bg-alt); border-bottom: 1px solid var(--border);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 sm:h-20">
+            <a href="home.html" class="text-xl sm:text-2xl font-bold" style="font-family: 'Space Grotesk', sans-serif; color: var(--accent);">VEZLO</a>
+            <div class="nav-links hidden md:flex items-center gap-1">
+                <a href="home.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="project.html" class="nav-link">View Projects</a>
+                <a href="proposals.html" class="nav-link">Proposals</a>
+                <a href="team.html" class="nav-link">Crew Team</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="mode-toggle" id="modeToggle"></div>
+                <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+    <a href="home.html">Home</a><a href="about.html">About Us</a><a href="project.html">View Projects</a>
+    <a href="proposals.html">Proposals</a><a href="team.html">Crew Team</a><a href="contact.html">Contact</a>
+</div>
+
+<main class="pt-20 sm:pt-24">
+    <div class="min-h-screen py-12 sm:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div>
+                    <p class="fade-in text-sm uppercase tracking-widest mb-4" style="color: var(--accent);">Get In Touch</p>
+                    <h2 class="fade-in stagger-1 text-3xl sm:text-5xl font-bold mb-6">Contact Us</h2>
+                    <p class="fade-in stagger-2 text-lg mb-8" style="color: var(--fg-muted);">Ready to start your project? Reach out and let's create something amazing together.</p>
+                    <div class="fade-in stagger-3 space-y-6">
+                        <div id="contactInfoPhone" class="flex items-center gap-4"></div>
+                        <div id="contactInfoEmail" class="flex items-center gap-4"></div>
+                        <div id="contactInfoLocation" class="flex items-center gap-4"></div>
+                    </div>
+                </div>
+                <div class="fade-in stagger-4 card p-8">
+                    <form id="contactForm">
+                        <div class="grid sm:grid-cols-2 gap-4 mb-4">
+                            <div><label class="block mb-2 text-sm font-medium">Your Name</label><input type="text" id="formName" placeholder="Your Name" required></div>
+                            <div><label class="block mb-2 text-sm font-medium">Your Email</label><input type="email" id="formEmail" placeholder="Your Email" required></div>
+                        </div>
+                        <div class="mb-4"><label class="block mb-2 text-sm font-medium">Subject</label><input type="text" id="formSubject" placeholder="Subject" required></div>
+                        <div class="mb-6"><label class="block mb-2 text-sm font-medium">Message</label><textarea id="formMessage" rows="5" placeholder="Your Message" required></textarea></div>
+                        <button type="submit" class="btn-primary w-full">Send via WhatsApp</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="footer-bottom pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-sm" style="color: var(--fg-muted);">2026 Copyright. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        renderContactInfo();
+        initForms();
+    });
+</script>
+</body>
+</html>
