@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Vezlo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="hero-bg"></div>
+<div class="grid-overlay"></div>
+
+<nav class="fixed top-0 left-0 w-full z-50 bg-opacity-80 backdrop-blur-xl" style="background: var(--bg-alt); border-bottom: 1px solid var(--border);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 sm:h-20">
+            <a href="home.html" class="text-xl sm:text-2xl font-bold" style="font-family: 'Space Grotesk', sans-serif; color: var(--accent);">VEZLO ADMIN</a>
+            <div class="flex items-center gap-4">
+                <div class="mode-toggle" id="modeToggle"></div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main class="pt-24 px-4 sm:px-6 lg:px-8 pb-20">
+    <div class="max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold">Data Management</h1>
+            <button class="danger-btn" onclick="resetData()">Reset to Default</button>
+        </div>
+
+        <!-- CONTACT EDIT -->
+        <div class="admin-card">
+            <h2 class="text-xl font-bold mb-4">Contact Info</h2>
+            <div class="grid sm:grid-cols-3 gap-4">
+                <input type="text" id="adminPhone" placeholder="Phone" class="p-2 rounded bg-gray-800 border border-gray-700 w-full">
+                <input type="email" id="adminEmail" placeholder="Email" class="p-2 rounded bg-gray-800 border border-gray-700 w-full">
+                <input type="text" id="adminLocation" placeholder="Location" class="p-2 rounded bg-gray-800 border border-gray-700 w-full">
+            </div>
+        </div>
+
+        <!-- PROJECTS EDIT -->
+        <div class="admin-card">
+            <div class="admin-header">
+                <h2 class="text-xl font-bold">Projects</h2>
+                <button class="success-btn" onclick="addProject()">+ Add New</button>
+            </div>
+            <div id="projectsEditor" class="space-y-4"></div>
+        </div>
+
+        <!-- CREW EDIT -->
+        <div class="admin-card">
+            <div class="admin-header">
+                <h2 class="text-xl font-bold">Crew Team</h2>
+                <button class="success-btn" onclick="addCrew()">+ Add Member</button>
+            </div>
+            <div id="crewEditor" class="space-y-4"></div>
+        </div>
+
+        <!-- SAVE BUTTON -->
+        <button class="btn-primary w-full mt-8 py-4 text-lg" onclick="saveAllData()">Save All Changes</button>
+    </div>
+</main>
+
+<script src="script.js"></script>
+<script>
+    let data = getSiteData();
+
+    function renderAdmin() {
+        // Contact
+        document.getElementById('adminPhone').value = data.contact.phone;
+        document.getElementById('adminEmail').value = data.contact.email;
+        document.getElementById('adminLocation').value = data.contact.location;
+
+        // Projects
+        const projEditor = document.getElementById('projectsEditor');
+        projEditor.innerHTML = '';
+        data.projects.forEach((p, i) => {
+            projEditor.innerHTML += `
+                <div class="bg-gray-900 p-4 rounded-lg border border-gray-700">
+                    <div class="flex justify-end mb-2">
+                        <button class="text-red-500 text-sm" onclick="removeProject(${i})">Remove</button>
+                    </div>
+                    <div class="grid sm:grid-cols-2 gap-2">
+                        <input type="text" value="${p.name}" onchange="updateProject(${i}, 'name', this.value)" placeholder="Project Name" class="p-2 rounded bg-gray-800 border border-gray-700">
+                        <input type="text" value="${p.desc}" onchange="updateProject(${i}, 'desc', this.value)" placeholder="Description" class="p-2 rounded bg-gray-800 border border-gray-700">
+                        <input type="text" value="${p.link}" onchange="updateProject(${i}, 'link', this.value)" placeholder="Link" class="p-2 rounded bg-gray-800 border border-gray-700">
+                        <input type="text" value="${p.color}" onchange="updateProject(${i}, 'color', this.value)" placeholder="Color (e.g. #00d4aa)" class="p-2 rounded bg-gray-800 border border-gray-700">
+                    </div>
+                </div>`;
+        });
+
+        // Crew
+        const crewEditor = document.getElementById('crewEditor');
+        crewEditor.innerHTML = '';
+        data.crew.forEach((c, i) => {
+            crewEditor.innerHTML += `
+                <div class="bg-gray-900 p-4 rounded-lg border border-gray-700">
+                    <div class="flex justify-end mb-2">
+                        <button class="text-red-500 text-sm" onclick="removeCrew(${i})">Remove</button>
+                    </div>
+                    <div class="grid sm:grid-cols-2 gap-2">
+                        <input type="text" value="${c.name}" onchange="updateCrew(${i}, 'name', this.value)" placeholder="Name" class="p-2 rounded bg-gray-800 border border-gray-700">
+                        <input type="text" value="${c.role}" onchange="updateCrew(${i}, 'role', this.value)" placeholder="Role" class="p-2 rounded bg-gray-800 border border-gray-700">
+                        <input type="text" value="${c.img}" onchange="updateCrew(${i}, 'img', this.value)" placeholder="Image URL/Filename" class="p-2 rounded bg-gray-800 border border-gray-700">
+                        <input type="text" value="${c.caption}" onchange="updateCrew(${i}, 'caption', this.value)" placeholder="Caption" class="p-2 rounded bg-gray-800 border border-gray-700">
+                    </div>
+                </div>`;
+        });
+    }
+
+    function updateProject(index, key, value) { data.projects[index][key] = value; }
+    function addProject() { data.projects.push({ name: "New Project", desc: "Description", link: "#", color: "#ffffff" }); renderAdmin(); }
+    function removeProject(i) { data.projects.splice(i, 1); renderAdmin(); }
+
+    function updateCrew(index, key, value) { data.crew[index][key] = value; }
+    function addCrew() { data.crew.push({ name: "New Member", role: "Role", img: "img.jpg", caption: "Caption" }); renderAdmin(); }
+    function removeCrew(i) { data.crew.splice(i, 1); renderAdmin(); }
+
+    function saveAllData() {
+        data.contact.phone = document.getElementById('adminPhone').value;
+        data.contact.email = document.getElementById('adminEmail').value;
+        data.contact.location = document.getElementById('adminLocation').value;
+        saveSiteData(data);
+    }
+
+    function resetData() {
+        if(confirm('Are you sure you want to reset all data to default?')) {
+            localStorage.removeItem('vezloSiteData');
+            location.reload();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', renderAdmin);
+</script>
+</body>
+</html>
