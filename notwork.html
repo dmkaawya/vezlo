@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found | 404</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --bg-secondary: #12121a;
+            --fg: #e8e8ec;
+            --muted: #6b6b7b;
+            --accent: #00ffa3;
+            --accent-dim: rgba(0, 255, 163, 0.15);
+            --card: #16161f;
+            --border: #2a2a3a;
+            --error: #ff4757;
+            --warning: #ffa502;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Background Grid */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 163, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 163, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Gradient Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 255, 163, 0.2) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 71, 87, 0.15) 0%, transparent 70%);
+            bottom: -50px;
+            left: -50px;
+            animation: float 20s ease-in-out infinite reverse;
+        }
+
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 255, 163, 0.1) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-orb 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        @keyframes pulse-orb {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* Particle Canvas */
+        #particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Main Content */
+        .main-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        /* 404 Number */
+        .error-code {
+            font-size: clamp(8rem, 25vw, 16rem);
+            font-weight: 700;
+            line-height: 1;
+            position: relative;
+            user-select: none;
+        }
+
+        .error-code .digit {
+            display: inline-block;
+            position: relative;
+            color: var(--fg);
+            text-shadow: 0 0 60px rgba(0, 255, 163, 0.3);
+        }
+
+        .error-code .digit:nth-child(2) {
+            color: var(--accent);
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% { 
+                transform: translate(0); 
+                text-shadow: 0 0 60px rgba(0, 255, 163, 0.3);
+            }
+            92% { 
+                transform: translate(-5px, 2px); 
+                text-shadow: -3px 0 var(--error), 3px 0 var(--accent);
+            }
+            94% { 
+                transform: translate(5px, -2px); 
+                text-shadow: 3px 0 var(--error), -3px 0 var(--accent);
+            }
+            96% { 
+                transform: translate(-3px, 0); 
+                text-shadow: 0 0 60px rgba(0, 255, 163, 0.5);
+            }
+        }
+
+        /* Scan Lines */
+        .scan-lines {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.1) 2px,
+                rgba(0, 0, 0, 0.1) 4px
+            );
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        /* Terminal Box */
+        .terminal {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 36px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .terminal-dots {
+            position: absolute;
+            top: 12px;
+            left: 16px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot:nth-child(1) { background: #ff5f56; }
+        .terminal-dot:nth-child(2) { background: #ffbd2e; }
+        .terminal-dot:nth-child(3) { background: #27ca40; }
+
+        .terminal-content {
+            margin-top: 28px;
+        }
+
+        .terminal-line {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            opacity: 0;
+            animation: type-in 0.5s ease forwards;
+        }
+
+        .terminal-line:nth-child(1) { animation-delay: 0.2s; }
+        .terminal-line:nth-child(2) { animation-delay: 0.6s; }
+        .terminal-line:nth-child(3) { animation-delay: 1s; }
+        .terminal-line:nth-child(4) { animation-delay: 1.4s; }
+
+        @keyframes type-in {
+            from { 
+                opacity: 0; 
+                transform: translateX(-10px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0);
+            }
+        }
+
+        .prompt {
+            color: var(--accent);
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .command {
+            color: var(--fg);
+        }
+
+        .error-text {
+            color: var(--error);
+        }
+
+        .warning-text {
+            color: var(--warning);
+        }
+
+        /* Status Indicator */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.875rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+
+        .status-dot.error { background: var(--error); }
+        .status-dot.warning { background: var(--warning); }
+        .status-dot.success { background: #27ca40; }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Message */
+        .message-box {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .message-title {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--fg);
+        }
+
+        .message-desc {
+            color: var(--muted);
+            font-size: 1rem;
+            max-width: 400px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0, 255, 163, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--fg);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s;
+        }
+
+        .btn:hover svg {
+            transform: translateX(2px);
+        }
+
+        /* Connection Animation */
+        .connection-check {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 1.5rem 0;
+            opacity: 0;
+            animation: fade-in 0.5s ease forwards 1.5s;
+        }
+
+        @keyframes fade-in {
+            to { opacity: 1; }
+        }
+
+        .wifi-icon {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1rem;
+        }
+
+        .wifi-icon svg {
+            width: 100%;
+            height: 100%;
+            color: var(--error);
+        }
+
+        .wifi-icon .cross {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            color: var(--error);
+            animation: cross-pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes cross-pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.7; }
+        }
+
+        .connection-text {
+            color: var(--muted);
+            font-size: 0.875rem;
+        }
+
+        /* Footer */
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-top: 1px solid var(--border);
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .copyright {
+            color: var(--muted);
+            font-size: 0.8125rem;
+        }
+
+        .designer {
+            font-size: 0.8125rem;
+        }
+
+        .designer a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .designer a:hover {
+            text-decoration: underline;
+            text-shadow: 0 0 20px rgba(0, 255, 163, 0.5);
+        }
+
+        /* Focus States */
+        .btn:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .terminal {
+                padding: 1rem;
+            }
+
+            .terminal-content {
+                font-size: 0.75rem;
+            }
+
+            .status-bar {
+                flex-direction: column;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+
+            .footer {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Floating Elements */
+        .float-element {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .float-element-1 {
+            top: 15%;
+            left: 10%;
+            animation: float-slow 20s ease-in-out infinite;
+        }
+
+        .float-element-2 {
+            bottom: 20%;
+            right: 10%;
+            animation: float-slow 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes float-slow {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(20px, -20px) rotate(10deg); }
+        }
+
+        /* Loading Bar Animation */
+        .loading-bar {
+            width: 200px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .loading-bar-inner {
+            height: 100%;
+            width: 30%;
+            background: var(--accent);
+            border-radius: 2px;
+            animation: loading 2s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(400%); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="scan-lines"></div>
+    <canvas id="particles"></canvas>
+
+    <!-- Floating Decorative Elements -->
+    <svg class="float-element float-element-1" width="60" height="60" viewBox="0 0 60 60" fill="none">
+        <rect x="10" y="10" width="40" height="40" stroke="var(--accent)" stroke-width="1" fill="none" rx="4" transform="rotate(15 30 30)"/>
+    </svg>
+    <svg class="float-element float-element-2" width="50" height="50" viewBox="0 0 50 50" fill="none">
+        <circle cx="25" cy="25" r="20" stroke="var(--border)" stroke-width="1" fill="none"/>
+    </svg>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- 404 Code -->
+        <div class="error-code">
+            <span class="digit">4</span>
+            <span class="digit">0</span>
+            <span class="digit">4</span>
+        </div>
+
+        <!-- Connection Check -->
+        <div class="connection-check">
+            <div class="wifi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/>
+                </svg>
+                <svg class="cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+            <span class="connection-text">Connection interrupted</span>
+        </div>
+
+        <!-- Terminal -->
+        <div class="terminal mono">
+            <div class="terminal-dots">
+                <span class="terminal-dot"></span>
+                <span class="terminal-dot"></span>
+                <span class="terminal-dot"></span>
+            </div>
+            <div class="terminal-content">
+                <div class="terminal-line">
+                    <span class="prompt">$</span>
+                    <span class="command">fetch /requested-page</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="prompt">></span>
+                    <span class="error-text">ERROR: 404 Not Found</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="prompt">></span>
+                    <span class="warning-text">WARN: Check your internet connection</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="prompt">></span>
+                    <span class="command" style="color: var(--muted);">Retrying...</span>
+                </div>
+            </div>
+            <div class="loading-bar">
+                <div class="loading-bar-inner"></div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-dot error"></span>
+                <span>Server Response: Failed</span>
+            </div>
+            <div class="status-item">
+                <span class="status-dot warning"></span>
+                <span>Connection: Unstable</span>
+            </div>
+            <div class="status-item">
+                <span class="status-dot success"></span>
+                <span>System: Online</span>
+            </div>
+        </div>
+
+        <!-- Message -->
+        <div class="message-box">
+            <h1 class="message-title">Oops! Page Not Found</h1>
+            <p class="message-desc">
+                The page you're looking for doesn't exist or has been moved. 
+                Check your internet connection and try again.
+            </p>
+        </div>
+
+        <!-- Buttons -->
+        <div class="btn-group">
+            <a href="/" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                Go Home
+            </a>
+            <a href="support.html" class="btn btn-secondary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                Support
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="copyright">2024 - 2026 All Rights Reserved</p>
+        <p class="designer">Design by <a href="https://vezlo-web.vercel.app/" target="_blank" rel="noopener noreferrer">Vezlo Web</a></p>
+    </footer>
+
+    <script>
+        // Particle System
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animationId = null;
+        let mouse = { x: null, y: null };
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        resize();
+        window.addEventListener('resize', resize);
+
+        // Track mouse
+        document.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.1;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // Mouse interaction
+                if (mouse.x !== null && mouse.y !== null) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) {
+                        const force = (100 - dist) / 100;
+                        this.x -= dx * force * 0.02;
+                        this.y -= dy * force * 0.02;
+                    }
+                }
+
+                // Wrap around
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, Math.max(0.1, this.size), 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 255, 163, ${this.opacity})`;
+                ctx.fill();
+            }
+        }
+
+        // Initialize particles
+        function initParticles() {
+            const count = Math.min(80, Math.floor((canvas.width * canvas.height) / 15000));
+            particles = [];
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        initParticles();
+
+        // Draw connections
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        const opacity = (1 - dist / 120) * 0.15;
+                        ctx.strokeStyle = `rgba(0, 255, 163, ${opacity})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            drawConnections();
+
+            animationId = requestAnimationFrame(animate);
+        }
+
+        // Check for reduced motion preference
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        
+        if (!prefersReducedMotion.matches) {
+            animate();
+        }
+
+        prefersReducedMotion.addEventListener('change', () => {
+            if (prefersReducedMotion.matches) {
+                cancelAnimationFrame(animationId);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            } else {
+                animate();
+            }
+        });
+
+        // Button hover sound simulation (visual feedback)
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                btn.style.transform = 'translateY(-2px) scale(1.02)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = '';
+            });
+        });
+
+        // Reinitialize particles on resize
+        window.addEventListener('resize', () => {
+            initParticles();
+        });
+    </script>
+</body>
+</html>
