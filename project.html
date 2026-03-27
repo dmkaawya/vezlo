@@ -84,12 +84,14 @@
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .btn-secondary { background: transparent; color: var(--fg); font-weight: 500; padding: 12px 28px; border-radius: 8px; border: 1px solid var(--border); transition: all 0.3s ease; cursor: pointer; }
         .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+        
+        .btn-sm { padding: 8px 16px; font-size: 0.875rem; border-radius: 6px; }
 
         /* Glass Card */
         .glass-card { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
         /* Project Card */
-        .project-card { background: var(--glass-bg); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 20px; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .project-card { background: var(--glass-bg); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 20px; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
         .project-card:hover { transform: translateY(-10px); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3); border-color: rgba(0, 212, 106, 0.3); }
         .project-card:hover .project-image { transform: scale(1.05); }
         .project-image { transition: transform 0.5s ease; }
@@ -99,9 +101,14 @@
         .project-card.unavailable .project-image { filter: grayscale(100%); }
         .project-card.unavailable:hover { transform: none; box-shadow: none; border-color: var(--glass-border); }
 
-        /* Search Bar */
-        .search-bar { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 20px; color: var(--fg); transition: all 0.3s ease; width: 100%; }
-        .search-bar:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0, 212, 106, 0.15); }
+        /* Filter Tabs */
+        .filter-btn { padding: 8px 20px; border-radius: 100px; font-size: 0.875rem; font-weight: 500; background: var(--card); border: 1px solid var(--border); color: var(--fg-muted); transition: all 0.3s ease; cursor: pointer; white-space: nowrap; }
+        .filter-btn:hover { border-color: var(--accent); color: var(--fg); }
+        .filter-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+        /* Sort Dropdown */
+        .sort-select { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; color: var(--fg); font-family: inherit; cursor: pointer; }
+        .sort-select:focus { outline: none; border-color: var(--accent); }
 
         /* Cart Badge */
         .cart-badge { position: absolute; top: -8px; right: -8px; width: 22px; height: 22px; background: var(--accent-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; animation: pop 0.3s ease; }
@@ -110,8 +117,11 @@
         /* Modal/Overlay */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); z-index: 100; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 95%; max-width: 600px; max-height: 90vh; overflow-y: auto; background: var(--card); border: 1px solid var(--border); border-radius: 24px; z-index: 101; opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .modal-content { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 95%; max-width: 500px; max-height: 90vh; overflow-y: auto; background: var(--card); border: 1px solid var(--border); border-radius: 24px; z-index: 101; opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .modal-content.active { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+        
+        /* Checkout Modal Wider */
+        .checkout-modal { max-width: 600px; }
 
         /* Cart Sidebar */
         .cart-sidebar { position: fixed; top: 0; right: 0; width: 100%; max-width: 420px; height: 100vh; background: var(--card); border-left: 1px solid var(--border); z-index: 102; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
@@ -153,6 +163,15 @@
         .form-input { width: 100%; padding: 14px 18px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--fg); font-family: 'Space Grotesk', sans-serif; font-size: 1rem; transition: all 0.3s ease; }
         .form-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0, 212, 106, 0.15); }
 
+        /* Coupon Input */
+        .coupon-input-group { display: flex; gap: 8px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .coupon-input-group input { flex: 1; padding: 10px 14px; border-radius: 8px; }
+
+        /* Floating WhatsApp */
+        .floating-whatsapp { position: fixed; bottom: 24px; left: 24px; width: 60px; height: 60px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4); z-index: 90; transition: all 0.3s ease; cursor: pointer; }
+        .floating-whatsapp:hover { transform: scale(1.1); box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6); }
+        .floating-whatsapp svg { width: 32px; height: 32px; fill: white; }
+
         /* Animations */
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
         .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -182,6 +201,11 @@
         <div class="gradient-orb orb-1"></div>
         <div class="gradient-orb orb-2"></div>
     </div>
+
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/94775048455" target="_blank" class="floating-whatsapp" aria-label="Chat on WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
 
     <!-- Navigation -->
     <nav class="nav-glass fixed top-0 left-0 right-0 z-50">
@@ -243,10 +267,27 @@
                 <p class="text-lg max-w-2xl mx-auto reveal reveal-delay-2" style="color: var(--fg-muted);">Browse our collection of premium website templates. Add your favorites to the cart and get started on your project.</p>
             </div>
 
-            <div class="max-w-2xl mx-auto mb-12 reveal reveal-delay-2">
-                <div class="relative">
-                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style="color: var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    <input type="text" id="searchInput" class="search-bar pl-12" placeholder="Search projects by name, category...">
+            <!-- Filters & Search -->
+            <div class="mb-8 space-y-4 reveal reveal-delay-2">
+                <!-- Search & Sort Row -->
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="relative flex-1">
+                        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style="color: var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <input type="text" id="searchInput" class="search-bar pl-12 w-full" placeholder="Search projects...">
+                    </div>
+                    <select id="sortSelect" class="sort-select sm:w-48">
+                        <option value="default">Sort by: Default</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                        <option value="name_asc">Name: A-Z</option>
+                        <option value="name_desc">Name: Z-A</option>
+                    </select>
+                </div>
+                
+                <!-- Category Filter Tabs -->
+                <div class="flex gap-2 overflow-x-auto pb-2" id="categoryFilters">
+                    <button class="filter-btn active" data-category="all">All Projects</button>
+                    <!-- Categories will be injected here -->
                 </div>
             </div>
 
@@ -254,22 +295,58 @@
             <div id="noResults" class="text-center py-20 hidden">
                 <svg class="w-20 h-20 mx-auto mb-4" style="color: var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <h3 class="font-display text-xl font-bold mb-2">No projects found</h3>
-                <p style="color: var(--fg-muted);">Try adjusting your search terms</p>
+                <p style="color: var(--fg-muted);">Try adjusting your search or filter</p>
             </div>
         </div>
     </main>
 
+    <!-- Quick View Modal -->
+    <div class="modal-overlay" id="quickViewOverlay"></div>
+    <div class="modal-content p-6" id="quickViewModal">
+        <div class="flex justify-end mb-4">
+            <button id="closeQuickView" class="p-2 rounded-lg" style="background: var(--bg);" aria-label="Close">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div id="quickViewContent"></div>
+    </div>
+
     <!-- Cart Sidebar -->
     <div class="cart-sidebar" id="cartSidebar">
-        <div class="p-6 border-b" style="border-color: var(--border);"><div class="flex justify-between items-center"><h2 class="font-display text-xl font-bold">Your Cart</h2><button id="closeCart" class="p-2 rounded-lg" style="background: var(--bg);" aria-label="Close cart"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div></div>
+        <div class="p-6 border-b" style="border-color: var(--border);">
+            <div class="flex justify-between items-center">
+                <h2 class="font-display text-xl font-bold">Your Cart</h2>
+                <div class="flex items-center gap-2">
+                    <button id="clearCartBtn" class="text-xs px-3 py-1 rounded" style="color: var(--accent-red); background: rgba(255,61,61,0.1);">Clear All</button>
+                    <button id="closeCart" class="p-2 rounded-lg" style="background: var(--bg);" aria-label="Close cart"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                </div>
+            </div>
+        </div>
         <div class="flex-1 overflow-y-auto p-6" id="cartItems"></div>
-        <div class="p-6 border-t" style="border-color: var(--border);"><div class="flex justify-between items-center mb-4"><span class="font-medium" style="color: var(--fg-muted);">Total:</span><span class="font-display text-2xl font-bold" id="cartTotal" style="color: var(--accent);">$0.00</span></div><button id="checkoutBtn" class="btn-primary w-full text-center py-4" disabled>Proceed to Checkout</button></div>
+        
+        <!-- Coupon Section -->
+        <div class="px-6 pb-4">
+            <div class="coupon-input-group">
+                <input type="text" id="couponInput" class="form-input" placeholder="Coupon code">
+                <button id="applyCouponBtn" class="btn-secondary btn-sm">Apply</button>
+            </div>
+            <p id="couponMessage" class="text-xs mt-2" style="color: var(--accent); display: none;"></p>
+        </div>
+
+        <div class="p-6 border-t" style="border-color: var(--border);">
+            <div class="space-y-2 mb-4 text-sm">
+                <div class="flex justify-between"><span style="color: var(--fg-muted);">Subtotal:</span><span id="cartSubtotal">$0.00</span></div>
+                <div class="flex justify-between" id="cartDiscountRow" style="display: none;"><span style="color: var(--accent);">Coupon Discount:</span><span id="cartDiscount">-$0.00</span></div>
+                <div class="flex justify-between font-bold text-lg pt-2 border-t" style="border-color: var(--border);"><span>Total:</span><span style="color: var(--accent);" id="cartTotal">$0.00</span></div>
+            </div>
+            <button id="checkoutBtn" class="btn-primary w-full text-center py-4" disabled>Proceed to Checkout</button>
+        </div>
     </div>
     <div class="modal-overlay" id="cartOverlay"></div>
 
     <!-- Checkout Modal -->
     <div class="modal-overlay" id="checkoutOverlay"></div>
-    <div class="modal-content p-6 lg:p-8" id="checkoutModal">
+    <div class="modal-content checkout-modal p-6 lg:p-8" id="checkoutModal">
         <div class="flex justify-between items-center mb-8">
             <div class="step active" data-step="1"><div class="step-circle">1</div><span class="hidden sm:block text-sm font-medium">Contact</span></div>
             <div class="flex-1 h-0.5 mx-2" style="background: var(--border);"></div>
@@ -366,6 +443,7 @@
                 <h3 class="font-medium mb-3" style="color: var(--accent);">Price Breakdown</h3>
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between"><span style="color: var(--fg-muted);">Subtotal:</span><span id="reviewSubtotal">$0.00</span></div>
+                    <div class="flex justify-between" id="reviewCouponRow" style="display: none;"><span style="color: var(--accent);">Coupon:</span><span id="reviewCoupon">-$0.00</span></div>
                     <div class="flex justify-between"><span style="color: var(--fg-muted);">Discount:</span><span id="reviewDiscount" style="color: var(--accent);">-$0.00</span></div>
                     <div class="flex justify-between"><span style="color: var(--fg-muted);">Tax (5%):</span><span id="reviewTax">$0.00</span></div>
                     <div class="flex justify-between"><span style="color: var(--fg-muted);">Service Charge:</span><span id="reviewService">$0.00</span></div>
@@ -409,6 +487,7 @@
     </footer>
 
     <script>
+        // Data
         const projectsData = [
             { id: 1, name: "TechStart Landing", category: "Technology", description: "Modern landing page for tech startups with animations", price: 299, image: "https://picsum.photos/seed/tech1/400/300", available: true },
             { id: 2, name: "FoodieDelight", category: "Restaurant", description: "Restaurant website with menu and reservation system", price: 449, image: "https://picsum.photos/seed/food2/400/300", available: false },
@@ -432,15 +511,29 @@
             { id: 20, name: "CryptoTracker", category: "Finance", description: "Cryptocurrency dashboard with charts", price: 449, image: "https://picsum.photos/seed/crypto20/400/300", available: true }
         ];
 
+        const coupons = {
+            'SAVE10': { type: 'percent', value: 0.10 },
+            'VIP20': { type: 'percent', value: 0.20 },
+            'FLAT50': { type: 'fixed', value: 50 }
+        };
+
+        // State
         let cart = [];
         let currentStep = 1;
         let selectedPayment = null;
         let customerData = {};
         let monthlyData = { months: 0, rate: 0 };
+        let activeCategory = 'all';
+        let currentSort = 'default';
+        let appliedCoupon = null;
+
         const USD_TO_LKR = 320;
 
+        // DOM Elements
         const projectsGrid = document.getElementById('projectsGrid');
         const searchInput = document.getElementById('searchInput');
+        const sortSelect = document.getElementById('sortSelect');
+        const categoryFilters = document.getElementById('categoryFilters');
         const noResults = document.getElementById('noResults');
         const cartBtn = document.getElementById('cartBtn');
         const cartBadge = document.getElementById('cartBadge');
@@ -449,26 +542,92 @@
         const closeCart = document.getElementById('closeCart');
         const cartItems = document.getElementById('cartItems');
         const cartTotal = document.getElementById('cartTotal');
+        const cartSubtotal = document.getElementById('cartSubtotal');
         const checkoutBtn = document.getElementById('checkoutBtn');
         const checkoutModal = document.getElementById('checkoutModal');
         const checkoutOverlay = document.getElementById('checkoutOverlay');
+        const quickViewModal = document.getElementById('quickViewModal');
+        const quickViewOverlay = document.getElementById('quickViewOverlay');
 
+        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            renderProjects(projectsData);
+            renderCategories();
+            filterAndRenderProjects();
             initThemeToggle();
             initMobileMenu();
             initScrollReveal();
             initCart();
             initCheckout();
+            initQuickView();
         });
 
+        // --- Filter & Sort Logic ---
+
+        function renderCategories() {
+            const categories = [...new Set(projectsData.map(p => p.category))];
+            // Keep "All" button, append others
+            categoryFilters.innerHTML = `<button class="filter-btn active" data-category="all">All Projects</button>`;
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.dataset.category = cat;
+                btn.textContent = cat;
+                categoryFilters.appendChild(btn);
+            });
+
+            // Add listeners
+            categoryFilters.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    categoryFilters.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeCategory = btn.dataset.category;
+                    filterAndRenderProjects();
+                });
+            });
+        }
+
+        function filterAndRenderProjects() {
+            let filtered = [...projectsData];
+
+            // 1. Filter by Category
+            if (activeCategory !== 'all') {
+                filtered = filtered.filter(p => p.category === activeCategory);
+            }
+
+            // 2. Filter by Search
+            const query = searchInput.value.toLowerCase();
+            if (query) {
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(query) || 
+                    p.description.toLowerCase().includes(query)
+                );
+            }
+
+            // 3. Sort
+            switch(currentSort) {
+                case 'price_asc': filtered.sort((a, b) => a.price - b.price); break;
+                case 'price_desc': filtered.sort((a, b) => b.price - a.price); break;
+                case 'name_asc': filtered.sort((a, b) => a.name.localeCompare(b.name)); break;
+                case 'name_desc': filtered.sort((a, b) => b.name.localeCompare(a.name)); break;
+            }
+
+            renderProjects(filtered);
+        }
+
+        searchInput.addEventListener('input', filterAndRenderProjects);
+        sortSelect.addEventListener('change', (e) => {
+            currentSort = e.target.value;
+            filterAndRenderProjects();
+        });
+
+        // --- Render Projects ---
         function renderProjects(projects) {
             if (projects.length === 0) { projectsGrid.innerHTML = ''; noResults.classList.remove('hidden'); return; }
             noResults.classList.add('hidden');
             projectsGrid.innerHTML = projects.map((project, index) => {
                 const isUnavailable = project.available === false;
                 return `
-                <div class="project-card reveal reveal-delay-${(index % 5) + 1} ${isUnavailable ? 'unavailable' : ''}">
+                <div class="project-card reveal reveal-delay-${(index % 5) + 1} ${isUnavailable ? 'unavailable' : ''}" onclick="openQuickView(${project.id})">
                     <div class="relative overflow-hidden">
                         <img src="${project.image}" alt="${project.name}" class="project-image w-full h-48 object-cover">
                         <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium" style="background: ${isUnavailable ? 'var(--accent-red)' : 'rgba(0, 0, 0, 0.7)'}; color: ${isUnavailable ? 'white' : 'var(--accent)'};">
@@ -480,18 +639,18 @@
                     </div>
                     <div class="p-5">
                         <h3 class="font-display font-bold text-lg mb-1">${project.name}</h3>
-                        <p class="text-sm mb-4" style="color: var(--fg-muted);">${project.description}</p>
+                        <p class="text-sm mb-4 line-clamp-2" style="color: var(--fg-muted);">${project.description}</p>
                         <div class="flex gap-2">
                             ${isUnavailable ? `
-                                <a href="contact.html" class="flex-1 text-center py-2 rounded-lg font-medium transition-all" style="background: var(--accent-red); color: white;">
-                                    Not Available - Contact Us
+                                <a href="contact.html" onclick="event.stopPropagation()" class="flex-1 text-center py-2 rounded-lg font-medium transition-all" style="background: var(--accent-red); color: white;">
+                                    Contact Us
                                 </a>
                             ` : `
-                                <button onclick="addToCart(${project.id})" class="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg transition-all" style="background: var(--bg); border: 1px solid var(--border);" title="Add to Cart">
+                                <button onclick="event.stopPropagation(); addToCart(${project.id})" class="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg transition-all" style="background: var(--bg); border: 1px solid var(--border);" title="Add to Cart">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                                 </button>
-                                <a href="view1.html?id=${project.id}" class="flex-1 text-center py-2 rounded-lg font-medium transition-all" style="background: var(--accent); color: #000;">
-                                    View More
+                                <a href="view1.html?id=${project.id}" onclick="event.stopPropagation()" class="flex-1 text-center py-2 rounded-lg font-medium transition-all" style="background: var(--accent); color: #000;">
+                                    Details
                                 </a>
                             `}
                         </div>
@@ -501,15 +660,50 @@
             initScrollReveal();
         }
 
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            const filtered = projectsData.filter(p => p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query) || p.description.toLowerCase().includes(query));
-            renderProjects(filtered);
-        });
+        // --- Quick View ---
+        function initQuickView() {
+            document.getElementById('closeQuickView').addEventListener('click', closeQuickViewModal);
+            quickViewOverlay.addEventListener('click', closeQuickViewModal);
+        }
+
+        function openQuickView(id) {
+            const p = projectsData.find(x => x.id === id);
+            if (!p) return;
+            
+            const isUnavailable = p.available === false;
+            
+            document.getElementById('quickViewContent').innerHTML = `
+                <img src="${p.image}" class="w-full h-56 object-cover rounded-xl mb-6" alt="${p.name}">
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-medium mb-3" style="background: rgba(0,212,106,0.15); color: var(--accent);">${p.category}</span>
+                <h2 class="font-display text-2xl font-bold mb-2">${p.name}</h2>
+                <p class="text-xl font-bold mb-4" style="color: var(--accent);">$${p.price}</p>
+                <p class="mb-6" style="color: var(--fg-muted);">${p.description}</p>
+                
+                ${isUnavailable ? `
+                    <div class="notice-box mb-4">This project is currently not available. Please contact us for custom solutions.</div>
+                    <a href="contact.html" class="btn-primary w-full text-center block">Contact Us</a>
+                ` : `
+                    <div class="flex gap-3">
+                        <button onclick="addToCart(${p.id}); closeQuickViewModal();" class="btn-primary flex-1">Add to Cart</button>
+                        <a href="view1.html?id=${p.id}" class="btn-secondary flex-1 text-center">Full Details</a>
+                    </div>
+                `}
+            `;
+            
+            quickViewModal.classList.add('active');
+            quickViewOverlay.classList.add('active');
+        }
+
+        function closeQuickViewModal() {
+            quickViewModal.classList.remove('active');
+            quickViewOverlay.classList.remove('active');
+        }
+
+        // --- Cart Logic ---
 
         function addToCart(id) {
             const project = projectsData.find(p => p.id === id);
-            if (!project) return;
+            if (!project || !project.available) return;
             if (cart.find(item => item.id === id)) { alert('This project is already in your cart!'); return; }
             cart.push({...project});
             updateCartUI();
@@ -517,22 +711,53 @@
         }
 
         function removeFromCart(id) { cart = cart.filter(item => item.id !== id); updateCartUI(); }
+        function clearCart() { cart = []; appliedCoupon = null; document.getElementById('couponInput').value = ''; updateCartUI(); }
 
         function updateCartUI() {
             if (cart.length > 0) { cartBadge.textContent = cart.length; cartBadge.style.display = 'flex'; checkoutBtn.disabled = false; }
             else { cartBadge.style.display = 'none'; checkoutBtn.disabled = true; }
+
             if (cart.length === 0) { cartItems.innerHTML = `<div class="text-center py-12"><p style="color: var(--fg-muted);">Your cart is empty</p></div>`; }
             else {
                 cartItems.innerHTML = cart.map(item => `
                     <div class="flex gap-4 p-3 rounded-lg mb-3" style="background: var(--bg);">
                         <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-lg object-cover">
-                        <div class="flex-1"><h4 class="font-medium">${item.name}</h4><p class="text-sm" style="color: var(--fg-muted);">${item.category}</p><p class="font-bold" style="color: var(--accent);">$${item.price}</p></div>
-                        <button onclick="removeFromCart(${item.id})" class="p-2 h-fit rounded-lg" style="color: var(--accent-red);" title="Remove"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                        <div class="flex-1"><h4 class="font-medium text-sm">${item.name}</h4><p class="text-xs" style="color: var(--fg-muted);">${item.category}</p><p class="font-bold text-sm" style="color: var(--accent);">$${item.price}</p></div>
+                        <button onclick="removeFromCart(${item.id})" class="p-1 h-fit" style="color: var(--accent-red);" title="Remove"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
                     </div>
                 `).join('');
             }
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            cartTotal.textContent = `$${total.toFixed(2)}`;
+            calculateTotals();
+        }
+
+        function calculateTotals() {
+            const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+            let discount = subtotal > 500 ? subtotal * 0.1 : 0;
+            let couponDiscount = 0;
+
+            // Coupon Logic
+            const couponMsg = document.getElementById('couponMessage');
+            const couponDiscountRow = document.getElementById('cartDiscountRow');
+            
+            if (appliedCoupon) {
+                if (appliedCoupon.type === 'percent') {
+                    couponDiscount = subtotal * appliedCoupon.value;
+                } else {
+                    couponDiscount = appliedCoupon.value;
+                }
+                couponDiscountRow.style.display = 'flex';
+                document.getElementById('cartDiscount').textContent = `-$${couponDiscount.toFixed(2)}`;
+                couponMsg.textContent = `Coupon applied successfully!`;
+                couponMsg.style.display = 'block';
+            } else {
+                couponDiscountRow.style.display = 'none';
+                couponMsg.style.display = 'none';
+            }
+
+            const finalTotal = subtotal - discount - couponDiscount;
+            
+            cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+            cartTotal.textContent = `$${finalTotal.toFixed(2)}`;
         }
 
         function showCartNotification() { cartBtn.style.transform = 'scale(1.1)'; setTimeout(() => cartBtn.style.transform = '', 200); }
@@ -541,9 +766,35 @@
             cartBtn.addEventListener('click', () => { cartSidebar.classList.add('active'); cartOverlay.classList.add('active'); });
             closeCart.addEventListener('click', closeCartSidebar);
             cartOverlay.addEventListener('click', closeCartSidebar);
+            document.getElementById('clearCartBtn').addEventListener('click', clearCart);
+            
             function closeCartSidebar() { cartSidebar.classList.remove('active'); cartOverlay.classList.remove('active'); }
             checkoutBtn.addEventListener('click', () => { closeCartSidebar(); openCheckoutModal(); });
+
+            // Coupon Apply
+            document.getElementById('applyCouponBtn').addEventListener('click', () => {
+                const code = document.getElementById('couponInput').value.trim().toUpperCase();
+                const msg = document.getElementById('couponMessage');
+                
+                if (coupons[code]) {
+                    appliedCoupon = coupons[code];
+                    calculateTotals();
+                    msg.style.color = 'var(--accent)';
+                    msg.textContent = `Coupon "${code}" applied!`;
+                    msg.style.display = 'block';
+                } else if (!code) {
+                    msg.style.display = 'none';
+                } else {
+                    appliedCoupon = null;
+                    calculateTotals();
+                    msg.style.color = 'var(--accent-red)';
+                    msg.textContent = 'Invalid coupon code';
+                    msg.style.display = 'block';
+                }
+            });
         }
+
+        // --- Checkout Logic ---
 
         function openCheckoutModal() {
             currentStep = 1; selectedPayment = null; monthlyData = { months: 0, rate: 0 }; customerData = {};
@@ -565,9 +816,16 @@
         function getBaseTotal() {
             const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
             const discount = subtotal > 500 ? subtotal * 0.1 : 0;
-            const tax = (subtotal - discount) * 0.05;
+            
+            let couponDiscount = 0;
+            if (appliedCoupon) {
+                 if (appliedCoupon.type === 'percent') couponDiscount = subtotal * appliedCoupon.value;
+                 else couponDiscount = appliedCoupon.value;
+            }
+
+            const tax = (subtotal - discount - couponDiscount) * 0.05;
             const serviceCharge = 25;
-            return { subtotal, discount, tax, serviceCharge, baseTotal: subtotal - discount + tax + serviceCharge };
+            return { subtotal, discount, couponDiscount, tax, serviceCharge, baseTotal: subtotal - discount - couponDiscount + tax + serviceCharge };
         }
 
         function initCheckout() {
@@ -643,9 +901,20 @@
             const totalUSD = pricing.baseTotal + extraFee;
             const totalLKR = totalUSD * USD_TO_LKR;
 
-            document.getElementById('reviewItems').innerHTML = cart.map(item => `<div class="flex justify-between text-sm"><span>${item.name} (${item.category})</span><span>$${item.price}</span></div>`).join('');
+            document.getElementById('reviewItems').innerHTML = cart.map(item => `<div class="flex justify-between text-sm"><span>${item.name}</span><span>$${item.price}</span></div>`).join('');
+            
             document.getElementById('reviewSubtotal').textContent = `$${pricing.subtotal.toFixed(2)}`;
             document.getElementById('reviewDiscount').textContent = `-$${pricing.discount.toFixed(2)}`;
+            
+            // Coupon in Review
+            const couponRow = document.getElementById('reviewCouponRow');
+            if (pricing.couponDiscount > 0) {
+                couponRow.style.display = 'flex';
+                document.getElementById('reviewCoupon').textContent = `-$${pricing.couponDiscount.toFixed(2)}`;
+            } else {
+                couponRow.style.display = 'none';
+            }
+
             document.getElementById('reviewTax').textContent = `$${pricing.tax.toFixed(2)}`;
             document.getElementById('reviewService').textContent = `$${pricing.serviceCharge.toFixed(2)}`;
             
@@ -685,13 +954,14 @@
 
             const totalLKR = totalUSD * USD_TO_LKR;
             const projectList = cart.map(p => `• ${p.name} ($${p.price})`).join('\n');
+            const couponInfo = appliedCoupon ? `\n• Coupon Applied: -$${pricing.couponDiscount.toFixed(2)}` : '';
 
-            const message = `🛒 *NEW ORDER - VEZLO WEB SOLUTIONS*\n\n👤 *Customer Details*\n━━━━━━━━━━━━━━━━\n• Name: ${customerData.name}\n• Phone: ${customerData.phone}\n• Email: ${customerData.email}\n• Budget: ${customerData.budget}\n\n📦 *Selected Projects*\n━━━━━━━━━━━━━━━━\n${projectList}\n\n💰 *Price Breakdown*\n━━━━━━━━━━━━━━━━\n• Subtotal: $${pricing.subtotal.toFixed(2)}\n• Discount: -$${pricing.discount.toFixed(2)}\n• Tax (5%): $${pricing.tax.toFixed(2)}\n• Service: $${pricing.serviceCharge.toFixed(2)}\n${extraFee > 0 ? `• Extra Fees: $${extraFee.toFixed(2)}` : ''}\n\n💵 *TOTAL*\n━━━━━━━━━━━━━━━━\n• USD: *$${totalUSD.toFixed(2)}*\n• LKR: *Rs. ${totalLKR.toLocaleString('en-US', {minimumFractionDigits: 2})}*\n\n💳 *Payment Method*\n━━━━━━━━━━━━━━━━\n${paymentNote}\n\n📝 *Notes*\n${customerData.notes}\n\n✅ Please process this order. Thank you for choosing Vezlo!`;
+            const message = `🛒 *NEW ORDER - VEZLO WEB SOLUTIONS*\n\n👤 *Customer Details*\n━━━━━━━━━━━━━━━━\n• Name: ${customerData.name}\n• Phone: ${customerData.phone}\n• Email: ${customerData.email}\n• Budget: ${customerData.budget}\n\n📦 *Selected Projects*\n━━━━━━━━━━━━━━━━\n${projectList}\n\n💰 *Price Breakdown*\n━━━━━━━━━━━━━━━━\n• Subtotal: $${pricing.subtotal.toFixed(2)}\n• Discount: -$${pricing.discount.toFixed(2)}${couponInfo}\n• Tax (5%): $${pricing.tax.toFixed(2)}\n• Service: $${pricing.serviceCharge.toFixed(2)}\n${extraFee > 0 ? `• Extra Fees: $${extraFee.toFixed(2)}` : ''}\n\n💵 *TOTAL*\n━━━━━━━━━━━━━━━━\n• USD: *$${totalUSD.toFixed(2)}*\n• LKR: *Rs. ${totalLKR.toLocaleString('en-US', {minimumFractionDigits: 2})}*\n\n💳 *Payment Method*\n━━━━━━━━━━━━━━━━\n${paymentNote}\n\n📝 *Notes*\n${customerData.notes}\n\n✅ Please process this order. Thank you for choosing Vezlo!`;
 
             const whatsappUrl = `https://wa.me/94775048455?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
 
-            cart = []; updateCartUI(); closeCheckoutModal();
+            cart = []; appliedCoupon = null; updateCartUI(); closeCheckoutModal();
             document.getElementById('agreeRules').checked = false;
         }
 
