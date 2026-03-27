@@ -1,0 +1,3430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vezlo - LMS Learning Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           CSS VARIABLES - THEME SYSTEM
+           ============================================ */
+        :root {
+            /* Light Mode Colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #0d0d0d;
+            --text-secondary: #4a4a4a;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            
+            /* Brand Colors */
+            --red-primary: #dc2626;
+            --red-dark: #b91c1c;
+            --red-light: #fee2e2;
+            --green-primary: #16a34a;
+            --green-dark: #15803d;
+            --green-light: #dcfce7;
+            --black-primary: #0d0d0d;
+            --black-secondary: #1a1a1a;
+            
+            /* UI Colors */
+            --accent-gradient: linear-gradient(135deg, var(--red-primary) 0%, var(--green-primary) 100%);
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-full: 9999px;
+            
+            /* Transitions */
+            --transition-fast: 0.15s ease;
+            --transition-base: 0.3s ease;
+            --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Dark Mode Colors */
+        [data-theme="dark"] {
+            --bg-primary: #0d0d0d;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #262626;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a3a3a3;
+            --text-muted: #737373;
+            --border-color: #333333;
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            --glass-bg: rgba(13, 13, 13, 0.9);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ============================================
+           BASE STYLES
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background var(--transition-base), color var(--transition-base);
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .bg-pattern::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(220, 38, 38, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(22, 163, 74, 0.1) 0%, transparent 40%);
+            animation: bgFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-2%, 2%) rotate(1deg); }
+        }
+
+        /* ============================================
+           HEADER STYLES
+           ============================================ */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: var(--space-md) var(--space-xl);
+            transition: all var(--transition-base);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.75rem;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--accent-gradient);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: var(--space-lg);
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--red-primary);
+            transition: all var(--transition-base);
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-link:hover::after {
+            width: 60%;
+        }
+
+        .nav-link.active {
+            color: var(--red-primary);
+        }
+
+        .nav-link.active::after {
+            width: 60%;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 48px;
+            height: 28px;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            position: relative;
+            transition: all var(--transition-base);
+        }
+
+        .theme-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: var(--red-primary);
+            border-radius: 50%;
+            transition: all var(--transition-base);
+        }
+
+        [data-theme="dark"] .theme-toggle::after {
+            left: 22px;
+            background: var(--green-primary);
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: var(--space-sm);
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+            transition: all var(--transition-fast);
+        }
+
+        /* ============================================
+           MAIN CONTENT STYLES
+           ============================================ */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-xl);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: var(--space-2xl) 0;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-2xl);
+            align-items: start;
+        }
+
+        /* Image Carousel */
+        .carousel-container {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+        }
+
+        .carousel {
+            position: relative;
+            aspect-ratio: 16/10;
+            overflow: hidden;
+        }
+
+        .carousel-slides {
+            display: flex;
+            transition: transform var(--transition-slow);
+            height: 100%;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .carousel-slide img,
+        .carousel-slide video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-controls {
+            position: absolute;
+            bottom: var(--space-md);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: var(--space-sm);
+            z-index: 10;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .carousel-dot.active {
+            background: var(--red-primary);
+            transform: scale(1.2);
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            z-index: 10;
+        }
+
+        .carousel-nav:hover {
+            background: var(--red-primary);
+            color: white;
+        }
+
+        .carousel-nav.prev { left: var(--space-md); }
+        .carousel-nav.next { right: var(--space-md); }
+
+        .carousel-nav svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Swipe Indicator */
+        .swipe-indicator {
+            display: none;
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--glass-bg);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* Project Info */
+        .project-info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .project-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            background: var(--green-light);
+            color: var(--green-dark);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 600;
+            width: fit-content;
+        }
+
+        [data-theme="dark"] .project-badge {
+            background: rgba(22, 163, 74, 0.2);
+            color: var(--green-primary);
+        }
+
+        .project-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.75rem;
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text-primary);
+        }
+
+        .project-summary {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Features List */
+        .features-section {
+            margin-top: var(--space-xl);
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--red-primary);
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            transition: all var(--transition-fast);
+        }
+
+        .feature-item:hover {
+            border-color: var(--red-primary);
+            transform: translateX(4px);
+        }
+
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--red-light);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        [data-theme="dark"] .feature-icon {
+            background: rgba(220, 38, 38, 0.2);
+        }
+
+        .feature-icon svg {
+            width: 16px;
+            height: 16px;
+            color: var(--red-primary);
+        }
+
+        .feature-text {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        /* Price Display */
+        .price-section {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-top: var(--space-xl);
+        }
+
+        .price-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .price-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .price-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--green-primary);
+        }
+
+        .price-value span {
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .price-lkr {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-top: var(--space-xs);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-xl);
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-md);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .btn-primary {
+            background: var(--red-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--green-primary);
+            color: var(--green-primary);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--red-primary);
+            border-color: var(--red-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--red-primary);
+            color: white;
+        }
+
+        /* ============================================
+           TABS SECTION
+           ============================================ */
+        .tabs-section {
+            padding: var(--space-2xl) 0;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: var(--space-xs);
+            background: var(--bg-secondary);
+            padding: var(--space-xs);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-xl);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .tabs-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            padding: var(--space-md) var(--space-xl);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--bg-primary);
+            color: var(--red-primary);
+            box-shadow: var(--card-shadow);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Customize Tab */
+        .customize-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--space-xl);
+        }
+
+        .options-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+        }
+
+        .option-group {
+            margin-bottom: var(--space-xl);
+        }
+
+        .option-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .option-title {
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .option-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-md);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+        }
+
+        .option-item:hover {
+            border-color: var(--green-primary);
+        }
+
+        .option-item.selected {
+            border-color: var(--green-primary);
+            background: var(--green-light);
+        }
+
+        [data-theme="dark"] .option-item.selected {
+            background: rgba(22, 163, 74, 0.1);
+        }
+
+        .option-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .option-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--green-primary);
+            cursor: pointer;
+        }
+
+        .option-name {
+            font-weight: 500;
+        }
+
+        .option-price {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            color: var(--green-primary);
+        }
+
+        /* Summary Panel */
+        .summary-panel {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            position: sticky;
+            top: 120px;
+        }
+
+        .summary-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-items {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .summary-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: var(--space-md) 0;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .summary-total-value {
+            color: var(--green-primary);
+        }
+
+        /* Price Plans */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-lg);
+        }
+
+        .plan-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            display: flex;
+            flex-direction: column;
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--red-primary);
+            transform: scaleX(0);
+            transition: transform var(--transition-base);
+        }
+
+        .plan-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--card-shadow);
+        }
+
+        .plan-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .plan-card.popular {
+            border-color: var(--green-primary);
+        }
+
+        .plan-card.popular::before {
+            background: var(--green-primary);
+            transform: scaleX(1);
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            background: var(--green-primary);
+            color: white;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .plan-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+
+        .plan-price {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--green-primary);
+            margin-bottom: var(--space-lg);
+        }
+
+        .plan-price span {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .plan-features {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xl);
+        }
+
+        .plan-feature {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .plan-feature svg {
+            width: 16px;
+            height: 16px;
+            color: var(--green-primary);
+            flex-shrink: 0;
+        }
+
+        /* ============================================
+           MODAL STYLES
+           ============================================ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-xl);
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.4s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            padding: var(--space-xl);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary);
+            z-index: 10;
+        }
+
+        .modal-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--bg-secondary);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .modal-close:hover {
+            background: var(--red-light);
+            color: var(--red-primary);
+        }
+
+        .modal-body {
+            padding: var(--space-xl);
+        }
+
+        /* Checkout Steps */
+        .checkout-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-xl);
+            position: relative;
+        }
+
+        .checkout-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            right: 40px;
+            height: 2px;
+            background: var(--border-color);
+        }
+
+        .checkout-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-sm);
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: all var(--transition-base);
+        }
+
+        .checkout-step.active .step-number {
+            background: var(--red-primary);
+            border-color: var(--red-primary);
+            color: white;
+        }
+
+        .checkout-step.completed .step-number {
+            background: var(--green-primary);
+            border-color: var(--green-primary);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .checkout-step.active .step-label {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: var(--space-sm);
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--space-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all var(--transition-fast);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--red-primary);
+            background: var(--bg-primary);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .payment-method {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .payment-method:hover {
+            border-color: var(--text-muted);
+        }
+
+        .payment-method.selected {
+            border-color: var(--green-primary);
+            background: var(--green-light);
+        }
+
+        [data-theme="dark"] .payment-method.selected {
+            background: rgba(22, 163, 74, 0.1);
+        }
+
+        .payment-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-sm);
+        }
+
+        .payment-radio {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--green-primary);
+        }
+
+        .payment-name {
+            font-weight: 600;
+        }
+
+        .payment-notice {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            margin-top: var(--space-sm);
+        }
+
+        .payment-unavailable {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .unavailable-badge {
+            background: var(--red-light);
+            color: var(--red-dark);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            margin-left: auto;
+        }
+
+        [data-theme="dark"] .unavailable-badge {
+            background: rgba(220, 38, 38, 0.2);
+            color: var(--red-primary);
+        }
+
+        /* Bank Details */
+        .bank-details {
+            display: none;
+            margin-top: var(--space-lg);
+            padding: var(--space-lg);
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+        }
+
+        .bank-details.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .bank-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .bank-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+        }
+
+        .bank-info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .bank-name {
+            font-weight: 600;
+        }
+
+        .bank-detail {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .copy-btn {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--green-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all var(--transition-fast);
+        }
+
+        .copy-btn:hover {
+            background: var(--green-dark);
+        }
+
+        /* Installment Options */
+        .installment-options {
+            display: none;
+            flex-direction: column;
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
+        }
+
+        .installment-options.show {
+            display: flex;
+        }
+
+        .installment-option {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .installment-option:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .installment-option.selected {
+            background: var(--green-light);
+            border: 2px solid var(--green-primary);
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-item.total {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--green-primary);
+            padding-top: var(--space-md);
+            margin-top: var(--space-sm);
+            border-top: 2px solid var(--border-color);
+            border-bottom: none;
+        }
+
+        /* Agree Checkbox */
+        .agree-section {
+            margin-top: var(--space-xl);
+            padding: var(--space-lg);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+        }
+
+        .agree-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+        }
+
+        .agree-checkbox input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--green-primary);
+            margin-top: 2px;
+        }
+
+        .agree-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .agree-text a {
+            color: var(--red-primary);
+            text-decoration: none;
+        }
+
+        .agree-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal Footer */
+        .modal-footer {
+            padding: var(--space-xl);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            gap: var(--space-md);
+            position: sticky;
+            bottom: 0;
+            background: var(--bg-primary);
+        }
+
+        /* ============================================
+           FOOTER STYLES
+           ============================================ */
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: var(--space-xl) 0;
+            margin-top: var(--space-2xl);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-lg);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-link:hover {
+            color: var(--red-primary);
+        }
+
+        .footer-developer {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .footer-developer a {
+            color: var(--green-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-developer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ============================================
+           RESPONSIVE STYLES
+           ============================================ */
+        @media (max-width: 1200px) {
+            .plans-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .customize-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--bg-primary);
+                flex-direction: column;
+                padding: var(--space-lg);
+                border-bottom: 1px solid var(--border-color);
+                gap: var(--space-sm);
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .swipe-indicator {
+                display: block;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .checkout-steps {
+                flex-wrap: wrap;
+                gap: var(--space-md);
+            }
+
+            .checkout-steps::before {
+                display: none;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* ============================================
+           ANIMATIONS
+           ============================================ */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered Animation */
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+        .stagger-5 { transition-delay: 0.5s; }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: var(--space-xl);
+            right: var(--space-xl);
+            background: var(--green-primary);
+            color: white;
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            z-index: 3000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all var(--transition-base);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Pattern -->
+    <div class="bg-pattern"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">V</div>
+                <span>Vezlo</span>
+            </a>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="login.html" class="nav-link">Login</a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"></button>
+            </nav>
+
+            <div class="header-actions" style="display: flex; align-items: center; gap: 1rem;">
+                <button class="theme-toggle" id="themeToggleMobile" aria-label="Toggle theme"></button>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-grid">
+                    <!-- Image Carousel -->
+                    <div class="carousel-container animate-on-scroll stagger-1">
+                        <div class="carousel" id="carousel">
+                            <div class="carousel-slides" id="carouselSlides">
+                                <div class="carousel-slide">
+                                    <img src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&h=500&fit=crop" alt="LMS Dashboard">
+                                </div>
+                                <div class="carousel-slide">
+                                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=500&fit=crop" alt="Learning Platform">
+                                </div>
+                                <div class="carousel-slide">
+                                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=500&fit=crop" alt="Online Classes">
+                                </div>
+                                <div class="carousel-slide">
+                                    <video muted loop playsinline>
+                                        <source src="https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4" type="video/mp4">
+                                    </video>
+                                </div>
+                            </div>
+                            
+                            <button class="carousel-nav prev" id="carouselPrev" aria-label="Previous slide">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="15 18 9 12 15 6"></polyline>
+                                </svg>
+                            </button>
+                            <button class="carousel-nav next" id="carouselNext" aria-label="Next slide">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <div class="carousel-controls" id="carouselControls">
+                            <button class="carousel-dot active" data-index="0"></button>
+                            <button class="carousel-dot" data-index="1"></button>
+                            <button class="carousel-dot" data-index="2"></button>
+                            <button class="carousel-dot" data-index="3"></button>
+                        </div>
+                        
+                        <div class="swipe-indicator">Swipe to view more</div>
+                    </div>
+
+                    <!-- Project Info -->
+                    <div class="project-info">
+                        <div class="project-badge animate-on-scroll stagger-2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                            Ready to Deploy
+                        </div>
+
+                        <h1 class="project-title animate-on-scroll stagger-2">Learning Management System</h1>
+                        
+                        <p class="project-summary animate-on-scroll stagger-3">
+                            A comprehensive Learning Management System designed for educational institutions, tutoring centers, and online course providers. Features include student management, course creation, progress tracking, live classes, and detailed analytics.
+                        </p>
+
+                        <!-- Features -->
+                        <div class="features-section animate-on-scroll stagger-4">
+                            <h3 class="section-title">Key Features</h3>
+                            <div class="features-grid">
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text">Student Management</span>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text">Live Classes</span>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                                            <polyline points="10 9 9 9 8 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text">Course Builder</span>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text">Analytics Dashboard</span>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text">Progress Tracking</span>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-text">Payment Integration</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="price-section animate-on-scroll stagger-5">
+                            <div class="price-header">
+                                <span class="price-label">Starting From</span>
+                                <span class="price-value">$299 <span>USD</span></span>
+                            </div>
+                            <p class="price-lkr">Approximately LKR 89,700</p>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons animate-on-scroll stagger-5">
+                            <button class="btn btn-primary" id="requestWebsiteBtn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                Request Website
+                            </button>
+                            <button class="btn btn-secondary" id="customizeBtn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                                Customize
+                            </button>
+                            <button class="btn btn-outline" id="fastRequestBtn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                </svg>
+                                Fast Request
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabs Section -->
+        <section class="tabs-section">
+            <div class="container">
+                <div class="tabs-nav">
+                    <button class="tab-btn active" data-tab="options">Options & Details</button>
+                    <button class="tab-btn" data-tab="customize">Customize Website</button>
+                    <button class="tab-btn" data-tab="plans">Price Plans</button>
+                    <button class="tab-btn" data-tab="service">After Service</button>
+                </div>
+
+                <!-- Options Tab -->
+                <div class="tab-content active" id="options">
+                    <div class="options-panel">
+                        <div class="option-group">
+                            <h4 class="option-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                                </svg>
+                                Included Pages
+                            </h4>
+                            <div class="option-list">
+                                <div class="option-item selected">
+                                    <div class="option-info">
+                                        <input type="checkbox" class="option-checkbox" checked disabled>
+                                        <span class="option-name">Home / Landing Page</span>
+                                    </div>
+                                    <span class="option-price">Included</span>
+                                </div>
+                                <div class="option-item selected">
+                                    <div class="option-info">
+                                        <input type="checkbox" class="option-checkbox" checked disabled>
+                                        <span class="option-name">Course Catalog</span>
+                                    </div>
+                                    <span class="option-price">Included</span>
+                                </div>
+                                <div class="option-item selected">
+                                    <div class="option-info">
+                                        <input type="checkbox" class="option-checkbox" checked disabled>
+                                        <span class="option-name">Student Dashboard</span>
+                                    </div>
+                                    <span class="option-price">Included</span>
+                                </div>
+                                <div class="option-item selected">
+                                    <div class="option-info">
+                                        <input type="checkbox" class="option-checkbox" checked disabled>
+                                        <span class="option-name">Teacher Dashboard</span>
+                                    </div>
+                                    <span class="option-price">Included</span>
+                                </div>
+                                <div class="option-item selected">
+                                    <div class="option-info">
+                                        <input type="checkbox" class="option-checkbox" checked disabled>
+                                        <span class="option-name">Admin Panel</span>
+                                    </div>
+                                    <span class="option-price">Included</span>
+                                </div>
+                                <div class="option-item selected">
+                                    <div class="option-info">
+                                        <input type="checkbox" class="option-checkbox" checked disabled>
+                                        <span class="option-name">Login / Registration</span>
+                                    </div>
+                                    <span class="option-price">Included</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="option-group">
+                            <h4 class="option-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                </svg>
+                                Domain & Hosting
+                            </h4>
+                            <div class="option-list">
+                                <div class="option-item selected">
+                                    <div class="option-info">
+                                        <input type="checkbox" class="option-checkbox" checked disabled>
+                                        <span class="option-name">Domain (.com) - 1 Year</span>
+                                    </div>
+                                    <span class="option-price">$12/year</span>
+                                </div>
+                                <div class="option-item selected">
+                                    <div class="option-info">
+                                        <input type="checkbox" class="option-checkbox" checked disabled>
+                                        <span class="option-name">Hosting (5GB SSD) - 1 Year</span>
+                                    </div>
+                                    <span class="option-price">$50/year</span>
+                                </div>
+                                <div class="option-item selected">
+                                    <div class="option-info">
+                                        <input type="checkbox" class="option-checkbox" checked disabled>
+                                        <span class="option-name">SSL Certificate</span>
+                                    </div>
+                                    <span class="option-price">Free</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="option-group">
+                            <h4 class="option-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                </svg>
+                                Technical Details
+                            </h4>
+                            <div class="option-list">
+                                <div class="option-item">
+                                    <div class="option-info">
+                                        <span class="option-name">Technology Stack</span>
+                                    </div>
+                                    <span style="color: var(--text-secondary);">React, Node.js, MongoDB</span>
+                                </div>
+                                <div class="option-item">
+                                    <div class="option-info">
+                                        <span class="option-name">Responsive Design</span>
+                                    </div>
+                                    <span style="color: var(--green-primary);">Yes</span>
+                                </div>
+                                <div class="option-item">
+                                    <div class="option-info">
+                                        <span class="option-name">SEO Optimized</span>
+                                    </div>
+                                    <span style="color: var(--green-primary);">Yes</span>
+                                </div>
+                                <div class="option-item">
+                                    <div class="option-info">
+                                        <span class="option-name">Delivery Time</span>
+                                    </div>
+                                    <span style="color: var(--text-secondary);">14-21 Days</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customize Tab -->
+                <div class="tab-content" id="customize">
+                    <div class="customize-grid">
+                        <div class="options-panel">
+                            <div class="option-group">
+                                <h4 class="option-title">Additional Pages</h4>
+                                <div class="option-list" id="additionalPages">
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="checkbox" class="option-checkbox" data-price="25" data-name="Blog Section">
+                                            <span class="option-name">Blog Section</span>
+                                        </div>
+                                        <span class="option-price">+$25</span>
+                                    </label>
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="checkbox" class="option-checkbox" data-price="30" data-name="Forum/Discussion Board">
+                                            <span class="option-name">Forum/Discussion Board</span>
+                                        </div>
+                                        <span class="option-price">+$30</span>
+                                    </label>
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="checkbox" class="option-checkbox" data-price="20" data-name="Events Calendar">
+                                            <span class="option-name">Events Calendar</span>
+                                        </div>
+                                        <span class="option-price">+$20</span>
+                                    </label>
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="checkbox" class="option-checkbox" data-price="35" data-name="Certificate Generator">
+                                            <span class="option-name">Certificate Generator</span>
+                                        </div>
+                                        <span class="option-price">+$35</span>
+                                    </label>
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="checkbox" class="option-checkbox" data-price="40" data-name="Quiz/Exam System">
+                                            <span class="option-name">Quiz/Exam System</span>
+                                        </div>
+                                        <span class="option-price">+$40</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="option-group">
+                                <h4 class="option-title">Enhanced Features</h4>
+                                <div class="option-list" id="enhancedFeatures">
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="checkbox" class="option-checkbox" data-price="50" data-name="Video Conferencing Integration">
+                                            <span class="option-name">Video Conferencing Integration</span>
+                                        </div>
+                                        <span class="option-price">+$50</span>
+                                    </label>
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="checkbox" class="option-checkbox" data-price="25" data-name="Email Notification System">
+                                            <span class="option-name">Email Notification System</span>
+                                        </div>
+                                        <span class="option-price">+$25</span>
+                                    </label>
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="checkbox" class="option-checkbox" data-price="30" data-name="SMS Notifications">
+                                            <span class="option-name">SMS Notifications</span>
+                                        </div>
+                                        <span class="option-price">+$30</span>
+                                    </label>
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="checkbox" class="option-checkbox" data-price="45" data-name="Advanced Analytics">
+                                            <span class="option-name">Advanced Analytics</span>
+                                        </div>
+                                        <span class="option-price">+$45</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="option-group">
+                                <h4 class="option-title">Domain Extensions</h4>
+                                <div class="option-list" id="domainExtensions">
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="radio" name="domain" class="option-checkbox" data-price="0" data-name=".com Domain" checked>
+                                            <span class="option-name">.com Domain</span>
+                                        </div>
+                                        <span class="option-price">$12/yr</span>
+                                    </label>
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="radio" name="domain" class="option-checkbox" data-price="5" data-name=".net Domain">
+                                            <span class="option-name">.net Domain</span>
+                                        </div>
+                                        <span class="option-price">+$5/yr</span>
+                                    </label>
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="radio" name="domain" class="option-checkbox" data-price="8" data-name=".org Domain">
+                                            <span class="option-name">.org Domain</span>
+                                        </div>
+                                        <span class="option-price">+$8/yr</span>
+                                    </label>
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="radio" name="domain" class="option-checkbox" data-price="15" data-name=".lk Domain (Sri Lanka)">
+                                            <span class="option-name">.lk Domain (Sri Lanka)</span>
+                                        </div>
+                                        <span class="option-price">+$15/yr</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="option-group">
+                                <h4 class="option-title">Hosting Upgrades</h4>
+                                <div class="option-list" id="hostingUpgrades">
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="radio" name="hosting" class="option-checkbox" data-price="0" data-name="Basic Hosting (5GB)" checked>
+                                            <span class="option-name">Basic Hosting (5GB SSD)</span>
+                                        </div>
+                                        <span class="option-price">$50/yr</span>
+                                    </label>
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="radio" name="hosting" class="option-checkbox" data-price="30" data-name="Pro Hosting (20GB)">
+                                            <span class="option-name">Pro Hosting (20GB SSD)</span>
+                                        </div>
+                                        <span class="option-price">+$30/yr</span>
+                                    </label>
+                                    <label class="option-item">
+                                        <div class="option-info">
+                                            <input type="radio" name="hosting" class="option-checkbox" data-price="60" data-name="Business Hosting (50GB)">
+                                            <span class="option-name">Business Hosting (50GB SSD)</span>
+                                        </div>
+                                        <span class="option-price">+$60/yr</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="summary-panel">
+                            <h3 class="summary-title">Customization Summary</h3>
+                            <div class="summary-items" id="summaryItems">
+                                <div class="summary-item">
+                                    <span>Base LMS Package</span>
+                                    <span>$299</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>.com Domain (1 Year)</span>
+                                    <span>$12</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Basic Hosting (1 Year)</span>
+                                    <span>$50</span>
+                                </div>
+                            </div>
+                            <div class="summary-divider"></div>
+                            <div class="summary-total">
+                                <span>Total</span>
+                                <span class="summary-total-value" id="customTotal">$361</span>
+                            </div>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: var(--space-sm);">
+                                ≈ LKR <span id="customTotalLKR">108,300</span>
+                            </p>
+                            <button class="btn btn-primary" style="width: 100%; margin-top: var(--space-lg);" id="proceedCustomBtn">
+                                Proceed with Customization
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Plans Tab -->
+                <div class="tab-content" id="plans">
+                    <div class="plans-grid">
+                        <div class="plan-card animate-on-scroll stagger-1">
+                            <h3 class="plan-name">Basic</h3>
+                            <div class="plan-price">$299 <span>/ project</span></div>
+                            <div class="plan-features">
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    5 Core Pages
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Basic Student Management
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Course Upload System
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Mobile Responsive
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    1 Month Support
+                                </div>
+                            </div>
+                            <button class="btn btn-outline" style="width: 100%;" onclick="selectPlan('basic')">
+                                Select Plan
+                            </button>
+                        </div>
+
+                        <div class="plan-card animate-on-scroll stagger-2">
+                            <h3 class="plan-name">Standard</h3>
+                            <div class="plan-price">$449 <span>/ project</span></div>
+                            <div class="plan-features">
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Everything in Basic
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Quiz & Exam System
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Certificate Generator
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Payment Integration
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    3 Months Support
+                                </div>
+                            </div>
+                            <button class="btn btn-outline" style="width: 100%;" onclick="selectPlan('standard')">
+                                Select Plan
+                            </button>
+                        </div>
+
+                        <div class="plan-card popular animate-on-scroll stagger-3">
+                            <span class="plan-badge">Most Popular</span>
+                            <h3 class="plan-name">Pro</h3>
+                            <div class="plan-price">$699 <span>/ project</span></div>
+                            <div class="plan-features">
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Everything in Standard
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Live Class Integration
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Advanced Analytics
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Email Notifications
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    6 Months Support
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" style="width: 100%;" onclick="selectPlan('pro')">
+                                Select Plan
+                            </button>
+                        </div>
+
+                        <div class="plan-card animate-on-scroll stagger-4">
+                            <h3 class="plan-name">Ultra Pro</h3>
+                            <div class="plan-price">$999 <span>/ project</span></div>
+                            <div class="plan-features">
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Everything in Pro
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Custom Features
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Priority Support
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    1 Year Free Updates
+                                </div>
+                                <div class="plan-feature">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Dedicated Manager
+                                </div>
+                            </div>
+                            <button class="btn btn-outline" style="width: 100%;" onclick="selectPlan('ultra')">
+                                Select Plan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Tab -->
+                <div class="tab-content" id="service">
+                    <div class="options-panel">
+                        <div class="option-group">
+                            <h4 class="option-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                After Sale Services
+                            </h4>
+                            <div class="option-list">
+                                <div class="option-item">
+                                    <div class="option-info">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span class="option-name">Free Bug Fixes (Warranty Period)</span>
+                                    </div>
+                                </div>
+                                <div class="option-item">
+                                    <div class="option-info">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span class="option-name">Technical Support via WhatsApp</span>
+                                    </div>
+                                </div>
+                                <div class="option-item">
+                                    <div class="option-info">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span class="option-name">Training Sessions (1-2 Hours)</span>
+                                    </div>
+                                </div>
+                                <div class="option-item">
+                                    <div class="option-info">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span class="option-name">Documentation & User Guide</span>
+                                    </div>
+                                </div>
+                                <div class="option-item">
+                                    <div class="option-info">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-primary)" stroke-width="2">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span class="option-name">Regular Security Updates</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="option-group">
+                            <h4 class="option-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                Extended Support Plans
+                            </h4>
+                            <div class="option-list">
+                                <label class="option-item">
+                                    <div class="option-info">
+                                        <input type="radio" name="support" class="option-checkbox">
+                                        <span class="option-name">Monthly Maintenance - $29/month</span>
+                                    </div>
+                                </label>
+                                <label class="option-item">
+                                    <div class="option-info">
+                                        <input type="radio" name="support" class="option-checkbox">
+                                        <span class="option-name">Priority Support - $49/month</span>
+                                    </div>
+                                </label>
+                                <label class="option-item">
+                                    <div class="option-info">
+                                        <input type="radio" name="support" class="option-checkbox">
+                                        <span class="option-name">Full Service Package - $99/month</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>2026 Vezlo. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="rules.html" class="footer-link">Terms & Conditions</a>
+                <a href="#" class="footer-link">License</a>
+                <a href="rules.html" class="footer-link">Privacy Policy</a>
+            </div>
+            <p class="footer-developer">
+                Developed by <a href="https://dmkaawya.vercel.app" target="_blank">dmkaawya</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Request Website Modal -->
+    <div class="modal-overlay" id="requestModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Request Website</h2>
+                <button class="modal-close" id="closeRequestModal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Checkout Steps -->
+                <div class="checkout-steps">
+                    <div class="checkout-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <span class="step-label">Details</span>
+                    </div>
+                    <div class="checkout-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <span class="step-label">Payment</span>
+                    </div>
+                    <div class="checkout-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <span class="step-label">Summary</span>
+                    </div>
+                </div>
+
+                <!-- Step 1: Details Form -->
+                <div class="checkout-content" id="step1">
+                    <div class="form-group">
+                        <label class="form-label">Your Name *</label>
+                        <input type="text" class="form-input" id="customerName" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" class="form-input" id="customerEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number *</label>
+                        <input type="tel" class="form-input" id="customerPhone" placeholder="+94 77 123 4567" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Additional Notes</label>
+                        <textarea class="form-input form-textarea" id="customerNotes" placeholder="Any specific requirements or questions..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Step 2: Payment Methods -->
+                <div class="checkout-content" id="step2" style="display: none;">
+                    <div class="payment-methods">
+                        <!-- Bank Transfer -->
+                        <div class="payment-method" data-method="bank">
+                            <div class="payment-header">
+                                <input type="radio" name="paymentMethod" class="payment-radio" value="bank">
+                                <span class="payment-name">Bank Transfer</span>
+                            </div>
+                            <p class="payment-notice">Select bank and make payment. Send payment screenshot via WhatsApp.</p>
+                        </div>
+
+                        <!-- Bank Details -->
+                        <div class="bank-details" id="bankDetails">
+                            <h4 style="margin-bottom: var(--space-md); font-weight: 600;">Bank Account Details</h4>
+                            <p class="payment-notice" style="margin-bottom: var(--space-md); background: var(--green-light); color: var(--green-dark);">
+                                If your bank is different from listed banks, LKR 25,000 bank tax charge will apply. Same bank transfers are tax-free.
+                            </p>
+                            <div class="bank-list">
+                                <div class="bank-item">
+                                    <div class="bank-info">
+                                        <span class="bank-name">Commercial Bank</span>
+                                        <span class="bank-detail">Account: 1234567890</span>
+                                        <span class="bank-detail">Branch: Colombo 03</span>
+                                        <span class="bank-detail">Name: Vezlo Technologies</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyBankDetails('Commercial Bank, 1234567890, Colombo 03, Vezlo Technologies')">Copy</button>
+                                </div>
+                                <div class="bank-item">
+                                    <div class="bank-info">
+                                        <span class="bank-name">People's Bank</span>
+                                        <span class="bank-detail">Account: 0987654321</span>
+                                        <span class="bank-detail">Branch: Kandy</span>
+                                        <span class="bank-detail">Name: Vezlo Technologies</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyBankDetails('People\\'s Bank, 0987654321, Kandy, Vezlo Technologies')">Copy</button>
+                                </div>
+                                <div class="bank-item">
+                                    <div class="bank-info">
+                                        <span class="bank-name">Sampath Bank</span>
+                                        <span class="bank-detail">Account: 1122334455</span>
+                                        <span class="bank-detail">Branch: Galle</span>
+                                        <span class="bank-detail">Name: Vezlo Technologies</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyBankDetails('Sampath Bank, 1122334455, Galle, Vezlo Technologies')">Copy</button>
+                                </div>
+                                <div class="bank-item">
+                                    <div class="bank-info">
+                                        <span class="bank-name">HNB Bank</span>
+                                        <span class="bank-detail">Account: 5566778899</span>
+                                        <span class="bank-detail">Branch: Negombo</span>
+                                        <span class="bank-detail">Name: Vezlo Technologies</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyBankDetails('HNB Bank, 5566778899, Negombo, Vezlo Technologies')">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pay Later -->
+                        <div class="payment-method" data-method="paylater">
+                            <div class="payment-header">
+                                <input type="radio" name="paymentMethod" class="payment-radio" value="paylater">
+                                <span class="payment-name">Pay Later</span>
+                            </div>
+                            <p class="payment-notice">30% advance payment required before starting the project. Balance upon completion.</p>
+                        </div>
+
+                        <!-- Monthly Installment -->
+                        <div class="payment-method" data-method="installment">
+                            <div class="payment-header">
+                                <input type="radio" name="paymentMethod" class="payment-radio" value="installment">
+                                <span class="payment-name">Monthly Installment</span>
+                            </div>
+                            <p class="payment-notice">Flexible payment plans available. Interest applies based on duration.</p>
+                            
+                            <div class="installment-options" id="installmentOptions">
+                                <div class="installment-option" data-months="3" data-interest="2">
+                                    <span>3 Months</span>
+                                    <span style="color: var(--red-primary);">+2% Interest</span>
+                                </div>
+                                <div class="installment-option" data-months="6" data-interest="4">
+                                    <span>6 Months</span>
+                                    <span style="color: var(--red-primary);">+4% Interest</span>
+                                </div>
+                                <div class="installment-option" data-months="12" data-interest="8">
+                                    <span>12 Months</span>
+                                    <span style="color: var(--red-primary);">+8% Interest</span>
+                                </div>
+                                <div class="installment-option" data-months="24" data-interest="16">
+                                    <span>24 Months</span>
+                                    <span style="color: var(--red-primary);">+16% Interest</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- QR Pay -->
+                        <div class="payment-method" data-method="qr">
+                            <div class="payment-header">
+                                <input type="radio" name="paymentMethod" class="payment-radio" value="qr">
+                                <span class="payment-name">QR Pay</span>
+                            </div>
+                            <p class="payment-notice">Scan QR code to pay. 5% tax fee applies.</p>
+                        </div>
+
+                        <!-- Unavailable Methods -->
+                        <div class="payment-method payment-unavailable" style="opacity: 0.5; cursor: not-allowed;">
+                            <div class="payment-header">
+                                <input type="radio" name="paymentMethod" class="payment-radio" value="card" disabled>
+                                <span class="payment-name">Card Payment</span>
+                                <span class="unavailable-badge">Coming Soon</span>
+                            </div>
+                        </div>
+                        <div class="payment-method payment-unavailable" style="opacity: 0.5; cursor: not-allowed;">
+                            <div class="payment-header">
+                                <input type="radio" name="paymentMethod" class="payment-radio" value="binance" disabled>
+                                <span class="payment-name">Binance Pay</span>
+                                <span class="unavailable-badge">Coming Soon</span>
+                            </div>
+                        </div>
+                        <div class="payment-method payment-unavailable" style="opacity: 0.5; cursor: not-allowed;">
+                            <div class="payment-header">
+                                <input type="radio" name="paymentMethod" class="payment-radio" value="ezcash" disabled>
+                                <span class="payment-name">Ez Cash</span>
+                                <span class="unavailable-badge">Coming Soon</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Summary -->
+                <div class="checkout-content" id="step3" style="display: none;">
+                    <div class="order-summary">
+                        <h4 style="margin-bottom: var(--space-md); font-weight: 600;">Order Summary</h4>
+                        <div class="order-item">
+                            <span>Website Package</span>
+                            <span id="summaryPackage">LMS - Basic</span>
+                        </div>
+                        <div class="order-item">
+                            <span>Domain (1 Year)</span>
+                            <span id="summaryDomain">$12</span>
+                        </div>
+                        <div class="order-item">
+                            <span>Hosting (1 Year)</span>
+                            <span id="summaryHosting">$50</span>
+                        </div>
+                        <div class="order-item" id="summaryTaxRow" style="display: none;">
+                            <span>Tax / Fee</span>
+                            <span id="summaryTax">$0</span>
+                        </div>
+                        <div class="order-item" id="summaryInterestRow" style="display: none;">
+                            <span>Interest</span>
+                            <span id="summaryInterest">$0</span>
+                        </div>
+                        <div class="order-item total">
+                            <span>Total</span>
+                            <span id="summaryTotal">$361</span>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: var(--space-sm);">
+                            Approximately LKR <span id="summaryTotalLKR">108,300</span>
+                        </p>
+                    </div>
+
+                    <div style="margin-top: var(--space-lg);">
+                        <h4 style="margin-bottom: var(--space-md); font-weight: 600;">Customer Details</h4>
+                        <div class="order-item">
+                            <span>Name</span>
+                            <span id="summaryName">-</span>
+                        </div>
+                        <div class="order-item">
+                            <span>Email</span>
+                            <span id="summaryEmail">-</span>
+                        </div>
+                        <div class="order-item">
+                            <span>Phone</span>
+                            <span id="summaryPhone">-</span>
+                        </div>
+                        <div class="order-item">
+                            <span>Payment Method</span>
+                            <span id="summaryPayment">-</span>
+                        </div>
+                    </div>
+
+                    <div class="agree-section">
+                        <label class="agree-checkbox">
+                            <input type="checkbox" id="agreeRules">
+                            <span class="agree-text">I agree to the <a href="rules.html" target="_blank">Terms & Conditions</a> and understand the project scope and payment terms.</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="prevStepBtn" style="display: none;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    Previous
+                </button>
+                <button class="btn btn-primary" id="nextStepBtn">
+                    Next
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fast Request Modal -->
+    <div class="modal-overlay" id="fastRequestModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Fast Request</h2>
+                <button class="modal-close" id="closeFastModal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Fast Request Steps -->
+                <div class="checkout-steps">
+                    <div class="checkout-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <span class="step-label">Details</span>
+                    </div>
+                    <div class="checkout-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <span class="step-label">Summary</span>
+                    </div>
+                </div>
+
+                <!-- Fast Step 1 -->
+                <div class="checkout-content" id="fastStep1">
+                    <div class="form-group">
+                        <label class="form-label">Your Name *</label>
+                        <input type="text" class="form-input" id="fastName" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" class="form-input" id="fastEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Budget Range</label>
+                        <input type="text" class="form-input" id="fastBudget" placeholder="e.g., $200 - $500">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Project Requirements</label>
+                        <textarea class="form-input form-textarea" id="fastNotes" placeholder="Describe what you need..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Fast Step 2 -->
+                <div class="checkout-content" id="fastStep2" style="display: none;">
+                    <div class="order-summary">
+                        <h4 style="margin-bottom: var(--space-md); font-weight: 600;">Request Summary</h4>
+                        <div class="order-item">
+                            <span>Request Type</span>
+                            <span>Custom Quote</span>
+                        </div>
+                        <div class="order-item">
+                            <span>Website Category</span>
+                            <span>LMS / Education</span>
+                        </div>
+                        <div class="order-item total">
+                            <span>Estimated Price</span>
+                            <span style="color: var(--text-muted);">To be discussed</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: var(--space-lg);">
+                        <h4 style="margin-bottom: var(--space-md); font-weight: 600;">Your Details</h4>
+                        <div class="order-item">
+                            <span>Name</span>
+                            <span id="fastSummaryName">-</span>
+                        </div>
+                        <div class="order-item">
+                            <span>Email</span>
+                            <span id="fastSummaryEmail">-</span>
+                        </div>
+                        <div class="order-item">
+                            <span>Budget</span>
+                            <span id="fastSummaryBudget">-</span>
+                        </div>
+                    </div>
+
+                    <div class="agree-section">
+                        <label class="agree-checkbox">
+                            <input type="checkbox" id="fastAgreeRules">
+                            <span class="agree-text">I agree to the <a href="rules.html" target="_blank">Terms & Conditions</a>.</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="fastPrevBtn" style="display: none;">Previous</button>
+                <button class="btn btn-primary" id="fastNextBtn">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        /* ============================================
+           INITIALIZATION & DATA
+           ============================================ */
+        
+        // Sample Data for LMS
+        const projectData = {
+            name: 'Learning Management System',
+            category: 'Education / LMS',
+            basePrice: 299,
+            domainPrice: 12,
+            hostingPrice: 50,
+            currency: {
+                usdToLkr: 300,
+                rate: '~300 LKR per USD'
+            }
+        };
+
+        // Bank Details Data
+        const bankAccounts = [
+            { name: 'Commercial Bank', account: '1234567890', branch: 'Colombo 03', holder: 'Vezlo Technologies' },
+            { name: "People's Bank", account: '0987654321', branch: 'Kandy', holder: 'Vezlo Technologies' },
+            { name: 'Sampath Bank', account: '1122334455', branch: 'Galle', holder: 'Vezlo Technologies' },
+            { name: 'HNB Bank', account: '5566778899', branch: 'Negombo', holder: 'Vezlo Technologies' }
+        ];
+
+        // Price Plans Data
+        const pricePlans = {
+            basic: { name: 'Basic', price: 299 },
+            standard: { name: 'Standard', price: 449 },
+            pro: { name: 'Pro', price: 699 },
+            ultra: { name: 'Ultra Pro', price: 999 }
+        };
+
+        // State Management
+        let currentStep = 1;
+        let fastStep = 1;
+        let selectedPlan = 'basic';
+        let selectedPayment = null;
+        let selectedInstallment = null;
+        let customPrice = 361;
+
+        // USD to LKR conversion rate
+        const USD_TO_LKR = 300;
+
+        /* ============================================
+           THEME MANAGEMENT
+           ============================================ */
+        
+        const themeToggle = document.getElementById('themeToggle');
+        const themeToggleMobile = document.getElementById('themeToggleMobile');
+        
+        function initTheme() {
+            const savedTheme = localStorage.getItem('vezlo-theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('vezlo-theme', newTheme);
+        }
+
+        initTheme();
+        themeToggle.addEventListener('click', toggleTheme);
+        themeToggleMobile.addEventListener('click', toggleTheme);
+
+        /* ============================================
+           MOBILE MENU
+           ============================================ */
+        
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('show');
+        });
+
+        /* ============================================
+           IMAGE CAROUSEL
+           ============================================ */
+        
+        const carouselSlides = document.getElementById('carouselSlides');
+        const carouselDots = document.querySelectorAll('.carousel-dot');
+        const carouselPrev = document.getElementById('carouselPrev');
+        const carouselNext = document.getElementById('carouselNext');
+        let currentSlide = 0;
+        const totalSlides = 4;
+
+        function updateCarousel(index) {
+            currentSlide = index;
+            carouselSlides.style.transform = `translateX(-${index * 100}%)`;
+            carouselDots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            
+            // Handle video playback
+            const videos = document.querySelectorAll('.carousel-slide video');
+            videos.forEach((video, i) => {
+                if (i === index) {
+                    video.play().catch(() => {});
+                } else {
+                    video.pause();
+                }
+            });
+        }
+
+        carouselDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                updateCarousel(parseInt(dot.dataset.index));
+            });
+        });
+
+        carouselPrev.addEventListener('click', () => {
+            updateCarousel((currentSlide - 1 + totalSlides) % totalSlides);
+        });
+
+        carouselNext.addEventListener('click', () => {
+            updateCarousel((currentSlide + 1) % totalSlides);
+        });
+
+        // Auto-play carousel
+        setInterval(() => {
+            updateCarousel((currentSlide + 1) % totalSlides);
+        }, 5000);
+
+        // Touch/Swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const carousel = document.getElementById('carousel');
+
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        carousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    updateCarousel((currentSlide + 1) % totalSlides);
+                } else {
+                    updateCarousel((currentSlide - 1 + totalSlides) % totalSlides);
+                }
+            }
+        }
+
+        /* ============================================
+           TABS NAVIGATION
+           ============================================ */
+        
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+                
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        /* ============================================
+           CUSTOMIZATION CALCULATOR
+           ============================================ */
+        
+        const additionalCheckboxes = document.querySelectorAll('#additionalPages .option-checkbox, #enhancedFeatures .option-checkbox');
+        const domainRadios = document.querySelectorAll('input[name="domain"]');
+        const hostingRadios = document.querySelectorAll('input[name="hosting"]');
+        const summaryItems = document.getElementById('summaryItems');
+        const customTotalEl = document.getElementById('customTotal');
+        const customTotalLKREl = document.getElementById('customTotalLKR');
+
+        function updateCustomPrice() {
+            let basePrice = projectData.basePrice;
+            let additions = [];
+            
+            // Base package
+            additions.push({ name: 'Base LMS Package', price: basePrice });
+            
+            // Additional pages and features
+            additionalCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    const price = parseInt(checkbox.dataset.price) || 0;
+                    const name = checkbox.dataset.name;
+                    additions.push({ name, price });
+                }
+            });
+            
+            // Domain
+            let domainPrice = 12;
+            let domainName = '.com Domain (1 Year)';
+            domainRadios.forEach(radio => {
+                if (radio.checked) {
+                    domainPrice = 12 + (parseInt(radio.dataset.price) || 0);
+                    domainName = radio.dataset.name;
+                }
+            });
+            additions.push({ name: domainName, price: domainPrice });
+            
+            // Hosting
+            let hostingPrice = 50;
+            let hostingName = 'Basic Hosting (1 Year)';
+            hostingRadios.forEach(radio => {
+                if (radio.checked) {
+                    hostingPrice = 50 + (parseInt(radio.dataset.price) || 0);
+                    hostingName = radio.dataset.name;
+                }
+            });
+            additions.push({ name: hostingName, price: hostingPrice });
+            
+            // Calculate total
+            const total = additions.reduce((sum, item) => sum + item.price, 0);
+            const totalLKR = total * USD_TO_LKR;
+            
+            // Update UI
+            summaryItems.innerHTML = additions.map(item => `
+                <div class="summary-item">
+                    <span>${item.name}</span>
+                    <span>$${item.price}</span>
+                </div>
+            `).join('');
+            
+            customTotalEl.textContent = `$${total}`;
+            customTotalLKREl.textContent = totalLKR.toLocaleString();
+            customPrice = total;
+        }
+
+        additionalCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateCustomPrice);
+        });
+
+        domainRadios.forEach(radio => {
+            radio.addEventListener('change', updateCustomPrice);
+        });
+
+        hostingRadios.forEach(radio => {
+            radio.addEventListener('change', updateCustomPrice);
+        });
+
+        /* ============================================
+           MODALS
+           ============================================ */
+        
+        const requestModal = document.getElementById('requestModal');
+        const fastRequestModal = document.getElementById('fastRequestModal');
+        const requestWebsiteBtn = document.getElementById('requestWebsiteBtn');
+        const customizeBtn = document.getElementById('customizeBtn');
+        const fastRequestBtn = document.getElementById('fastRequestBtn');
+        const closeRequestModal = document.getElementById('closeRequestModal');
+        const closeFastModal = document.getElementById('closeFastModal');
+
+        requestWebsiteBtn.addEventListener('click', () => {
+            requestModal.classList.add('active');
+            resetRequestModal();
+        });
+
+        customizeBtn.addEventListener('click', () => {
+            document.querySelector('[data-tab="customize"]').click();
+            window.scrollTo({ top: document.querySelector('.tabs-section').offsetTop - 100, behavior: 'smooth' });
+        });
+
+        fastRequestBtn.addEventListener('click', () => {
+            fastRequestModal.classList.add('active');
+            resetFastRequestModal();
+        });
+
+        closeRequestModal.addEventListener('click', () => {
+            requestModal.classList.remove('active');
+        });
+
+        closeFastModal.addEventListener('click', () => {
+            fastRequestModal.classList.remove('active');
+        });
+
+        // Close modal on overlay click
+        [requestModal, fastRequestModal].forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        /* ============================================
+           CHECKOUT STEPS
+           ============================================ */
+        
+        const nextStepBtn = document.getElementById('nextStepBtn');
+        const prevStepBtn = document.getElementById('prevStepBtn');
+
+        function resetRequestModal() {
+            currentStep = 1;
+            updateCheckoutSteps();
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerEmail').value = '';
+            document.getElementById('customerPhone').value = '';
+            document.getElementById('customerNotes').value = '';
+            selectedPayment = null;
+            document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+            document.querySelectorAll('input[name="paymentMethod"]').forEach(r => r.checked = false);
+            document.getElementById('bankDetails').classList.remove('show');
+            document.getElementById('installmentOptions').classList.remove('show');
+            document.getElementById('agreeRules').checked = false;
+        }
+
+        function updateCheckoutSteps() {
+            const steps = document.querySelectorAll('#requestModal .checkout-step');
+            steps.forEach((step, i) => {
+                step.classList.remove('active', 'completed');
+                if (i + 1 < currentStep) step.classList.add('completed');
+                if (i + 1 === currentStep) step.classList.add('active');
+            });
+            
+            document.getElementById('step1').style.display = currentStep === 1 ? 'block' : 'none';
+            document.getElementById('step2').style.display = currentStep === 2 ? 'block' : 'none';
+            document.getElementById('step3').style.display = currentStep === 3 ? 'block' : 'none';
+            
+            prevStepBtn.style.display = currentStep > 1 ? 'inline-flex' : 'none';
+            
+            if (currentStep === 3) {
+                nextStepBtn.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
+                    Send to WhatsApp
+                `;
+                updateOrderSummary();
+            } else {
+                nextStepBtn.innerHTML = `
+                    Next
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                `;
+            }
+        }
+
+        nextStepBtn.addEventListener('click', () => {
+            if (currentStep === 1) {
+                const name = document.getElementById('customerName').value.trim();
+                const email = document.getElementById('customerEmail').value.trim();
+                const phone = document.getElementById('customerPhone').value.trim();
+                
+                if (!name || !email || !phone) {
+                    showToast('Please fill in all required fields');
+                    return;
+                }
+                
+                if (!isValidEmail(email)) {
+                    showToast('Please enter a valid email address');
+                    return;
+                }
+                
+                currentStep = 2;
+                updateCheckoutSteps();
+            } else if (currentStep === 2) {
+                if (!selectedPayment) {
+                    showToast('Please select a payment method');
+                    return;
+                }
+                
+                if (selectedPayment === 'installment' && !selectedInstallment) {
+                    showToast('Please select an installment plan');
+                    return;
+                }
+                
+                currentStep = 3;
+                updateCheckoutSteps();
+            } else if (currentStep === 3) {
+                if (!document.getElementById('agreeRules').checked) {
+                    showToast('Please agree to the Terms & Conditions');
+                    return;
+                }
+                
+                sendToWhatsApp();
+            }
+        });
+
+        prevStepBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateCheckoutSteps();
+            }
+        });
+
+        /* ============================================
+           PAYMENT METHOD SELECTION
+           ============================================ */
+        
+        const paymentMethods = document.querySelectorAll('.payment-method:not(.payment-unavailable)');
+        const bankDetails = document.getElementById('bankDetails');
+        const installmentOptions = document.getElementById('installmentOptions');
+
+        paymentMethods.forEach(method => {
+            method.addEventListener('click', () => {
+                paymentMethods.forEach(m => m.classList.remove('selected'));
+                method.classList.add('selected');
+                
+                const radio = method.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                    selectedPayment = radio.value;
+                }
+                
+                // Show/hide bank details
+                bankDetails.classList.toggle('show', selectedPayment === 'bank');
+                
+                // Show/hide installment options
+                installmentOptions.classList.toggle('show', selectedPayment === 'installment');
+            });
+        });
+
+        // Installment option selection
+        document.querySelectorAll('.installment-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.installment-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedInstallment = {
+                    months: parseInt(option.dataset.months),
+                    interest: parseInt(option.dataset.interest)
+                };
+            });
+        });
+
+        /* ============================================
+           ORDER SUMMARY
+           ============================================ */
+        
+        function updateOrderSummary() {
+            const name = document.getElementById('customerName').value;
+            const email = document.getElementById('customerEmail').value;
+            const phone = document.getElementById('customerPhone').value;
+            
+            document.getElementById('summaryName').textContent = name;
+            document.getElementById('summaryEmail').textContent = email;
+            document.getElementById('summaryPhone').textContent = phone;
+            document.getElementById('summaryPayment').textContent = getPaymentMethodName(selectedPayment);
+            
+            let total = customPrice;
+            let taxAmount = 0;
+            let interestAmount = 0;
+            
+            // Calculate tax/interest
+            if (selectedPayment === 'qr') {
+                taxAmount = total * 0.05;
+                document.getElementById('summaryTaxRow').style.display = 'flex';
+                document.getElementById('summaryTax').textContent = `$${taxAmount.toFixed(2)} (5%)`;
+            } else {
+                document.getElementById('summaryTaxRow').style.display = 'none';
+            }
+            
+            if (selectedPayment === 'installment' && selectedInstallment) {
+                interestAmount = total * (selectedInstallment.interest / 100);
+                document.getElementById('summaryInterestRow').style.display = 'flex';
+                document.getElementById('summaryInterest').textContent = `$${interestAmount.toFixed(2)} (${selectedInstallment.interest}%)`;
+            } else {
+                document.getElementById('summaryInterestRow').style.display = 'none';
+            }
+            
+            const finalTotal = total + taxAmount + interestAmount;
+            document.getElementById('summaryTotal').textContent = `$${finalTotal.toFixed(2)}`;
+            document.getElementById('summaryTotalLKR').textContent = (finalTotal * USD_TO_LKR).toLocaleString();
+        }
+
+        function getPaymentMethodName(method) {
+            const names = {
+                bank: 'Bank Transfer',
+                paylater: 'Pay Later (30% Advance)',
+                installment: `Monthly Installment (${selectedInstallment ? selectedInstallment.months + ' months' : ''})`,
+                qr: 'QR Pay'
+            };
+            return names[method] || method;
+        }
+
+        /* ============================================
+           FAST REQUEST MODAL
+           ============================================ */
+        
+        const fastNextBtn = document.getElementById('fastNextBtn');
+        const fastPrevBtn = document.getElementById('fastPrevBtn');
+
+        function resetFastRequestModal() {
+            fastStep = 1;
+            updateFastSteps();
+            document.getElementById('fastName').value = '';
+            document.getElementById('fastEmail').value = '';
+            document.getElementById('fastBudget').value = '';
+            document.getElementById('fastNotes').value = '';
+            document.getElementById('fastAgreeRules').checked = false;
+        }
+
+        function updateFastSteps() {
+            const steps = document.querySelectorAll('#fastRequestModal .checkout-step');
+            steps.forEach((step, i) => {
+                step.classList.remove('active', 'completed');
+                if (i + 1 < fastStep) step.classList.add('completed');
+                if (i + 1 === fastStep) step.classList.add('active');
+            });
+            
+            document.getElementById('fastStep1').style.display = fastStep === 1 ? 'block' : 'none';
+            document.getElementById('fastStep2').style.display = fastStep === 2 ? 'block' : 'none';
+            
+            fastPrevBtn.style.display = fastStep > 1 ? 'inline-flex' : 'none';
+            
+            if (fastStep === 2) {
+                fastNextBtn.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
+                    Send to WhatsApp
+                `;
+                updateFastSummary();
+            } else {
+                fastNextBtn.innerHTML = `
+                    Next
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                `;
+            }
+        }
+
+        fastNextBtn.addEventListener('click', () => {
+            if (fastStep === 1) {
+                const name = document.getElementById('fastName').value.trim();
+                const email = document.getElementById('fastEmail').value.trim();
+                
+                if (!name || !email) {
+                    showToast('Please fill in all required fields');
+                    return;
+                }
+                
+                if (!isValidEmail(email)) {
+                    showToast('Please enter a valid email address');
+                    return;
+                }
+                
+                fastStep = 2;
+                updateFastSteps();
+            } else if (fastStep === 2) {
+                if (!document.getElementById('fastAgreeRules').checked) {
+                    showToast('Please agree to the Terms & Conditions');
+                    return;
+                }
+                
+                sendFastRequestToWhatsApp();
+            }
+        });
+
+        fastPrevBtn.addEventListener('click', () => {
+            if (fastStep > 1) {
+                fastStep--;
+                updateFastSteps();
+            }
+        });
+
+        function updateFastSummary() {
+            document.getElementById('fastSummaryName').textContent = document.getElementById('fastName').value;
+            document.getElementById('fastSummaryEmail').textContent = document.getElementById('fastEmail').value;
+            document.getElementById('fastSummaryBudget').textContent = document.getElementById('fastBudget').value || 'Not specified';
+        }
+
+        /* ============================================
+           WHATSAPP INTEGRATION
+           ============================================ */
+        
+        function sendToWhatsApp() {
+            const name = document.getElementById('customerName').value;
+            const email = document.getElementById('customerEmail').value;
+            const phone = document.getElementById('customerPhone').value;
+            const notes = document.getElementById('customerNotes').value;
+            
+            const total = document.getElementById('summaryTotal').textContent;
+            const totalLKR = document.getElementById('summaryTotalLKR').textContent;
+            const paymentMethod = getPaymentMethodName(selectedPayment);
+            
+            let message = `🌐 *Vezlo - Website Request*\n\n`;
+            message += `📋 *Project Details*\n`;
+            message += `━━━━━━━━━━━━━━━━━━\n`;
+            message += `📦 Package: LMS - ${pricePlans[selectedPlan].name}\n`;
+            message += `💰 Total: ${total} USD (LKR ${totalLKR})\n`;
+            message += `💳 Payment: ${paymentMethod}\n\n`;
+            
+            message += `👤 *Customer Details*\n`;
+            message += `━━━━━━━━━━━━━━━━━━\n`;
+            message += `📛 Name: ${name}\n`;
+            message += `📧 Email: ${email}\n`;
+            message += `📱 Phone: ${phone}\n`;
+            
+            if (notes) {
+                message += `\n📝 *Notes*\n`;
+                message += `━━━━━━━━━━━━━━━━━━\n`;
+                message += `${notes}\n`;
+            }
+            
+            message += `\n✅ Agreed to Terms & Conditions`;
+            
+            const whatsappUrl = `https://wa.me/94775048455?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            
+            requestModal.classList.remove('active');
+            showToast('Redirecting to WhatsApp...');
+        }
+
+        function sendFastRequestToWhatsApp() {
+            const name = document.getElementById('fastName').value;
+            const email = document.getElementById('fastEmail').value;
+            const budget = document.getElementById('fastBudget').value;
+            const notes = document.getElementById('fastNotes').value;
+            
+            let message = `⚡ *Vezlo - Fast Request*\n\n`;
+            message += `📋 *Request Details*\n`;
+            message += `━━━━━━━━━━━━━━━━━━\n`;
+            message += `📦 Category: LMS / Education\n`;
+            message += `💰 Budget: ${budget || 'To be discussed'}\n\n`;
+            
+            message += `👤 *Customer Details*\n`;
+            message += `━━━━━━━━━━━━━━━━━━\n`;
+            message += `📛 Name: ${name}\n`;
+            message += `📧 Email: ${email}\n`;
+            
+            if (notes) {
+                message += `\n📝 *Requirements*\n`;
+                message += `━━━━━━━━━━━━━━━━━━\n`;
+                message += `${notes}\n`;
+            }
+            
+            message += `\n✅ Agreed to Terms & Conditions`;
+            
+            const whatsappUrl = `https://wa.me/94775048455?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            
+            fastRequestModal.classList.remove('active');
+            showToast('Redirecting to WhatsApp...');
+        }
+
+        /* ============================================
+           SELECT PLAN FUNCTION
+           ============================================ */
+        
+        function selectPlan(plan) {
+            selectedPlan = plan;
+            customPrice = pricePlans[plan].price + 12 + 50; // base + domain + hosting
+            
+            // Update base price in summary
+            const summaryItems = document.getElementById('summaryItems');
+            const firstItem = summaryItems.querySelector('.summary-item span:last-child');
+            if (firstItem) {
+                firstItem.textContent = `$${pricePlans[plan].price}`;
+            }
+            
+            // Update total
+            document.getElementById('customTotal').textContent = `$${customPrice}`;
+            document.getElementById('customTotalLKR').textContent = (customPrice * USD_TO_LKR).toLocaleString();
+            
+            // Open request modal
+            requestModal.classList.add('active');
+            resetRequestModal();
+            showToast(`${pricePlans[plan].name} plan selected!`);
+        }
+
+        /* ============================================
+           PROCEED WITH CUSTOMIZATION
+           ============================================ */
+        
+        document.getElementById('proceedCustomBtn').addEventListener('click', () => {
+            selectedPlan = 'custom';
+            requestModal.classList.add('active');
+            resetRequestModal();
+        });
+
+        /* ============================================
+           UTILITY FUNCTIONS
+           ============================================ */
+        
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function copyBankDetails(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Bank details copied to clipboard!');
+            });
+        }
+
+        /* ============================================
+           SCROLL ANIMATIONS
+           ============================================ */
+        
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        /* ============================================
+           KEYBOARD ACCESSIBILITY
+           ============================================ */
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                requestModal.classList.remove('active');
+                fastRequestModal.classList.remove('active');
+            }
+        });
+
+        /* ============================================
+           INITIAL CALCULATIONS
+           ============================================ */
+        
+        updateCustomPrice();
+    </script>
+</body>
+</html>
