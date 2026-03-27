@@ -101,6 +101,23 @@
         .project-card.unavailable .project-image { filter: grayscale(100%); }
         .project-card.unavailable:hover { transform: none; box-shadow: none; border-color: var(--glass-border); }
 
+         /* Search Bar */
+        .search-bar {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 20px;
+            color: var(--fg);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 212, 106, 0.15);
+        }
+
         /* Filter Tabs */
         .filter-btn { padding: 8px 20px; border-radius: 100px; font-size: 0.875rem; font-weight: 500; background: var(--card); border: 1px solid var(--border); color: var(--fg-muted); transition: all 0.3s ease; cursor: pointer; white-space: nowrap; }
         .filter-btn:hover { border-color: var(--accent); color: var(--fg); }
