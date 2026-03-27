@@ -52,16 +52,8 @@
             --glass-border: rgba(0, 0, 0, 0.1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Space Grotesk', sans-serif;
             background: var(--bg);
@@ -69,428 +61,119 @@
             overflow-x: hidden;
             transition: background 0.5s ease, color 0.3s ease;
         }
+        .font-display { font-family: 'Syne', sans-serif; }
 
-        .font-display {
-            font-family: 'Syne', sans-serif;
-        }
-
-        /* Background */
+        /* Background Effects */
         .hero-bg {
-            position: fixed;
-            inset: 0;
-            overflow: hidden;
-            z-index: -1;
+            position: fixed; inset: 0; overflow: hidden; z-index: -1;
         }
-
         .gradient-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.2;
+            position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.2;
             animation: float 30s ease-in-out infinite;
         }
-
-        .orb-1 {
-            width: 600px;
-            height: 600px;
-            background: var(--accent);
-            top: -200px;
-            right: -150px;
-        }
-
-        .orb-2 {
-            width: 500px;
-            height: 500px;
-            background: var(--accent-red);
-            bottom: -150px;
-            left: -150px;
-            animation-delay: -15s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(30px, -30px) scale(1.05); }
-        }
+        .orb-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -150px; }
+        .orb-2 { width: 500px; height: 500px; background: var(--accent-red); bottom: -150px; left: -150px; animation-delay: -15s; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, -30px) scale(1.05); } }
 
         /* Navigation */
-        .nav-glass {
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .light .nav-glass {
-            background: rgba(255, 255, 255, 0.9);
-        }
-
-        .nav-link {
-            position: relative;
-            color: var(--fg-muted);
-            transition: color 0.3s ease;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent);
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: var(--accent);
-        }
-
-        .nav-link:hover::after, .nav-link.active::after {
-            width: 100%;
-        }
+        .nav-glass { background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+        .light .nav-glass { background: rgba(255, 255, 255, 0.9); }
+        .nav-link { position: relative; color: var(--fg-muted); transition: color 0.3s ease; }
+        .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--accent); transition: width 0.3s ease; }
+        .nav-link:hover, .nav-link.active { color: var(--accent); }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
 
         /* Buttons */
-        .btn-primary {
-            background: var(--accent);
-            color: #000;
-            font-weight: 600;
-            padding: 12px 28px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(0, 212, 106, 0.3);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--fg);
-            font-weight: 500;
-            padding: 12px 28px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
+        .btn-primary { background: var(--accent); color: #000; font-weight: 600; padding: 12px 28px; border-radius: 8px; transition: all 0.3s ease; border: none; cursor: pointer; }
+        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0, 212, 106, 0.3); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: transparent; color: var(--fg); font-weight: 500; padding: 12px 28px; border-radius: 8px; border: 1px solid var(--border); transition: all 0.3s ease; cursor: pointer; }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
         /* Glass Card */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        .glass-card { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
         /* Project Card */
-        .project-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .project-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-            border-color: rgba(0, 212, 106, 0.3);
-        }
-
-        .project-card:hover .project-image {
-            transform: scale(1.05);
-        }
-
-        .project-image {
-            transition: transform 0.5s ease;
-        }
+        .project-card { background: var(--glass-bg); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 20px; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .project-card:hover { transform: translateY(-10px); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3); border-color: rgba(0, 212, 106, 0.3); }
+        .project-card:hover .project-image { transform: scale(1.05); }
+        .project-image { transition: transform 0.5s ease; }
 
         /* Search Bar */
-        .search-bar {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px 20px;
-            color: var(--fg);
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .search-bar:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(0, 212, 106, 0.15);
-        }
+        .search-bar { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 20px; color: var(--fg); transition: all 0.3s ease; width: 100%; }
+        .search-bar:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0, 212, 106, 0.15); }
 
         /* Cart Badge */
-        .cart-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 22px;
-            height: 22px;
-            background: var(--accent-red);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 700;
-            color: white;
-            animation: pop 0.3s ease;
-        }
-
-        @keyframes pop {
-            0% { transform: scale(0); }
-            80% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
+        .cart-badge { position: absolute; top: -8px; right: -8px; width: 22px; height: 22px; background: var(--accent-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; animation: pop 0.3s ease; }
+        @keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
         /* Modal/Overlay */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            width: 95%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            z-index: 101;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .modal-content.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, -50%) scale(1);
-        }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); z-index: 100; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 95%; max-width: 600px; max-height: 90vh; overflow-y: auto; background: var(--card); border: 1px solid var(--border); border-radius: 24px; z-index: 101; opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .modal-content.active { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
 
         /* Cart Sidebar */
-        .cart-sidebar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 100%;
-            max-width: 420px;
-            height: 100vh;
-            background: var(--card);
-            border-left: 1px solid var(--border);
-            z-index: 102;
-            transform: translateX(100%);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .cart-sidebar.active {
-            transform: translateX(0);
-        }
+        .cart-sidebar { position: fixed; top: 0; right: 0; width: 100%; max-width: 420px; height: 100vh; background: var(--card); border-left: 1px solid var(--border); z-index: 102; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+        .cart-sidebar.active { transform: translateX(0); }
 
         /* Step Indicator */
-        .step {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            opacity: 0.4;
-            transition: opacity 0.3s ease;
-        }
+        .step { display: flex; align-items: center; gap: 12px; opacity: 0.4; transition: opacity 0.3s ease; }
+        .step.active { opacity: 1; }
+        .step.completed { opacity: 1; }
+        .step-circle { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--border); font-weight: 600; transition: all 0.3s ease; }
+        .step.active .step-circle, .step.completed .step-circle { border-color: var(--accent); background: var(--accent); color: #000; }
 
-        .step.active {
-            opacity: 1;
-        }
+        /* Payment Options */
+        .payment-option { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.3s ease; }
+        .payment-option:hover { border-color: var(--accent); }
+        .payment-option.selected { border-color: var(--accent); background: rgba(0, 212, 106, 0.1); }
+        .payment-option.disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        /* Payment Details (Hidden by default) */
+        .payment-details { margin-top: 16px; padding: 16px; background: var(--card); border-radius: 12px; border: 1px solid var(--border); display: none; }
+        .payment-option.selected .payment-details { display: block; }
+        .payment-details p { margin-bottom: 8px; font-size: 0.9rem; color: var(--fg-muted); }
+        .payment-details p strong { color: var(--fg); }
 
-        .step.completed {
-            opacity: 1;
-        }
+        /* Monthly Calculator */
+        .monthly-option { padding: 10px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; }
+        .monthly-option:hover, .monthly-option.active { border-color: var(--accent); background: rgba(0, 212, 106, 0.05); }
+        .monthly-option .calc-details { font-size: 0.85rem; color: var(--fg-muted); margin-top: 4px; }
 
-        .step-circle {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--border);
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .step.active .step-circle {
-            border-color: var(--accent);
-            background: var(--accent);
-            color: #000;
-        }
-
-        .step.completed .step-circle {
-            border-color: var(--accent);
-            background: var(--accent);
-            color: #000;
-        }
-
-        /* Payment Option */
-        .payment-option {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .payment-option:hover {
-            border-color: var(--accent);
-        }
-
-        .payment-option.selected {
-            border-color: var(--accent);
-            background: rgba(0, 212, 106, 0.1);
-        }
-
-        .payment-option.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        /* QR Image & Notices */
+        .qr-image { max-width: 200px; border-radius: 12px; margin: 10px auto; display: block; border: 1px solid var(--border); }
+        .notice-box { background: rgba(255, 61, 61, 0.1); border-left: 4px solid var(--accent-red); padding: 12px; margin-top: 12px; border-radius: 0 8px 8px 0; font-size: 0.9rem; }
+        .notice-box.green { background: rgba(0, 212, 106, 0.1); border-left-color: var(--accent); }
+        
+        /* Price Display */
+        .price-display { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
 
         /* Form Inputs */
-        .form-input {
-            width: 100%;
-            padding: 14px 18px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--fg);
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
+        .form-input { width: 100%; padding: 14px 18px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--fg); font-family: 'Space Grotesk', sans-serif; font-size: 1rem; transition: all 0.3s ease; }
+        .form-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0, 212, 106, 0.15); }
 
-        .form-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(0, 212, 106, 0.15);
-        }
-
-        /* Scroll Reveal */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        /* Animations */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
 
         /* Theme Toggle */
-        .theme-toggle {
-            width: 56px;
-            height: 28px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+        .theme-toggle { width: 56px; height: 28px; background: var(--card); border: 1px solid var(--border); border-radius: 20px; position: relative; cursor: pointer; transition: all 0.3s ease; }
+        .theme-toggle::after { content: ''; position: absolute; width: 22px; height: 22px; background: var(--accent); border-radius: 50%; top: 2px; left: 2px; transition: transform 0.3s ease; }
+        .light .theme-toggle::after { transform: translateX(28px); background: var(--accent-red); }
 
-        .theme-toggle::after {
-            content: '';
-            position: absolute;
-            width: 22px;
-            height: 22px;
-            background: var(--accent);
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s ease;
-        }
+        .footer-link { color: var(--fg-muted); transition: color 0.3s ease; }
+        .footer-link:hover { color: var(--accent); }
+        *:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .mobile-menu { transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .mobile-menu.active { transform: translateX(0); }
 
-        .light .theme-toggle::after {
-            transform: translateX(28px);
-            background: var(--accent-red);
-        }
-
-        /* Footer */
-        .footer-link {
-            color: var(--fg-muted);
-            transition: color 0.3s ease;
-        }
-
-        .footer-link:hover {
-            color: var(--accent);
-        }
-
-        /* Focus States */
-        *:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 3px;
-        }
-
-        /* Mobile Menu */
-        .mobile-menu {
-            transform: translateX(100%);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .mobile-menu.active {
-            transform: translateX(0);
-        }
-
-        /* Reduced Motion */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
     </style>
 </head>
 <body class="dark">
@@ -510,32 +193,22 @@
                     </div>
                     <span class="font-display font-bold text-xl" style="color: var(--fg);">Vezlo</span>
                 </a>
-
                 <div class="hidden lg:flex items-center gap-8">
                     <a href="index.html" class="nav-link font-medium">Home</a>
                     <a href="about.html" class="nav-link font-medium">About Us</a>
                     <a href="project.html" class="nav-link font-medium active">Projects</a>
                     <a href="contact.html" class="nav-link font-medium">Contact</a>
                 </div>
-
                 <div class="flex items-center gap-4">
                     <div class="theme-toggle" id="themeToggle" role="button" tabindex="0" aria-label="Toggle theme"></div>
-                    
-                    <!-- Cart Button -->
                     <button id="cartBtn" class="relative p-2 rounded-lg transition-colors" style="background: var(--card); border: 1px solid var(--border);" aria-label="Open cart">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                         <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
                     </button>
-
                     <a href="login.html" class="hidden sm:flex btn-secondary text-sm">Login</a>
                     <a href="contact.html" class="hidden sm:flex btn-primary text-sm">Get Started</a>
-                    
                     <button class="lg:hidden p-2" id="mobileMenuBtn" aria-label="Open menu">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                        </svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     </button>
                 </div>
             </div>
@@ -547,9 +220,7 @@
         <div class="p-6">
             <div class="flex justify-end mb-8">
                 <button id="closeMobileMenu" class="p-2" aria-label="Close menu">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             <div class="flex flex-col gap-4">
@@ -558,9 +229,7 @@
                 <a href="project.html" class="nav-link text-lg font-medium py-2">Projects</a>
                 <a href="contact.html" class="nav-link text-lg font-medium py-2">Contact</a>
                 <a href="login.html" class="nav-link text-lg font-medium py-2">Login</a>
-                <div class="pt-4 border-t" style="border-color: var(--border);">
-                    <a href="contact.html" class="btn-primary w-full text-center block">Get Started</a>
-                </div>
+                <div class="pt-4 border-t" style="border-color: var(--border);"><a href="contact.html" class="btn-primary w-full text-center block">Get Started</a></div>
             </div>
         </div>
     </div>
@@ -568,39 +237,22 @@
     <!-- Main Content -->
     <main class="pt-24 lg:pt-32 pb-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Header -->
             <div class="text-center mb-12">
-                <span class="reveal inline-block px-4 py-2 rounded-full text-sm font-medium mb-4" style="background: rgba(0, 212, 106, 0.15); color: var(--accent);">
-                    Our Portfolio
-                </span>
-                <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 reveal reveal-delay-1">
-                    Explore Our <span style="color: var(--accent-red);">Projects</span>
-                </h1>
-                <p class="text-lg max-w-2xl mx-auto reveal reveal-delay-2" style="color: var(--fg-muted);">
-                    Browse our collection of premium website templates. Add your favorites to the cart and get started on your project.
-                </p>
+                <span class="reveal inline-block px-4 py-2 rounded-full text-sm font-medium mb-4" style="background: rgba(0, 212, 106, 0.15); color: var(--accent);">Our Portfolio</span>
+                <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 reveal reveal-delay-1">Explore Our <span style="color: var(--accent-red);">Projects</span></h1>
+                <p class="text-lg max-w-2xl mx-auto reveal reveal-delay-2" style="color: var(--fg-muted);">Browse our collection of premium website templates. Add your favorites to the cart and get started on your project.</p>
             </div>
 
-            <!-- Search Bar -->
             <div class="max-w-2xl mx-auto mb-12 reveal reveal-delay-2">
                 <div class="relative">
-                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style="color: var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
+                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style="color: var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     <input type="text" id="searchInput" class="search-bar pl-12" placeholder="Search projects by name, category...">
                 </div>
             </div>
 
-            <!-- Projects Grid -->
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="projectsGrid">
-                <!-- Projects will be rendered here -->
-            </div>
-
-            <!-- No Results -->
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="projectsGrid"></div>
             <div id="noResults" class="text-center py-20 hidden">
-                <svg class="w-20 h-20 mx-auto mb-4" style="color: var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
+                <svg class="w-20 h-20 mx-auto mb-4" style="color: var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <h3 class="font-display text-xl font-bold mb-2">No projects found</h3>
                 <p style="color: var(--fg-muted);">Try adjusting your search terms</p>
             </div>
@@ -609,232 +261,120 @@
 
     <!-- Cart Sidebar -->
     <div class="cart-sidebar" id="cartSidebar">
-        <div class="p-6 border-b" style="border-color: var(--border);">
-            <div class="flex justify-between items-center">
-                <h2 class="font-display text-xl font-bold">Your Cart</h2>
-                <button id="closeCart" class="p-2 rounded-lg" style="background: var(--bg);" aria-label="Close cart">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-
-        <div class="flex-1 overflow-y-auto p-6" id="cartItems">
-            <!-- Cart items will be rendered here -->
-        </div>
-
-        <div class="p-6 border-t" style="border-color: var(--border);">
-            <div class="flex justify-between items-center mb-4">
-                <span class="font-medium" style="color: var(--fg-muted);">Total:</span>
-                <span class="font-display text-2xl font-bold" id="cartTotal" style="color: var(--accent);">$0.00</span>
-            </div>
-            <button id="checkoutBtn" class="btn-primary w-full text-center py-4 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                Proceed to Checkout
-            </button>
-        </div>
+        <div class="p-6 border-b" style="border-color: var(--border);"><div class="flex justify-between items-center"><h2 class="font-display text-xl font-bold">Your Cart</h2><button id="closeCart" class="p-2 rounded-lg" style="background: var(--bg);" aria-label="Close cart"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div></div>
+        <div class="flex-1 overflow-y-auto p-6" id="cartItems"></div>
+        <div class="p-6 border-t" style="border-color: var(--border);"><div class="flex justify-between items-center mb-4"><span class="font-medium" style="color: var(--fg-muted);">Total:</span><span class="font-display text-2xl font-bold" id="cartTotal" style="color: var(--accent);">$0.00</span></div><button id="checkoutBtn" class="btn-primary w-full text-center py-4" disabled>Proceed to Checkout</button></div>
     </div>
-
-    <!-- Cart Overlay -->
     <div class="modal-overlay" id="cartOverlay"></div>
 
     <!-- Checkout Modal -->
     <div class="modal-overlay" id="checkoutOverlay"></div>
     <div class="modal-content p-6 lg:p-8" id="checkoutModal">
-        <!-- Step Indicator -->
         <div class="flex justify-between items-center mb-8">
-            <div class="step active" data-step="1">
-                <div class="step-circle">1</div>
-                <span class="hidden sm:block text-sm font-medium">Contact</span>
-            </div>
+            <div class="step active" data-step="1"><div class="step-circle">1</div><span class="hidden sm:block text-sm font-medium">Contact</span></div>
             <div class="flex-1 h-0.5 mx-2" style="background: var(--border);"></div>
-            <div class="step" data-step="2">
-                <div class="step-circle">2</div>
-                <span class="hidden sm:block text-sm font-medium">Payment</span>
-            </div>
+            <div class="step" data-step="2"><div class="step-circle">2</div><span class="hidden sm:block text-sm font-medium">Payment</span></div>
             <div class="flex-1 h-0.5 mx-2" style="background: var(--border);"></div>
-            <div class="step" data-step="3">
-                <div class="step-circle">3</div>
-                <span class="hidden sm:block text-sm font-medium">Review</span>
-            </div>
+            <div class="step" data-step="3"><div class="step-circle">3</div><span class="hidden sm:block text-sm font-medium">Review</span></div>
         </div>
 
-        <!-- Step 1: Contact Info -->
+        <!-- Step 1 -->
         <div id="step1" class="step-content">
             <h2 class="font-display text-xl font-bold mb-6">Contact Information</h2>
             <form id="contactForm" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium mb-2">Full Name *</label>
-                    <input type="text" id="custName" class="form-input" placeholder="Enter your name" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-2">Phone Number *</label>
-                    <input type="tel" id="custPhone" class="form-input" placeholder="Enter your phone number" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-2">Email Address *</label>
-                    <input type="email" id="custEmail" class="form-input" placeholder="Enter your email" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-2">Budget Range</label>
-                    <select id="custBudget" class="form-input">
-                        <option value="">Select budget range</option>
-                        <option value="Under $500">Under $500</option>
-                        <option value="$500 - $1000">$500 - $1000</option>
-                        <option value="$1000 - $2500">$1000 - $2500</option>
-                        <option value="$2500 - $5000">$2500 - $5000</option>
-                        <option value="Above $5000">Above $5000</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-2">Additional Notes</label>
-                    <textarea id="custNotes" class="form-input" rows="3" placeholder="Any specific requirements..."></textarea>
-                </div>
+                <div><label class="block text-sm font-medium mb-2">Full Name *</label><input type="text" id="custName" class="form-input" placeholder="Enter your name" required></div>
+                <div><label class="block text-sm font-medium mb-2">Phone Number *</label><input type="tel" id="custPhone" class="form-input" placeholder="Enter your phone number" required></div>
+                <div><label class="block text-sm font-medium mb-2">Email Address *</label><input type="email" id="custEmail" class="form-input" placeholder="Enter your email" required></div>
+                <div><label class="block text-sm font-medium mb-2">Budget Range</label><input type="text" id="custBudget" class="form-input" placeholder="e.g. $500 - $1000"></div>
+                <div><label class="block text-sm font-medium mb-2">Additional Notes</label><textarea id="custNotes" class="form-input" rows="3" placeholder="Any specific requirements..."></textarea></div>
             </form>
-            <div class="flex gap-4 mt-6">
-                <button id="step1Cancel" class="btn-secondary flex-1">Cancel</button>
-                <button id="step1Next" class="btn-primary flex-1">Next</button>
-            </div>
+            <div class="flex gap-4 mt-6"><button id="step1Cancel" class="btn-secondary flex-1">Cancel</button><button id="step1Next" class="btn-primary flex-1">Next</button></div>
         </div>
 
-        <!-- Step 2: Payment Method -->
+        <!-- Step 2 -->
         <div id="step2" class="step-content hidden">
             <h2 class="font-display text-xl font-bold mb-6">Select Payment Method</h2>
             <div class="space-y-3" id="paymentMethods">
+                <!-- Bank Transfer -->
                 <div class="payment-option" data-method="bank">
                     <div class="flex items-center gap-3">
-                        <svg class="w-6 h-6" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                        </svg>
-                        <div>
-                            <p class="font-medium">Bank Transfer</p>
-                            <p class="text-sm" style="color: var(--fg-muted);">Direct bank deposit</p>
-                        </div>
+                        <svg class="w-6 h-6" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        <div><p class="font-medium">Bank Transfer</p><p class="text-sm" style="color: var(--fg-muted);">Direct bank deposit</p></div>
+                    </div>
+                    <div class="payment-details">
+                        <p><strong>Bank:</strong> Commercial Bank</p><p><strong>Account Name:</strong> Vezlo Web Solutions</p><p><strong>Account Number:</strong> 8000123456</p><p><strong>Branch:</strong> Colombo 03</p>
+                        <div class="notice-box green mt-3">Please complete the payment and send the receipt via WhatsApp.</div>
                     </div>
                 </div>
 
+                <!-- Pay Later -->
                 <div class="payment-option" data-method="later">
                     <div class="flex items-center gap-3">
-                        <svg class="w-6 h-6" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        <div>
-                            <p class="font-medium">Pay Later</p>
-                            <p class="text-sm" style="color: var(--fg-muted);">Pay after project completion</p>
-                        </div>
+                        <svg class="w-6 h-6" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <div><p class="font-medium">Pay Later</p><p class="text-sm" style="color: var(--fg-muted);">Pay after project completion</p></div>
+                    </div>
+                    <div class="payment-details">
+                        <div class="notice-box"><strong>Notice:</strong> You must pay <strong>30% advance</strong> from the total cost before starting the project. The remaining 70% can be paid after completion.</div>
+                        <p class="mt-3 text-sm">Advance Payment (30%): <span class="font-bold" style="color: var(--accent);" id="laterAdvance">$0.00</span></p>
                     </div>
                 </div>
 
+                <!-- Pay Monthly -->
                 <div class="payment-option" data-method="monthly">
                     <div class="flex items-center gap-3">
-                        <svg class="w-6 h-6" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        <div>
-                            <p class="font-medium">Pay Monthly</p>
-                            <p class="text-sm" style="color: var(--fg-muted);">Installment plans available</p>
+                        <svg class="w-6 h-6" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <div><p class="font-medium">Pay Monthly</p><p class="text-sm" style="color: var(--fg-muted);">Select your installment plan</p></div>
+                    </div>
+                    <div class="payment-details">
+                        <p class="mb-2 font-medium">Select Installment Period:</p>
+                        <div class="space-y-2" id="monthlyOptions">
+                            <div class="monthly-option" data-months="72" data-rate="0.40"><div class="flex justify-between"><span>72 Months</span><span style="color: var(--accent-red);">+40% Interest</span></div><div class="calc-details">Monthly: <span class="monthly-installment"></span></div></div>
+                            <div class="monthly-option" data-months="48" data-rate="0.32"><div class="flex justify-between"><span>48 Months</span><span style="color: var(--accent-red);">+32% Interest</span></div><div class="calc-details">Monthly: <span class="monthly-installment"></span></div></div>
+                            <div class="monthly-option" data-months="24" data-rate="0.16"><div class="flex justify-between"><span>24 Months</span><span style="color: var(--accent-red);">+16% Interest</span></div><div class="calc-details">Monthly: <span class="monthly-installment"></span></div></div>
+                            <div class="monthly-option" data-months="6" data-rate="0.04"><div class="flex justify-between"><span>6 Months</span><span style="color: var(--accent-red);">+4% Interest</span></div><div class="calc-details">Monthly: <span class="monthly-installment"></span></div></div>
+                            <div class="monthly-option" data-months="3" data-rate="0.02"><div class="flex justify-between"><span>3 Months</span><span style="color: var(--accent-red);">+2% Interest</span></div><div class="calc-details">Monthly: <span class="monthly-installment"></span></div></div>
                         </div>
+                        <input type="hidden" id="selectedMonths" value="0"><input type="hidden" id="selectedRate" value="0">
                     </div>
                 </div>
 
+                <!-- QR Payment -->
                 <div class="payment-option" data-method="qr">
                     <div class="flex items-center gap-3">
-                        <svg class="w-6 h-6" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
-                        </svg>
-                        <div>
-                            <p class="font-medium">QR Payment</p>
-                            <p class="text-sm" style="color: var(--accent-red);">5% extra charge applies</p>
-                        </div>
+                        <svg class="w-6 h-6" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                        <div><p class="font-medium">QR Payment</p><p class="text-sm" style="color: var(--accent-red);">5% extra charge applies</p></div>
+                    </div>
+                    <div class="payment-details text-center">
+                        <img src="846hdh.png" alt="Payment QR Code" class="qr-image" onerror="this.src='https://via.placeholder.com/200?text=QR+Code'">
+                        <div class="notice-box"><strong>Notice:</strong> A 5% extra fee will be added to your total for QR payment processing.</div>
                     </div>
                 </div>
 
-                <div class="payment-option disabled" data-method="binance">
-                    <div class="flex items-center gap-3">
-                        <svg class="w-6 h-6" style="color: var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        <div>
-                            <p class="font-medium">Binance</p>
-                            <p class="text-sm" style="color: var(--fg-muted);">Not Available</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="payment-option disabled" data-method="card">
-                    <div class="flex items-center gap-3">
-                        <svg class="w-6 h-6" style="color: var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                        </svg>
-                        <div>
-                            <p class="font-medium">Card Payment</p>
-                            <p class="text-sm" style="color: var(--fg-muted);">Not Available</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="payment-option disabled" data-method="easycash">
-                    <div class="flex items-center gap-3">
-                        <svg class="w-6 h-6" style="color: var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
-                        <div>
-                            <p class="font-medium">EasyCash</p>
-                            <p class="text-sm" style="color: var(--fg-muted);">Not Available</p>
-                        </div>
-                    </div>
-                </div>
+                <!-- Disabled -->
+                <div class="payment-option disabled" data-method="binance"><div class="flex items-center gap-3"><svg class="w-6 h-6" style="color: var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><p class="font-medium">Binance</p><p class="text-sm" style="color: var(--fg-muted);">Not Available</p></div></div></div>
+                <div class="payment-option disabled" data-method="card"><div class="flex items-center gap-3"><svg class="w-6 h-6" style="color: var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg><div><p class="font-medium">Card Payment</p><p class="text-sm" style="color: var(--fg-muted);">Not Available</p></div></div></div>
+                <div class="payment-option disabled" data-method="easycash"><div class="flex items-center gap-3"><svg class="w-6 h-6" style="color: var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg><div><p class="font-medium">EasyCash</p><p class="text-sm" style="color: var(--fg-muted);">Not Available</p></div></div></div>
             </div>
-            <div class="flex gap-4 mt-6">
-                <button id="step2Back" class="btn-secondary flex-1">Back</button>
-                <button id="step2Next" class="btn-primary flex-1">Next</button>
-            </div>
+            <div class="flex gap-4 mt-6"><button id="step2Back" class="btn-secondary flex-1">Back</button><button id="step2Next" class="btn-primary flex-1">Next</button></div>
         </div>
 
-        <!-- Step 3: Review & Submit -->
+        <!-- Step 3 -->
         <div id="step3" class="step-content hidden">
             <h2 class="font-display text-xl font-bold mb-6">Review Your Order</h2>
-            
-            <!-- Order Summary -->
-            <div class="glass-card p-4 mb-4">
-                <h3 class="font-medium mb-3" style="color: var(--accent);">Selected Projects</h3>
-                <div id="reviewItems" class="space-y-2">
-                    <!-- Items will be rendered here -->
-                </div>
-            </div>
-
-            <!-- Pricing Breakdown -->
+            <div class="glass-card p-4 mb-4"><h3 class="font-medium mb-3" style="color: var(--accent);">Selected Projects</h3><div id="reviewItems" class="space-y-2 max-h-32 overflow-y-auto"></div></div>
             <div class="glass-card p-4 mb-4">
                 <h3 class="font-medium mb-3" style="color: var(--accent);">Price Breakdown</h3>
                 <div class="space-y-2 text-sm">
-                    <div class="flex justify-between">
-                        <span style="color: var(--fg-muted);">Subtotal:</span>
-                        <span id="reviewSubtotal">$0.00</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span style="color: var(--fg-muted);">Discount:</span>
-                        <span id="reviewDiscount" style="color: var(--accent);">-$0.00</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span style="color: var(--fg-muted);">Tax (5%):</span>
-                        <span id="reviewTax">$0.00</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span style="color: var(--fg-muted);">Service Charge:</span>
-                        <span id="reviewService">$0.00</span>
-                    </div>
-                    <div class="flex justify-between" id="extraFeeRow">
-                        <span style="color: var(--fg-muted);">QR Extra Fee (5%):</span>
-                        <span id="reviewExtraFee">$0.00</span>
-                    </div>
-                    <div class="flex justify-between pt-2 border-t font-bold text-lg" style="border-color: var(--border);">
-                        <span>Total:</span>
-                        <span id="reviewTotal" style="color: var(--accent);">$0.00</span>
-                    </div>
+                    <div class="flex justify-between"><span style="color: var(--fg-muted);">Subtotal:</span><span id="reviewSubtotal">$0.00</span></div>
+                    <div class="flex justify-between"><span style="color: var(--fg-muted);">Discount:</span><span id="reviewDiscount" style="color: var(--accent);">-$0.00</span></div>
+                    <div class="flex justify-between"><span style="color: var(--fg-muted);">Tax (5%):</span><span id="reviewTax">$0.00</span></div>
+                    <div class="flex justify-between"><span style="color: var(--fg-muted);">Service Charge:</span><span id="reviewService">$0.00</span></div>
+                    <div class="flex justify-between" id="extraFeeRow" style="display: none;"><span style="color: var(--fg-muted);">Processing Fee:</span><span id="reviewExtraFee">$0.00</span></div>
+                    <div class="flex justify-between pt-2 border-t font-bold text-lg" style="border-color: var(--border);"><span>Total (USD):</span><span class="price-display" id="reviewTotalUSD">$0.00</span></div>
+                    <div class="flex justify-between text-base" style="color: var(--fg-muted);"><span>Total (LKR):</span><span id="reviewTotalLKR">Rs. 0.00</span></div>
+                    <div id="monthlySummary" class="mt-3 p-3 rounded-lg hidden" style="background: var(--bg);"><p class="text-sm font-medium">Monthly Installment:</p><p class="text-xl font-bold" style="color: var(--accent);" id="monthlyPaymentAmount">$0.00/mo</p><p class="text-xs" style="color: var(--fg-muted);" id="monthlyTermInfo"></p></div>
                 </div>
             </div>
-
-            <!-- Customer Details -->
             <div class="glass-card p-4 mb-4">
                 <h3 class="font-medium mb-3" style="color: var(--accent);">Your Details</h3>
                 <div class="space-y-1 text-sm">
@@ -845,19 +385,8 @@
                     <p><span style="color: var(--fg-muted);">Payment:</span> <span id="reviewPayment"></span></p>
                 </div>
             </div>
-
-            <!-- Agree to Rules -->
-            <label class="flex items-start gap-3 cursor-pointer mb-6">
-                <input type="checkbox" id="agreeRules" class="mt-1 w-5 h-5 accent-[var(--accent)]">
-                <span class="text-sm">
-                    I agree to the <a href="rules.html" target="_blank" class="underline" style="color: var(--accent);">Terms & Rules</a>
-                </span>
-            </label>
-
-            <div class="flex gap-4">
-                <button id="step3Back" class="btn-secondary flex-1">Back</button>
-                <button id="submitOrder" class="btn-primary flex-1" disabled>Send Order</button>
-            </div>
+            <label class="flex items-start gap-3 cursor-pointer mb-6"><input type="checkbox" id="agreeRules" class="mt-1 w-5 h-5 accent-[var(--accent)]"><span class="text-sm">I agree to the <a href="rules.html" target="_blank" class="underline" style="color: var(--accent);">Terms & Rules</a></span></label>
+            <div class="flex gap-4"><button id="step3Back" class="btn-secondary flex-1">Back</button><button id="submitOrder" class="btn-primary flex-1" disabled>Send Order</button></div>
         </div>
     </div>
 
@@ -866,47 +395,20 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                 <div class="lg:col-span-2">
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent)] to-[var(--accent-red)] flex items-center justify-center">
-                            <span class="font-display font-bold text-black text-lg">V</span>
-                        </div>
-                        <span class="font-display font-bold text-xl" style="color: var(--fg);">Vezlo</span>
-                    </div>
-                    <p class="mb-4 max-w-sm" style="color: var(--fg-muted);">
-                        Premium web solutions with 24/7 support, high-level security, and professional design.
-                    </p>
+                    <div class="flex items-center gap-2 mb-4"><div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent)] to-[var(--accent-red)] flex items-center justify-center"><span class="font-display font-bold text-black text-lg">V</span></div><span class="font-display font-bold text-xl" style="color: var(--fg);">Vezlo</span></div>
+                    <p class="mb-4 max-w-sm" style="color: var(--fg-muted);">Premium web solutions with 24/7 support, high-level security, and professional design.</p>
                 </div>
-                <div>
-                    <h4 class="font-display font-bold mb-4" style="color: var(--fg);">Quick Links</h4>
-                    <ul class="space-y-3">
-                        <li><a href="index.html" class="footer-link">Home</a></li>
-                        <li><a href="about.html" class="footer-link">About Us</a></li>
-                        <li><a href="project.html" class="footer-link">Projects</a></li>
-                        <li><a href="contact.html" class="footer-link">Contact</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-display font-bold mb-4" style="color: var(--fg);">Legal</h4>
-                    <ul class="space-y-3">
-                        <li><a href="rules.html" class="footer-link">Terms & Services</a></li>
-                        <li><a href="#" class="footer-link">Privacy Policy</a></li>
-                        <li><a href="login.html" class="footer-link">Login</a></li>
-                    </ul>
-                </div>
+                <div><h4 class="font-display font-bold mb-4" style="color: var(--fg);">Quick Links</h4><ul class="space-y-3"><li><a href="index.html" class="footer-link">Home</a></li><li><a href="about.html" class="footer-link">About Us</a></li><li><a href="project.html" class="footer-link">Projects</a></li><li><a href="contact.html" class="footer-link">Contact</a></li></ul></div>
+                <div><h4 class="font-display font-bold mb-4" style="color: var(--fg);">Legal</h4><ul class="space-y-3"><li><a href="rules.html" class="footer-link">Terms & Services</a></li><li><a href="#" class="footer-link">Privacy Policy</a></li><li><a href="login.html" class="footer-link">Login</a></li></ul></div>
             </div>
             <div class="pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4" style="border-color: var(--border);">
                 <p style="color: var(--fg-muted);">2026 Copyright. All rights reserved.</p>
-                <div class="flex flex-wrap justify-center gap-4 text-sm" style="color: var(--fg-muted);">
-                    <span>Powered by <a href="https://vezlo-web.vercel.app/" target="_blank" class="font-medium" style="color: var(--accent);">Vezlo</a></span>
-                    <span>|</span>
-                    <span>Developed by <a href="https://dmkaawya.vercel.app/" target="_blank" class="font-medium" style="color: var(--accent);">dmkaawya</a></span>
-                </div>
+                <div class="flex flex-wrap justify-center gap-4 text-sm" style="color: var(--fg-muted);"><span>Powered by <a href="https://vezlo-web.vercel.app/" target="_blank" class="font-medium" style="color: var(--accent);">Vezlo</a></span><span>|</span><span>Developed by <a href="https://dmkaawya.vercel.app/" target="_blank" class="font-medium" style="color: var(--accent);">dmkaawya</a></span></div>
             </div>
         </div>
     </footer>
 
     <script>
-        // Project Data (20 sample projects)
         const projectsData = [
             { id: 1, name: "TechStart Landing", category: "Technology", description: "Modern landing page for tech startups with animations", price: 299, image: "https://picsum.photos/seed/tech1/400/300" },
             { id: 2, name: "FoodieDelight", category: "Restaurant", description: "Restaurant website with menu and reservation system", price: 449, image: "https://picsum.photos/seed/food2/400/300" },
@@ -930,13 +432,13 @@
             { id: 20, name: "CryptoTracker", category: "Finance", description: "Cryptocurrency dashboard with charts", price: 449, image: "https://picsum.photos/seed/crypto20/400/300" }
         ];
 
-        // State
         let cart = [];
         let currentStep = 1;
         let selectedPayment = null;
         let customerData = {};
+        let monthlyData = { months: 0, rate: 0 };
+        const USD_TO_LKR = 320;
 
-        // DOM Elements
         const projectsGrid = document.getElementById('projectsGrid');
         const searchInput = document.getElementById('searchInput');
         const noResults = document.getElementById('noResults');
@@ -951,7 +453,6 @@
         const checkoutModal = document.getElementById('checkoutModal');
         const checkoutOverlay = document.getElementById('checkoutOverlay');
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             renderProjects(projectsData);
             initThemeToggle();
@@ -961,372 +462,226 @@
             initCheckout();
         });
 
-        // Render Projects
         function renderProjects(projects) {
-            if (projects.length === 0) {
-                projectsGrid.innerHTML = '';
-                noResults.classList.remove('hidden');
-                return;
-            }
-
+            if (projects.length === 0) { projectsGrid.innerHTML = ''; noResults.classList.remove('hidden'); return; }
             noResults.classList.add('hidden');
             projectsGrid.innerHTML = projects.map((project, index) => `
                 <div class="project-card reveal reveal-delay-${(index % 5) + 1}">
                     <div class="relative overflow-hidden">
                         <img src="${project.image}" alt="${project.name}" class="project-image w-full h-48 object-cover">
-                        <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium" style="background: rgba(0, 0, 0, 0.7); color: var(--accent);">
-                            ${project.category}
-                        </span>
-                        <span class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold" style="background: var(--accent); color: #000;">
-                            $${project.price}
-                        </span>
+                        <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium" style="background: rgba(0, 0, 0, 0.7); color: var(--accent);">${project.category}</span>
+                        <span class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold" style="background: var(--accent); color: #000;">$${project.price}</span>
                     </div>
                     <div class="p-5">
                         <h3 class="font-display font-bold text-lg mb-1">${project.name}</h3>
                         <p class="text-sm mb-4" style="color: var(--fg-muted);">${project.description}</p>
                         <div class="flex gap-2">
-                            <button onclick="addToCart(${project.id})" class="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg transition-all" style="background: var(--bg); border: 1px solid var(--border);" title="Add to Cart">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                                </svg>
-                            </button>
-                            <a href="view1.html?id=${project.id}" class="flex-1 text-center py-2 rounded-lg font-medium transition-all" style="background: var(--accent); color: #000;">
-                                View More
-                            </a>
+                            <button onclick="addToCart(${project.id})" class="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg transition-all" style="background: var(--bg); border: 1px solid var(--border);" title="Add to Cart"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg></button>
+                            <a href="view1.html?id=${project.id}" class="flex-1 text-center py-2 rounded-lg font-medium transition-all" style="background: var(--accent); color: #000;">View More</a>
                         </div>
                     </div>
                 </div>
             `).join('');
-
-            // Re-init scroll reveal for new elements
             initScrollReveal();
         }
 
-        // Search
         searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
-            const filtered = projectsData.filter(p => 
-                p.name.toLowerCase().includes(query) || 
-                p.category.toLowerCase().includes(query) ||
-                p.description.toLowerCase().includes(query)
-            );
+            const filtered = projectsData.filter(p => p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query) || p.description.toLowerCase().includes(query));
             renderProjects(filtered);
         });
 
-        // Cart Functions
         function addToCart(id) {
             const project = projectsData.find(p => p.id === id);
             if (!project) return;
-
-            const existingItem = cart.find(item => item.id === id);
-            if (existingItem) {
-                alert('This project is already in your cart!');
-                return;
-            }
-
+            if (cart.find(item => item.id === id)) { alert('This project is already in your cart!'); return; }
             cart.push({...project});
             updateCartUI();
             showCartNotification();
         }
 
-        function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
-            updateCartUI();
-        }
+        function removeFromCart(id) { cart = cart.filter(item => item.id !== id); updateCartUI(); }
 
         function updateCartUI() {
-            // Update badge
-            if (cart.length > 0) {
-                cartBadge.textContent = cart.length;
-                cartBadge.style.display = 'flex';
-                checkoutBtn.disabled = false;
-            } else {
-                cartBadge.style.display = 'none';
-                checkoutBtn.disabled = true;
-            }
-
-            // Update cart items
-            if (cart.length === 0) {
-                cartItems.innerHTML = `
-                    <div class="text-center py-12">
-                        <svg class="w-16 h-16 mx-auto mb-4" style="color: var(--fg-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
-                        <p style="color: var(--fg-muted);">Your cart is empty</p>
-                    </div>
-                `;
-            } else {
+            if (cart.length > 0) { cartBadge.textContent = cart.length; cartBadge.style.display = 'flex'; checkoutBtn.disabled = false; }
+            else { cartBadge.style.display = 'none'; checkoutBtn.disabled = true; }
+            if (cart.length === 0) { cartItems.innerHTML = `<div class="text-center py-12"><p style="color: var(--fg-muted);">Your cart is empty</p></div>`; }
+            else {
                 cartItems.innerHTML = cart.map(item => `
                     <div class="flex gap-4 p-3 rounded-lg mb-3" style="background: var(--bg);">
                         <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-lg object-cover">
-                        <div class="flex-1">
-                            <h4 class="font-medium">${item.name}</h4>
-                            <p class="text-sm" style="color: var(--fg-muted);">${item.category}</p>
-                            <p class="font-bold" style="color: var(--accent);">$${item.price}</p>
-                        </div>
-                        <button onclick="removeFromCart(${item.id})" class="p-2 h-fit rounded-lg" style="color: var(--accent-red);" title="Remove">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                            </svg>
-                        </button>
+                        <div class="flex-1"><h4 class="font-medium">${item.name}</h4><p class="text-sm" style="color: var(--fg-muted);">${item.category}</p><p class="font-bold" style="color: var(--accent);">$${item.price}</p></div>
+                        <button onclick="removeFromCart(${item.id})" class="p-2 h-fit rounded-lg" style="color: var(--accent-red);" title="Remove"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                     </div>
                 `).join('');
             }
-
-            // Update total
             const total = cart.reduce((sum, item) => sum + item.price, 0);
             cartTotal.textContent = `$${total.toFixed(2)}`;
         }
 
-        function showCartNotification() {
-            cartBtn.style.transform = 'scale(1.1)';
-            setTimeout(() => cartBtn.style.transform = '', 200);
-        }
+        function showCartNotification() { cartBtn.style.transform = 'scale(1.1)'; setTimeout(() => cartBtn.style.transform = '', 200); }
 
-        // Cart Sidebar Toggle
         function initCart() {
-            cartBtn.addEventListener('click', () => {
-                cartSidebar.classList.add('active');
-                cartOverlay.classList.add('active');
-            });
-
+            cartBtn.addEventListener('click', () => { cartSidebar.classList.add('active'); cartOverlay.classList.add('active'); });
             closeCart.addEventListener('click', closeCartSidebar);
             cartOverlay.addEventListener('click', closeCartSidebar);
-
-            function closeCartSidebar() {
-                cartSidebar.classList.remove('active');
-                cartOverlay.classList.remove('active');
-            }
-
-            checkoutBtn.addEventListener('click', () => {
-                closeCartSidebar();
-                openCheckoutModal();
-            });
+            function closeCartSidebar() { cartSidebar.classList.remove('active'); cartOverlay.classList.remove('active'); }
+            checkoutBtn.addEventListener('click', () => { closeCartSidebar(); openCheckoutModal(); });
         }
 
-        // Checkout Modal
         function openCheckoutModal() {
-            currentStep = 1;
-            selectedPayment = null;
-            customerData = {};
+            currentStep = 1; selectedPayment = null; monthlyData = { months: 0, rate: 0 }; customerData = {};
             updateStepUI();
-            checkoutModal.classList.add('active');
-            checkoutOverlay.classList.add('active');
+            checkoutModal.classList.add('active'); checkoutOverlay.classList.add('active');
         }
 
-        function closeCheckoutModal() {
-            checkoutModal.classList.remove('active');
-            checkoutOverlay.classList.remove('active');
-        }
+        function closeCheckoutModal() { checkoutModal.classList.remove('active'); checkoutOverlay.classList.remove('active'); }
 
         function updateStepUI() {
-            // Update step indicators
             document.querySelectorAll('.step').forEach((step, index) => {
                 step.classList.remove('active', 'completed');
                 if (index + 1 < currentStep) step.classList.add('completed');
                 if (index + 1 === currentStep) step.classList.add('active');
             });
+            document.querySelectorAll('.step-content').forEach((content, index) => { content.classList.toggle('hidden', index + 1 !== currentStep); });
+        }
 
-            // Show/hide step content
-            document.querySelectorAll('.step-content').forEach((content, index) => {
-                content.classList.toggle('hidden', index + 1 !== currentStep);
-            });
+        function getBaseTotal() {
+            const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+            const discount = subtotal > 500 ? subtotal * 0.1 : 0;
+            const tax = (subtotal - discount) * 0.05;
+            const serviceCharge = 25;
+            return { subtotal, discount, tax, serviceCharge, baseTotal: subtotal - discount + tax + serviceCharge };
         }
 
         function initCheckout() {
-            // Step 1
             document.getElementById('step1Cancel').addEventListener('click', closeCheckoutModal);
             document.getElementById('step1Next').addEventListener('click', () => {
                 const name = document.getElementById('custName').value.trim();
                 const phone = document.getElementById('custPhone').value.trim();
                 const email = document.getElementById('custEmail').value.trim();
-
-                if (!name || !phone || !email) {
-                    alert('Please fill in all required fields');
-                    return;
-                }
-
-                customerData = {
-                    name,
-                    phone,
-                    email,
-                    budget: document.getElementById('custBudget').value || 'Not specified',
-                    notes: document.getElementById('custNotes').value.trim() || 'None'
-                };
-
-                currentStep = 2;
-                updateStepUI();
+                if (!name || !phone || !email) { alert('Please fill in all required fields'); return; }
+                customerData = { name, phone, email, budget: document.getElementById('custBudget').value.trim() || 'Not specified', notes: document.getElementById('custNotes').value.trim() || 'None' };
+                currentStep = 2; updateStepUI(); updatePaymentCalculations();
             });
 
-            // Step 2 - Payment
             document.querySelectorAll('.payment-option:not(.disabled)').forEach(option => {
                 option.addEventListener('click', () => {
                     document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
                     option.classList.add('selected');
                     selectedPayment = option.dataset.method;
+                    updatePaymentCalculations();
                 });
             });
 
-            document.getElementById('step2Back').addEventListener('click', () => {
-                currentStep = 1;
-                updateStepUI();
+            document.querySelectorAll('.monthly-option').forEach(opt => {
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    document.querySelectorAll('.monthly-option').forEach(o => o.classList.remove('active'));
+                    opt.classList.add('active');
+                    document.getElementById('selectedMonths').value = opt.dataset.months;
+                    document.getElementById('selectedRate').value = opt.dataset.rate;
+                    monthlyData = { months: parseInt(opt.dataset.months), rate: parseFloat(opt.dataset.rate) };
+                    updatePaymentCalculations();
+                });
             });
 
+            document.getElementById('step2Back').addEventListener('click', () => { currentStep = 1; updateStepUI(); });
             document.getElementById('step2Next').addEventListener('click', () => {
-                if (!selectedPayment) {
-                    alert('Please select a payment method');
-                    return;
-                }
-                currentStep = 3;
-                updateStepUI();
-                renderReview();
+                if (!selectedPayment) { alert('Please select a payment method'); return; }
+                if (selectedPayment === 'monthly' && monthlyData.months === 0) { alert('Please select an installment period'); return; }
+                currentStep = 3; updateStepUI(); renderReview();
             });
 
-            // Step 3 - Review
-            document.getElementById('step3Back').addEventListener('click', () => {
-                currentStep = 2;
-                updateStepUI();
-            });
-
-            document.getElementById('agreeRules').addEventListener('change', (e) => {
-                document.getElementById('submitOrder').disabled = !e.target.checked;
-            });
-
+            document.getElementById('step3Back').addEventListener('click', () => { currentStep = 2; updateStepUI(); });
+            document.getElementById('agreeRules').addEventListener('change', (e) => { document.getElementById('submitOrder').disabled = !e.target.checked; });
             document.getElementById('submitOrder').addEventListener('click', submitOrder);
-
-            // Close on overlay click
             checkoutOverlay.addEventListener('click', closeCheckoutModal);
         }
 
+        function updatePaymentCalculations() {
+            const pricing = getBaseTotal();
+            const laterAdvance = pricing.baseTotal * 0.30;
+            const laterEl = document.getElementById('laterAdvance');
+            if (laterEl) laterEl.textContent = `$${laterAdvance.toFixed(2)}`;
+
+            document.querySelectorAll('.monthly-option').forEach(opt => {
+                const months = parseInt(opt.dataset.months);
+                const rate = parseFloat(opt.dataset.rate);
+                const totalWithInterest = pricing.baseTotal * (1 + rate);
+                const monthlyPayment = totalWithInterest / months;
+                const span = opt.querySelector('.monthly-installment');
+                if (span) span.textContent = `$${monthlyPayment.toFixed(2)}/mo`;
+            });
+        }
+
         function renderReview() {
-            // Render items
-            const reviewItems = document.getElementById('reviewItems');
-            reviewItems.innerHTML = cart.map(item => `
-                <div class="flex justify-between text-sm">
-                    <span>${item.name} (${item.category})</span>
-                    <span>$${item.price}</span>
-                </div>
-            `).join('');
+            const pricing = getBaseTotal();
+            let extraFee = 0; let extraFeeLabel = ''; let paymentLabel = '';
+            
+            if (selectedPayment === 'qr') { extraFee = pricing.baseTotal * 0.05; extraFeeLabel = 'QR Processing Fee (5%)'; paymentLabel = 'QR Payment (5% extra)'; }
+            else if (selectedPayment === 'monthly') { extraFee = pricing.baseTotal * monthlyData.rate; extraFeeLabel = `Interest (${(monthlyData.rate * 100).toFixed(0)}%)`; paymentLabel = `Pay Monthly (${monthlyData.months} months)`; }
+            else if (selectedPayment === 'later') { paymentLabel = 'Pay Later (30% Advance)'; }
+            else { paymentLabel = 'Bank Transfer'; }
 
-            // Calculate pricing
-            const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
-            const discount = subtotal > 500 ? subtotal * 0.1 : 0;
-            const tax = (subtotal - discount) * 0.05;
-            const serviceCharge = 25;
-            const extraFee = selectedPayment === 'qr' ? (subtotal - discount) * 0.05 : 0;
-            const total = subtotal - discount + tax + serviceCharge + extraFee;
+            const totalUSD = pricing.baseTotal + extraFee;
+            const totalLKR = totalUSD * USD_TO_LKR;
 
-            document.getElementById('reviewSubtotal').textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById('reviewDiscount').textContent = `-$${discount.toFixed(2)}`;
-            document.getElementById('reviewTax').textContent = `$${tax.toFixed(2)}`;
-            document.getElementById('reviewService').textContent = `$${serviceCharge.toFixed(2)}`;
-            document.getElementById('reviewExtraFee').textContent = `$${extraFee.toFixed(2)}`;
-            document.getElementById('reviewTotal').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('reviewItems').innerHTML = cart.map(item => `<div class="flex justify-between text-sm"><span>${item.name} (${item.category})</span><span>$${item.price}</span></div>`).join('');
+            document.getElementById('reviewSubtotal').textContent = `$${pricing.subtotal.toFixed(2)}`;
+            document.getElementById('reviewDiscount').textContent = `-$${pricing.discount.toFixed(2)}`;
+            document.getElementById('reviewTax').textContent = `$${pricing.tax.toFixed(2)}`;
+            document.getElementById('reviewService').textContent = `$${pricing.serviceCharge.toFixed(2)}`;
+            
+            const extraFeeRow = document.getElementById('extraFeeRow');
+            if (extraFee > 0) {
+                extraFeeRow.style.display = 'flex';
+                extraFeeRow.querySelector('span:first-child').textContent = extraFeeLabel + ':';
+                document.getElementById('reviewExtraFee').textContent = `$${extraFee.toFixed(2)}`;
+            } else { extraFeeRow.style.display = 'none'; }
 
-            // Toggle extra fee row visibility
-            document.getElementById('extraFeeRow').style.display = selectedPayment === 'qr' ? 'flex' : 'none';
+            document.getElementById('reviewTotalUSD').textContent = `$${totalUSD.toFixed(2)}`;
+            document.getElementById('reviewTotalLKR').textContent = `Rs. ${totalLKR.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
 
-            // Customer details
+            const monthlySummary = document.getElementById('monthlySummary');
+            if (selectedPayment === 'monthly') {
+                const monthlyPayment = totalUSD / monthlyData.months;
+                monthlySummary.classList.remove('hidden');
+                document.getElementById('monthlyPaymentAmount').textContent = `$${monthlyPayment.toFixed(2)}/mo`;
+                document.getElementById('monthlyTermInfo').textContent = `For ${monthlyData.months} months • Total Interest: ${(monthlyData.rate * 100).toFixed(0)}%`;
+            } else { monthlySummary.classList.add('hidden'); }
+
             document.getElementById('reviewName').textContent = customerData.name;
             document.getElementById('reviewPhone').textContent = customerData.phone;
             document.getElementById('reviewEmail').textContent = customerData.email;
             document.getElementById('reviewBudget').textContent = customerData.budget;
-
-            const paymentNames = {
-                bank: 'Bank Transfer',
-                later: 'Pay Later',
-                monthly: 'Pay Monthly',
-                qr: 'QR Payment (5% extra)'
-            };
-            document.getElementById('reviewPayment').textContent = paymentNames[selectedPayment];
+            document.getElementById('reviewPayment').textContent = paymentLabel;
         }
 
         function submitOrder() {
-            const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
-            const discount = subtotal > 500 ? subtotal * 0.1 : 0;
-            const tax = (subtotal - discount) * 0.05;
-            const serviceCharge = 25;
-            const extraFee = selectedPayment === 'qr' ? (subtotal - discount) * 0.05 : 0;
-            const total = subtotal - discount + tax + serviceCharge + extraFee;
+            const pricing = getBaseTotal();
+            let totalUSD = pricing.baseTotal; let extraFee = 0; let paymentNote = '';
+            
+            if (selectedPayment === 'qr') { extraFee = pricing.baseTotal * 0.05; totalUSD += extraFee; paymentNote = 'Paid via QR (5% extra fee applied)'; }
+            else if (selectedPayment === 'monthly') { extraFee = pricing.baseTotal * monthlyData.rate; totalUSD += extraFee; const monthlyPayment = totalUSD / monthlyData.months; paymentNote = `Pay Monthly: ${monthlyData.months} months @ $${monthlyPayment.toFixed(2)}/mo`; }
+            else if (selectedPayment === 'later') { const advance = totalUSD * 0.30; paymentNote = `Pay Later. Advance Payment Required: $${advance.toFixed(2)} (30%)`; }
+            else { paymentNote = 'Bank Transfer'; }
 
-            const paymentNames = {
-                bank: 'Bank Transfer',
-                later: 'Pay Later',
-                monthly: 'Pay Monthly',
-                qr: 'QR Payment'
-            };
+            const totalLKR = totalUSD * USD_TO_LKR;
+            const projectList = cart.map(p => `• ${p.name} ($${p.price})`).join('\n');
 
-            const projectList = cart.map(p => `- ${p.name} ($${p.price})`).join('\n');
-
-            const message = `NEW ORDER - Vezlo Web Solutions
-
-Customer Details:
-Name: ${customerData.name}
-Phone: ${customerData.phone}
-Email: ${customerData.email}
-Budget: ${customerData.budget}
-
-Selected Projects:
- ${projectList}
-
-Payment Method: ${paymentNames[selectedPayment]}
-
-Price Breakdown:
-Subtotal: $${subtotal.toFixed(2)}
-Discount: -$${discount.toFixed(2)}
-Tax (5%): $${tax.toFixed(2)}
-Service Charge: $${serviceCharge.toFixed(2)}
- ${selectedPayment === 'qr' ? `QR Extra Fee (5%): $${extraFee.toFixed(2)}` : ''}
-TOTAL: $${total.toFixed(2)}
-
-Notes: ${customerData.notes}
-
-Please process this order. Thank you!`;
+            const message = `🛒 *NEW ORDER - VEZLO WEB SOLUTIONS*\n\n👤 *Customer Details*\n━━━━━━━━━━━━━━━━\n• Name: ${customerData.name}\n• Phone: ${customerData.phone}\n• Email: ${customerData.email}\n• Budget: ${customerData.budget}\n\n📦 *Selected Projects*\n━━━━━━━━━━━━━━━━\n${projectList}\n\n💰 *Price Breakdown*\n━━━━━━━━━━━━━━━━\n• Subtotal: $${pricing.subtotal.toFixed(2)}\n• Discount: -$${pricing.discount.toFixed(2)}\n• Tax (5%): $${pricing.tax.toFixed(2)}\n• Service: $${pricing.serviceCharge.toFixed(2)}\n${extraFee > 0 ? `• Extra Fees: $${extraFee.toFixed(2)}` : ''}\n\n💵 *TOTAL*\n━━━━━━━━━━━━━━━━\n• USD: *$${totalUSD.toFixed(2)}*\n• LKR: *Rs. ${totalLKR.toLocaleString('en-US', {minimumFractionDigits: 2})}*\n\n💳 *Payment Method*\n━━━━━━━━━━━━━━━━\n${paymentNote}\n\n📝 *Notes*\n${customerData.notes}\n\n✅ Please process this order. Thank you for choosing Vezlo!`;
 
             const whatsappUrl = `https://wa.me/94775048455?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
 
-            // Clear cart and close
-            cart = [];
-            updateCartUI();
-            closeCheckoutModal();
+            cart = []; updateCartUI(); closeCheckoutModal();
             document.getElementById('agreeRules').checked = false;
         }
 
-        // Theme Toggle
-        function initThemeToggle() {
-            const toggle = document.getElementById('themeToggle');
-            if (!toggle) return;
-
-            toggle.addEventListener('click', () => {
-                document.body.classList.toggle('light');
-                document.body.classList.toggle('dark');
-            });
-        }
-
-        // Mobile Menu
-        function initMobileMenu() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const closeMobileMenu = document.getElementById('closeMobileMenu');
-
-            if (!mobileMenu || !mobileMenuBtn || !closeMobileMenu) return;
-
-            mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.add('active'));
-            closeMobileMenu.addEventListener('click', () => mobileMenu.classList.remove('active'));
-        }
-
-        // Scroll Reveal
-        function initScrollReveal() {
-            const reveals = document.querySelectorAll('.reveal');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add('visible');
-                });
-            }, { threshold: 0.1 });
-
-            reveals.forEach(el => observer.observe(el));
-        }
+        function initThemeToggle() { const toggle = document.getElementById('themeToggle'); if (!toggle) return; toggle.addEventListener('click', () => { document.body.classList.toggle('light'); document.body.classList.toggle('dark'); }); }
+        function initMobileMenu() { const mobileMenu = document.getElementById('mobileMenu'); const mobileMenuBtn = document.getElementById('mobileMenuBtn'); const closeMobileMenu = document.getElementById('closeMobileMenu'); if (!mobileMenu || !mobileMenuBtn || !closeMobileMenu) return; mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.add('active')); closeMobileMenu.addEventListener('click', () => mobileMenu.classList.remove('active')); }
+        function initScrollReveal() { const reveals = document.querySelectorAll('.reveal'); const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1 }); reveals.forEach(el => observer.observe(el)); }
     </script>
 </body>
 </html>
