@@ -64,13 +64,8 @@
         .font-display { font-family: 'Syne', sans-serif; }
 
         /* Background Effects */
-        .hero-bg {
-            position: fixed; inset: 0; overflow: hidden; z-index: -1;
-        }
-        .gradient-orb {
-            position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.2;
-            animation: float 30s ease-in-out infinite;
-        }
+        .hero-bg { position: fixed; inset: 0; overflow: hidden; z-index: -1; }
+        .gradient-orb { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.2; animation: float 30s ease-in-out infinite; }
         .orb-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -150px; }
         .orb-2 { width: 500px; height: 500px; background: var(--accent-red); bottom: -150px; left: -150px; animation-delay: -15s; }
         @keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, -30px) scale(1.05); } }
@@ -98,6 +93,11 @@
         .project-card:hover { transform: translateY(-10px); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3); border-color: rgba(0, 212, 106, 0.3); }
         .project-card:hover .project-image { transform: scale(1.05); }
         .project-image { transition: transform 0.5s ease; }
+
+        /* Unavailable Project Styles */
+        .project-card.unavailable { opacity: 0.6; cursor: not-allowed; }
+        .project-card.unavailable .project-image { filter: grayscale(100%); }
+        .project-card.unavailable:hover { transform: none; box-shadow: none; border-color: var(--glass-border); }
 
         /* Search Bar */
         .search-bar { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 20px; color: var(--fg); transition: all 0.3s ease; width: 100%; }
@@ -130,7 +130,7 @@
         .payment-option.selected { border-color: var(--accent); background: rgba(0, 212, 106, 0.1); }
         .payment-option.disabled { opacity: 0.5; cursor: not-allowed; }
         
-        /* Payment Details (Hidden by default) */
+        /* Payment Details */
         .payment-details { margin-top: 16px; padding: 16px; background: var(--card); border-radius: 12px; border: 1px solid var(--border); display: none; }
         .payment-option.selected .payment-details { display: block; }
         .payment-details p { margin-bottom: 8px; font-size: 0.9rem; color: var(--fg-muted); }
@@ -410,26 +410,26 @@
 
     <script>
         const projectsData = [
-            { id: 1, name: "TechStart Landing", category: "Technology", description: "Modern landing page for tech startups with animations", price: 299, image: "https://picsum.photos/seed/tech1/400/300" },
-            { id: 2, name: "FoodieDelight", category: "Restaurant", description: "Restaurant website with menu and reservation system", price: 449, image: "https://picsum.photos/seed/food2/400/300" },
-            { id: 3, name: "FitLife Gym", category: "Fitness", description: "Gym membership site with class scheduling", price: 379, image: "https://picsum.photos/seed/fit3/400/300" },
-            { id: 4, name: "EduLearn Platform", category: "Education", description: "Online learning platform with course management", price: 599, image: "https://picsum.photos/seed/edu4/400/300" },
-            { id: 5, name: "StyleBoutique", category: "Fashion", description: "Fashion e-commerce with cart functionality", price: 499, image: "https://picsum.photos/seed/style5/400/300" },
-            { id: 6, name: "MediCare Clinic", category: "Healthcare", description: "Medical clinic site with appointment booking", price: 429, image: "https://picsum.photos/seed/med6/400/300" },
-            { id: 7, name: "TravelDreams", category: "Travel", description: "Travel agency with destination showcase", price: 349, image: "https://picsum.photos/seed/travel7/400/300" },
-            { id: 8, name: "LegalPro Services", category: "Law", description: "Law firm website with case studies", price: 279, image: "https://picsum.photos/seed/legal8/400/300" },
-            { id: 9, name: "PhotoStudio Pro", category: "Photography", description: "Photographer portfolio with gallery", price: 249, image: "https://picsum.photos/seed/photo9/400/300" },
-            { id: 10, name: "RealEstate Hub", category: "Real Estate", description: "Property listing site with search filters", price: 549, image: "https://picsum.photos/seed/real10/400/300" },
-            { id: 11, name: "EventMaster", category: "Events", description: "Event planning website with RSVP system", price: 399, image: "https://picsum.photos/seed/event11/400/300" },
-            { id: 12, name: "AutoDealer Pro", category: "Automotive", description: "Car dealership with inventory management", price: 479, image: "https://picsum.photos/seed/auto12/400/300" },
-            { id: 13, name: "WeddingBells", category: "Wedding", description: "Elegant wedding invitation website", price: 199, image: "https://picsum.photos/seed/wed13/400/300" },
-            { id: 14, name: "PetCare Center", category: "Pets", description: "Veterinary clinic with pet services", price: 329, image: "https://picsum.photos/seed/pet14/400/300" },
-            { id: 15, name: "MusicStudio", category: "Music", description: "Music producer portfolio with audio player", price: 269, image: "https://picsum.photos/seed/music15/400/300" },
-            { id: 16, name: "CharityHope", category: "Non-Profit", description: "Donation platform for charities", price: 229, image: "https://picsum.photos/seed/char16/400/300" },
-            { id: 17, name: "ConsultPro", category: "Business", description: "Consulting firm with service showcase", price: 319, image: "https://picsum.photos/seed/cons17/400/300" },
-            { id: 18, name: "BeautySalon", category: "Beauty", description: "Salon booking website with services", price: 289, image: "https://picsum.photos/seed/beauty18/400/300" },
-            { id: 19, name: "TechBlog", category: "Blog", description: "Tech news blog with subscription", price: 179, image: "https://picsum.photos/seed/blog19/400/300" },
-            { id: 20, name: "CryptoTracker", category: "Finance", description: "Cryptocurrency dashboard with charts", price: 449, image: "https://picsum.photos/seed/crypto20/400/300" }
+            { id: 1, name: "TechStart Landing", category: "Technology", description: "Modern landing page for tech startups with animations", price: 299, image: "https://picsum.photos/seed/tech1/400/300", available: true },
+            { id: 2, name: "FoodieDelight", category: "Restaurant", description: "Restaurant website with menu and reservation system", price: 449, image: "https://picsum.photos/seed/food2/400/300", available: false },
+            { id: 3, name: "FitLife Gym", category: "Fitness", description: "Gym membership site with class scheduling", price: 379, image: "https://picsum.photos/seed/fit3/400/300", available: true },
+            { id: 4, name: "EduLearn Platform", category: "Education", description: "Online learning platform with course management", price: 599, image: "https://picsum.photos/seed/edu4/400/300", available: true },
+            { id: 5, name: "StyleBoutique", category: "Fashion", description: "Fashion e-commerce with cart functionality", price: 499, image: "https://picsum.photos/seed/style5/400/300", available: true },
+            { id: 6, name: "MediCare Clinic", category: "Healthcare", description: "Medical clinic site with appointment booking", price: 429, image: "https://picsum.photos/seed/med6/400/300", available: false },
+            { id: 7, name: "TravelDreams", category: "Travel", description: "Travel agency with destination showcase", price: 349, image: "https://picsum.photos/seed/travel7/400/300", available: true },
+            { id: 8, name: "LegalPro Services", category: "Law", description: "Law firm website with case studies", price: 279, image: "https://picsum.photos/seed/legal8/400/300", available: true },
+            { id: 9, name: "PhotoStudio Pro", category: "Photography", description: "Photographer portfolio with gallery", price: 249, image: "https://picsum.photos/seed/photo9/400/300", available: true },
+            { id: 10, name: "RealEstate Hub", category: "Real Estate", description: "Property listing site with search filters", price: 549, image: "https://picsum.photos/seed/real10/400/300", available: true },
+            { id: 11, name: "EventMaster", category: "Events", description: "Event planning website with RSVP system", price: 399, image: "https://picsum.photos/seed/event11/400/300", available: true },
+            { id: 12, name: "AutoDealer Pro", category: "Automotive", description: "Car dealership with inventory management", price: 479, image: "https://picsum.photos/seed/auto12/400/300", available: true },
+            { id: 13, name: "WeddingBells", category: "Wedding", description: "Elegant wedding invitation website", price: 199, image: "https://picsum.photos/seed/wed13/400/300", available: false },
+            { id: 14, name: "PetCare Center", category: "Pets", description: "Veterinary clinic with pet services", price: 329, image: "https://picsum.photos/seed/pet14/400/300", available: true },
+            { id: 15, name: "MusicStudio", category: "Music", description: "Music producer portfolio with audio player", price: 269, image: "https://picsum.photos/seed/music15/400/300", available: true },
+            { id: 16, name: "CharityHope", category: "Non-Profit", description: "Donation platform for charities", price: 229, image: "https://picsum.photos/seed/char16/400/300", available: true },
+            { id: 17, name: "ConsultPro", category: "Business", description: "Consulting firm with service showcase", price: 319, image: "https://picsum.photos/seed/cons17/400/300", available: true },
+            { id: 18, name: "BeautySalon", category: "Beauty", description: "Salon booking website with services", price: 289, image: "https://picsum.photos/seed/beauty18/400/300", available: true },
+            { id: 19, name: "TechBlog", category: "Blog", description: "Tech news blog with subscription", price: 179, image: "https://picsum.photos/seed/blog19/400/300", available: true },
+            { id: 20, name: "CryptoTracker", category: "Finance", description: "Cryptocurrency dashboard with charts", price: 449, image: "https://picsum.photos/seed/crypto20/400/300", available: true }
         ];
 
         let cart = [];
@@ -465,23 +465,39 @@
         function renderProjects(projects) {
             if (projects.length === 0) { projectsGrid.innerHTML = ''; noResults.classList.remove('hidden'); return; }
             noResults.classList.add('hidden');
-            projectsGrid.innerHTML = projects.map((project, index) => `
-                <div class="project-card reveal reveal-delay-${(index % 5) + 1}">
+            projectsGrid.innerHTML = projects.map((project, index) => {
+                const isUnavailable = project.available === false;
+                return `
+                <div class="project-card reveal reveal-delay-${(index % 5) + 1} ${isUnavailable ? 'unavailable' : ''}">
                     <div class="relative overflow-hidden">
                         <img src="${project.image}" alt="${project.name}" class="project-image w-full h-48 object-cover">
-                        <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium" style="background: rgba(0, 0, 0, 0.7); color: var(--accent);">${project.category}</span>
-                        <span class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold" style="background: var(--accent); color: #000;">$${project.price}</span>
+                        <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium" style="background: ${isUnavailable ? 'var(--accent-red)' : 'rgba(0, 0, 0, 0.7)'}; color: ${isUnavailable ? 'white' : 'var(--accent)'};">
+                            ${isUnavailable ? 'Not Available' : project.category}
+                        </span>
+                        <span class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold" style="background: var(--accent); color: #000;">
+                            $${project.price}
+                        </span>
                     </div>
                     <div class="p-5">
                         <h3 class="font-display font-bold text-lg mb-1">${project.name}</h3>
                         <p class="text-sm mb-4" style="color: var(--fg-muted);">${project.description}</p>
                         <div class="flex gap-2">
-                            <button onclick="addToCart(${project.id})" class="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg transition-all" style="background: var(--bg); border: 1px solid var(--border);" title="Add to Cart"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg></button>
-                            <a href="view1.html?id=${project.id}" class="flex-1 text-center py-2 rounded-lg font-medium transition-all" style="background: var(--accent); color: #000;">View More</a>
+                            ${isUnavailable ? `
+                                <a href="contact.html" class="flex-1 text-center py-2 rounded-lg font-medium transition-all" style="background: var(--accent-red); color: white;">
+                                    Not Available - Contact Us
+                                </a>
+                            ` : `
+                                <button onclick="addToCart(${project.id})" class="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg transition-all" style="background: var(--bg); border: 1px solid var(--border);" title="Add to Cart">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                </button>
+                                <a href="view1.html?id=${project.id}" class="flex-1 text-center py-2 rounded-lg font-medium transition-all" style="background: var(--accent); color: #000;">
+                                    View More
+                                </a>
+                            `}
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
             initScrollReveal();
         }
 
