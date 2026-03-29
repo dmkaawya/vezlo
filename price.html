@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1Sense Digital — Pricing & Checkout</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['DM Sans', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* === Skeleton Shimmer === */
+    .skel {
+      background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+    .dark .skel {
+      background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+      background-size: 200% 100%;
+    }
+    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+
+    /* === Shake === */
+    @keyframes shake {
+      0%,100%{transform:translateX(0)} 10%,30%,50%,70%,90%{transform:translateX(-5px)} 20%,40%,60%,80%{transform:translateX(5px)}
+    }
+    .shake { animation: shake 0.5s ease-in-out; }
+
+    /* === Glow Pulse for Selected State === */
+    @keyframes glowPulse {
+      0%,100%{box-shadow:0 0 8px rgba(220,38,38,0.25)} 50%{box-shadow:0 0 24px rgba(220,38,38,0.55),0 0 48px rgba(220,38,38,0.15)}
+    }
+    .glow-selected { animation: glowPulse 2s ease-in-out infinite; }
+
+    /* === Fade Up === */
+    @keyframes fadeUp { 0%{opacity:0;transform:translateY(12px)} 100%{opacity:1;transform:translateY(0)} }
+    .fade-up { animation: fadeUp 0.4s ease-out forwards; }
+
+    /* === Scale In === */
+    @keyframes scaleIn { 0%{opacity:0;transform:scale(0.96)} 100%{opacity:1;transform:scale(1)} }
+    .scale-in { animation: scaleIn 0.35s ease-out forwards; }
+
+    /* === Skeleton Overlay === */
+    .step-skel { position:absolute;inset:0;z-index:20;display:none; }
+    .skel-active .step-skel { display:block; }
+    .skel-active .step-body { opacity:0; pointer-events:none; }
+
+    /* === Custom Range Slider === */
+    input[type=range] { -webkit-appearance:none; appearance:none; height:6px; border-radius:999px; outline:none; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:#dc2626; cursor:pointer; border:3px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,0.2); }
+    input[type=range]::-moz-range-thumb { width:22px; height:22px; border-radius:50%; background:#dc2626; cursor:pointer; border:3px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,0.2); }
+
+    /* === Tooltip === */
+    .copy-tip { position:absolute; top:-32px; left:50%; transform:translateX(-50%) translateY(4px); opacity:0; transition:all 0.25s ease; pointer-events:none; }
+    .copy-tip.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+    /* === Scrollbar === */
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:rgba(150,150,150,0.3); border-radius:999px; }
+
+    /* === Step Transition === */
+    .step-panel { transition: opacity 0.3s ease; }
+
+    /* === Mobile bar slide up === */
+    @keyframes slideUp { 0%{transform:translateY(100%)} 100%{transform:translateY(0)} }
+    .slide-up { animation: slideUp 0.35s ease-out forwards; }
+
+    /* Checkbox custom */
+    .custom-check { width:20px;height:20px;border-radius:6px;border:2px solid #d1d5db;transition:all 0.2s;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+    .custom-check.checked { background:#dc2626;border-color:#dc2626; }
+    .dark .custom-check { border-color:rgba(255,255,255,0.2); }
+    .dark .custom-check.checked { background:#dc2626;border-color:#dc2626; }
+
+    /* Radio-like method card */
+    .method-card { transition: all 0.25s ease; cursor:pointer; }
+    .method-card:hover { transform:translateY(-2px); }
+    .method-card.selected { transform:scale(1.02); }
+    .method-card.disabled { opacity:0.4; pointer-events:none; filter:grayscale(0.8); }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-100 dark:bg-[#080808] text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300">
+
+  <!-- ===== BACKGROUND ORBS ===== -->
+  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-40 w-[500px] h-[500px] bg-red-500/[0.07] dark:bg-red-600/[0.1] rounded-full blur-[120px]"></div>
+    <div class="absolute top-1/2 -left-40 w-[600px] h-[600px] bg-green-500/[0.06] dark:bg-green-600/[0.07] rounded-full blur-[120px]"></div>
+    <div class="absolute -bottom-40 right-1/4 w-[400px] h-[400px] bg-red-500/[0.04] dark:bg-red-600/[0.04] rounded-full blur-[100px]"></div>
+    <div class="absolute top-1/3 right-1/3 w-[300px] h-[300px] bg-green-500/[0.03] dark:bg-green-600/[0.03] rounded-full blur-[100px]"></div>
+  </div>
+
+  <!-- ===== TOP BAR ===== -->
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-white/60 dark:bg-white/[0.03] border-b border-gray-200/50 dark:border-white/[0.06]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="#" class="font-display font-bold text-xl tracking-tight">
+        <span class="text-red-600">1</span><span class="text-green-600">Sense</span>
+      </a>
+      <div class="flex items-center gap-3">
+        <!-- Currency Switcher -->
+        <button onclick="toggleCurrency()" id="currency-btn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-200/80 dark:bg-white/[0.06] hover:bg-gray-300 dark:hover:bg-white/[0.1] transition-colors border border-gray-200/50 dark:border-white/[0.08]">
+          <i class="fa-solid fa-coins text-yellow-500"></i>
+          <span id="currency-label">USD</span>
+        </button>
+        <!-- Theme Toggle -->
+        <button onclick="toggleTheme()" id="theme-btn" class="w-9 h-9 rounded-lg flex items-center justify-center bg-gray-200/80 dark:bg-white/[0.06] hover:bg-gray-300 dark:hover:bg-white/[0.1] transition-colors border border-gray-200/50 dark:border-white/[0.08]">
+          <i class="fa-solid fa-moon dark:hidden text-sm"></i>
+          <i class="fa-solid fa-sun hidden dark:inline text-sm text-yellow-400"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 pb-32">
+
+    <!-- ===== PRICING SECTION ===== -->
+    <section class="pt-12 pb-8 text-center">
+      <h1 class="font-display text-4xl sm:text-5xl font-bold tracking-tight mb-3">
+        Choose Your <span class="text-red-600">Plan</span>
+      </h1>
+      <p class="text-gray-500 dark:text-gray-400 max-w-lg mx-auto mb-8 text-sm sm:text-base">Transparent pricing, no hidden fees. Pick the perfect package for your project.</p>
+
+      <!-- Billing Toggle -->
+      <div class="flex items-center justify-center gap-3 mb-10">
+        <span id="lbl-monthly" class="text-sm font-semibold text-gray-900 dark:text-white transition-colors">Monthly</span>
+        <button onclick="toggleBilling()" id="billing-toggle" class="relative w-14 h-7 rounded-full bg-gray-300 dark:bg-gray-700 transition-colors duration-300 focus:outline-none" aria-label="Toggle billing cycle">
+          <span id="billing-dot" class="absolute top-0.5 left-0.5 w-6 h-6 rounded-full bg-white shadow-md transition-transform duration-300"></span>
+        </button>
+        <span id="lbl-lifetime" class="text-sm font-medium text-gray-400 dark:text-gray-500 transition-colors">Lifetime</span>
+        <span id="save-badge" class="hidden ml-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-green-600 text-white rounded-full">Save 50%+</span>
+      </div>
+
+      <!-- Pricing Cards -->
+      <div id="pricing-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 max-w-6xl mx-auto">
+        <!-- Cards rendered by JS -->
+      </div>
+    </section>
+
+    <!-- ===== CHECKOUT SECTION ===== -->
+    <section id="checkout-section" class="pt-8">
+      <!-- Selected Package Banner -->
+      <div id="pkg-banner" class="hidden mb-5 p-3.5 rounded-2xl bg-red-600/[0.08] dark:bg-red-600/[0.1] border border-red-600/20 flex items-center justify-between fade-up">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-red-600/20 flex items-center justify-center"><i class="fa-solid fa-box text-red-600 text-sm"></i></div>
+          <span class="text-sm font-medium">Selected: <strong id="pkg-banner-name" class="text-red-600"></strong> — <span id="pkg-banner-price" class="font-display font-bold"></span></span>
+        </div>
+        <button onclick="clearPackage()" class="text-xs text-red-600 hover:underline font-medium">Change</button>
+      </div>
+
+      <!-- Tab Switcher -->
+      <div class="flex items-center gap-1 p-1 rounded-2xl bg-white/50 dark:bg-white/[0.04] border border-gray-200/50 dark:border-white/[0.06] backdrop-blur-lg max-w-md mx-auto mb-6">
+        <button onclick="switchTab('full')" id="tab-full" class="flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-300 bg-red-600 text-white shadow-lg shadow-red-600/25">
+          <i class="fa-solid fa-cart-shopping mr-1.5"></i>Full Checkout
+        </button>
+        <button onclick="switchTab('fast')" id="tab-fast" class="flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-300 text-gray-500 dark:text-gray-400">
+          <i class="fa-solid fa-bolt mr-1.5"></i>Fast Request
+        </button>
+      </div>
+
+      <!-- Progress Bar -->
+      <div id="progress-wrap" class="max-w-2xl mx-auto mb-8">
+        <div class="flex items-center justify-between mb-2">
+          <span id="progress-label" class="text-xs font-semibold text-gray-500 dark:text-gray-400">Step 1 of 4</span>
+          <span id="progress-pct" class="text-xs font-bold text-red-600 font-display">25%</span>
+        </div>
+        <div class="h-2 rounded-full bg-gray-200 dark:bg-white/[0.06] overflow-hidden">
+          <div id="progress-bar" class="h-full rounded-full bg-gradient-to-r from-red-600 to-red-500 transition-all duration-500 ease-out" style="width:25%"></div>
+        </div>
+      </div>
+
+      <!-- Two Column Layout -->
+      <div class="flex flex-col lg:flex-row gap-6">
+
+        <!-- FORM COLUMN -->
+        <div class="flex-1 min-w-0">
+
+          <!-- ============ FULL CHECKOUT STEPS ============ -->
+          <div id="full-checkout">
+
+            <!-- Step 1: Details -->
+            <div id="f-step-1" class="step-panel relative rounded-2xl bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl border border-gray-200/50 dark:border-white/[0.08] p-6 sm:p-8 shadow-lg shadow-black/[0.03] dark:shadow-none">
+              <div class="step-skel p-6 space-y-4">
+                <div class="skel h-6 w-48"></div><div class="skel h-11 w-full"></div><div class="skel h-11 w-full"></div><div class="skel h-11 w-full"></div><div class="skel h-24 w-full"></div><div class="skel h-11 w-32 ml-auto"></div>
+              </div>
+              <div class="step-body">
+                <h2 class="font-display text-xl font-bold mb-1">Your Details</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">Tell us a bit about yourself.</p>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-semibold mb-1.5 text-gray-600 dark:text-gray-300">Full Name <span class="text-red-600">*</span></label>
+                    <input id="f-name" type="text" placeholder="John Doe" oninput="autoSave()" class="w-full px-4 py-3 rounded-xl bg-white/80 dark:bg-white/[0.05] border border-gray-200 dark:border-white/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-red-600/40 focus:border-red-600 transition placeholder:text-gray-400 dark:placeholder:text-gray-500">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold mb-1.5 text-gray-600 dark:text-gray-300">Email <span class="text-red-600">*</span></label>
+                    <input id="f-email" type="email" placeholder="john@example.com" oninput="autoSave()" class="w-full px-4 py-3 rounded-xl bg-white/80 dark:bg-white/[0.05] border border-gray-200 dark:border-white/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-red-600/40 focus:border-red-600 transition placeholder:text-gray-400 dark:placeholder:text-gray-500">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold mb-1.5 text-gray-600 dark:text-gray-300">WhatsApp Number <span class="text-red-600">*</span></label>
+                    <input id="f-whatsapp" type="tel" placeholder="+94 77 123 4567" oninput="autoSave()" class="w-full px-4 py-3 rounded-xl bg-white/80 dark:bg-white/[0.05] border border-gray-200 dark:border-white/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-red-600/40 focus:border-red-600 transition placeholder:text-gray-400 dark:placeholder:text-gray-500">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold mb-1.5 text-gray-600 dark:text-gray-300">Notes / Requirements</label>
+                    <textarea id="f-notes" rows="3" placeholder="Describe your project briefly..." oninput="autoSave()" class="w-full px-4 py-3 rounded-xl bg-white/80 dark:bg-white/[0.05] border border-gray-200 dark:border-white/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-red-600/40 focus:border-red-600 transition placeholder:text-gray-400 dark:placeholder:text-gray-500 resize-none"></textarea>
+                  </div>
+                  <div class="flex justify-end pt-2">
+                    <button onclick="goNext('full')" class="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition shadow-lg shadow-red-600/20 hover:shadow-red-600/30">Next Step <i class="fa-solid fa-arrow-right ml-1.5"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Add-ons -->
+            <div id="f-step-2" class="step-panel relative rounded-2xl bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl border border-gray-200/50 dark:border-white/[0.08] p-6 sm:p-8 shadow-lg shadow-black/[0.03] dark:shadow-none hidden">
+              <div class="step-skel p-6 space-y-4">
+                <div class="skel h-6 w-56"></div><div class="skel h-4 w-72 mb-2"></div><div class="skel h-16 w-full"></div><div class="skel h-16 w-full"></div><div class="skel h-16 w-full"></div><div class="skel h-16 w-full"></div><div class="flex gap-3 justify-end mt-4"><div class="skel h-11 w-28"></div><div class="skel h-11 w-32"></div></div>
+              </div>
+              <div class="step-body">
+                <h2 class="font-display text-xl font-bold mb-1">Enhance Your Package</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-sm mb-2">Select add-ons to supercharge your project.</p>
+                <div id="delivery-estimate" class="flex items-center gap-2 mb-6 px-4 py-2.5 rounded-xl bg-green-600/[0.08] border border-green-600/15 text-sm">
+                  <i class="fa-solid fa-truck-fast text-green-600"></i>
+                  <span class="text-green-700 dark:text-green-400 font-medium" id="delivery-text">Expected: —</span>
+                </div>
+                <div id="addons-list" class="space-y-3 mb-6">
+                  <!-- Rendered by JS -->
+                </div>
+                <div class="flex justify-between pt-2">
+                  <button onclick="goPrev('full')" class="px-5 py-3 rounded-xl bg-gray-200/80 dark:bg-white/[0.06] hover:bg-gray-300 dark:hover:bg-white/[0.1] text-sm font-semibold transition border border-gray-200/50 dark:border-white/[0.08]"><i class="fa-solid fa-arrow-left mr-1.5"></i>Back</button>
+                  <button onclick="goNext('full')" class="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition shadow-lg shadow-red-600/20">Next Step <i class="fa-solid fa-arrow-right ml-1.5"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3: Payment -->
+            <div id="f-step-3" class="step-panel relative rounded-2xl bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl border border-gray-200/50 dark:border-white/[0.08] p-6 sm:p-8 shadow-lg shadow-black/[0.03] dark:shadow-none hidden">
+              <div class="step-skel p-6 space-y-4">
+                <div class="skel h-6 w-44"></div><div class="skel h-4 w-64 mb-2"></div><div class="grid grid-cols-2 gap-3"><div class="skel h-20 w-full"></div><div class="skel h-20 w-full"></div><div class="skel h-20 w-full"></div><div class="skel h-20 w-full"></div></div><div class="skel h-32 w-full mt-4"></div><div class="flex gap-3 justify-end mt-4"><div class="skel h-11 w-28"></div><div class="skel h-11 w-32"></div></div>
+              </div>
+              <div class="step-body">
+                <h2 class="font-display text-xl font-bold mb-1">Payment Method</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-sm mb-5">Choose how you'd like to pay.</p>
+
+                <!-- Active Methods -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+                  <div onclick="selectMethod('bank')" id="meth-bank" class="method-card rounded-xl p-4 text-center border-2 border-gray-200 dark:border-white/[0.08] bg-white/60 dark:bg-white/[0.03] hover:border-red-600/50">
+                    <i class="fa-solid fa-building-columns text-2xl mb-2 text-gray-600 dark:text-gray-300"></i>
+                    <div class="text-xs font-semibold">Bank Transfer</div>
+                  </div>
+                  <div onclick="selectMethod('installment')" id="meth-installment" class="method-card rounded-xl p-4 text-center border-2 border-gray-200 dark:border-white/[0.08] bg-white/60 dark:bg-white/[0.03] hover:border-red-600/50">
+                    <i class="fa-solid fa-calendar-check text-2xl mb-2 text-gray-600 dark:text-gray-300"></i>
+                    <div class="text-xs font-semibold">Installments</div>
+                  </div>
+                  <div onclick="selectMethod('later')" id="meth-later" class="method-card rounded-xl p-4 text-center border-2 border-gray-200 dark:border-white/[0.08] bg-white/60 dark:bg-white/[0.03] hover:border-red-600/50">
+                    <i class="fa-solid fa-handshake text-2xl mb-2 text-gray-600 dark:text-gray-300"></i>
+                    <div class="text-xs font-semibold">Pay Later</div>
+                  </div>
+                  <div onclick="selectMethod('qr')" id="meth-qr" class="method-card rounded-xl p-4 text-center border-2 border-gray-200 dark:border-white/[0.08] bg-white/60 dark:bg-white/[0.03] hover:border-red-600/50">
+                    <i class="fa-solid fa-qrcode text-2xl mb-2 text-gray-600 dark:text-gray-300"></i>
+                    <div class="text-xs font-semibold">QR Pay</div>
+                  </div>
+                </div>
+
+                <!-- Unavailable Methods -->
+                <div class="grid grid-cols-3 gap-3 mb-6">
+                  <div class="method-card disabled rounded-xl p-3 text-center border-2 border-dashed border-gray-200 dark:border-white/[0.06] bg-gray-50 dark:bg-white/[0.01]">
+                    <i class="fa-solid fa-credit-card text-lg mb-1 text-gray-400"></i>
+                    <div class="text-[10px] font-medium text-gray-400">Card <span class="text-red-500">Soon</span></div>
+                  </div>
+                  <div class="method-card disabled rounded-xl p-3 text-center border-2 border-dashed border-gray-200 dark:border-white/[0.06] bg-gray-50 dark:bg-white/[0.01]">
+                    <i class="fa-brands fa-bitcoin text-lg mb-1 text-gray-400"></i>
+                    <div class="text-[10px] font-medium text-gray-400">Binance <span class="text-red-500">Soon</span></div>
+                  </div>
+                  <div class="method-card disabled rounded-xl p-3 text-center border-2 border-dashed border-gray-200 dark:border-white/[0.06] bg-gray-50 dark:bg-white/[0.01]">
+                    <i class="fa-solid fa-mobile-screen text-lg mb-1 text-gray-400"></i>
+                    <div class="text-[10px] font-medium text-gray-400">eZ Cash <span class="text-red-500">Soon</span></div>
+                  </div>
+                </div>
+
+                <!-- Payment Detail Panels -->
+                <div id="pay-bank" class="hidden rounded-xl border border-gray-200/50 dark:border-white/[0.06] bg-gray-50/50 dark:bg-white/[0.02] p-5 mb-5 fade-up">
+                  <h3 class="text-sm font-bold mb-3"><i class="fa-solid fa-building-columns mr-1.5 text-red-600"></i>Bank Transfer Details</h3>
+                  <div class="space-y-3" id="bank-list">
+                    <!-- Rendered by JS -->
+                  </div>
+                  <label class="flex items-center gap-2 mt-4 text-sm cursor-pointer">
+                    <input type="checkbox" id="same-bank-check" onchange="updateCalc()" class="w-4 h-4 rounded accent-red-600">
+                    <span>I'm transferring from the <strong>same bank</strong> <span class="text-green-600 font-medium">(No extra fee)</span></span>
+                  </label>
+                </div>
+
+                <div id="pay-installment" class="hidden rounded-xl border border-gray-200/50 dark:border-white/[0.06] bg-gray-50/50 dark:bg-white/[0.02] p-5 mb-5 fade-up">
+                  <h3 class="text-sm font-bold mb-3"><i class="fa-solid fa-calendar-check mr-1.5 text-red-600"></i>Installment Plan</h3>
+                  <select id="installment-select" onchange="updateCalc()" class="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/[0.05] border border-gray-200 dark:border-white/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-red-600/40">
+                    <option value="">Select plan...</option>
+                    <option value="3">3 Months (+2% fee)</option>
+                    <option value="6">6 Months (+4% fee)</option>
+                    <option value="12">12 Months (+8% fee)</option>
+                    <option value="24">24 Months (+16% fee)</option>
+                  </select>
+                  <div id="installment-info" class="mt-3 text-sm text-gray-500 dark:text-gray-400 hidden"></div>
+                </div>
+
+                <div id="pay-later" class="hidden rounded-xl border border-gray-200/50 dark:border-white/[0.06] bg-gray-50/50 dark:bg-white/[0.02] p-5 mb-5 fade-up">
+                  <h3 class="text-sm font-bold mb-2"><i class="fa-solid fa-handshake mr-1.5 text-red-600"></i>Pay Later</h3>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Pay 30% advance now, remaining 70% on delivery.</p>
+                  <div id="later-info" class="text-sm"></div>
+                </div>
+
+                <div id="pay-qr" class="hidden rounded-xl border border-gray-200/50 dark:border-white/[0.06] bg-gray-50/50 dark:bg-white/[0.02] p-5 mb-5 fade-up">
+                  <h3 class="text-sm font-bold mb-2"><i class="fa-solid fa-qrcode mr-1.5 text-red-600"></i>QR Pay</h3>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Scan any bank QR and pay. <span class="text-red-600 font-medium">+5% convenience fee</span> applies.</p>
+                  <div id="qr-info" class="text-sm"></div>
+                </div>
+
+                <div class="flex justify-between pt-2">
+                  <button onclick="goPrev('full')" class="px-5 py-3 rounded-xl bg-gray-200/80 dark:bg-white/[0.06] hover:bg-gray-300 dark:hover:bg-white/[0.1] text-sm font-semibold transition border border-gray-200/50 dark:border-white/[0.08]"><i class="fa-solid fa-arrow-left mr-1.5"></i>Back</button>
+                  <button onclick="goNext('full')" class="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition shadow-lg shadow-red-600/20">Next Step <i class="fa-solid fa-arrow-right ml-1.5"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 4: Summary -->
+            <div id="f-step-4" class="step-panel relative rounded-2xl bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl border border-gray-200/50 dark:border-white/[0.08] p-6 sm:p-8 shadow-lg shadow-black/[0.03] dark:shadow-none hidden">
+              <div class="step-skel p-6 space-y-4">
+                <div class="skel h-6 w-36"></div><div class="skel h-48 w-full"></div><div class="skel h-6 w-full"></div><div class="skel h-11 w-full"></div><div class="flex gap-3 justify-end mt-4"><div class="skel h-11 w-28"></div><div class="skel h-11 w-40"></div></div>
+              </div>
+              <div class="step-body">
+                <h2 class="font-display text-xl font-bold mb-5">Order Summary</h2>
+
+                <!-- Coupon -->
+                <div class="flex gap-2 mb-5">
+                  <input id="coupon-input" type="text" placeholder="Promo code (e.g. SAVE10)" class="flex-1 px-4 py-2.5 rounded-xl bg-white/80 dark:bg-white/[0.05] border border-gray-200 dark:border-white/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-green-600/40 focus:border-green-600 transition uppercase tracking-wider placeholder:normal-case placeholder:tracking-normal">
+                  <button onclick="applyCoupon()" id="coupon-btn" class="px-4 py-2.5 rounded-xl bg-green-600 hover:bg-green-700 text-white text-sm font-semibold transition whitespace-nowrap">Apply</button>
+                </div>
+                <div id="coupon-msg" class="hidden text-sm mb-4 px-3 py-2 rounded-lg"></div>
+                <div id="coupon-applied" class="hidden flex items-center justify-between mb-4 px-3 py-2.5 rounded-xl bg-green-600/[0.08] border border-green-600/15 text-sm">
+                  <span class="text-green-700 dark:text-green-400 font-medium"><i class="fa-solid fa-tag mr-1"></i><span id="coupon-applied-label"></span></span>
+                  <button onclick="removeCoupon()" class="text-red-600 hover:text-red-700 font-semibold text-xs">Remove</button>
+                </div>
+
+                <!-- Breakdown -->
+                <div id="summary-breakdown" class="rounded-xl border border-gray-200/50 dark:border-white/[0.06] bg-gray-50/50 dark:bg-white/[0.02] p-5 mb-5 text-sm space-y-3">
+                  <!-- Rendered by JS -->
+                </div>
+
+                <!-- Rules -->
+                <label id="rules-label" class="flex items-start gap-3 mb-6 cursor-pointer group">
+                  <div id="rules-check" class="custom-check mt-0.5" onclick="toggleRules()">
+                    <i class="fa-solid fa-check text-white text-[10px] hidden"></i>
+                  </div>
+                  <span class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">I agree to the <a href="#" class="text-red-600 hover:underline font-medium">Terms & Conditions</a>, <a href="#" class="text-red-600 hover:underline font-medium">Refund Policy</a>, and confirm all details are correct.</span>
+                </label>
+
+                <div class="flex justify-between pt-2">
+                  <button onclick="goPrev('full')" class="px-5 py-3 rounded-xl bg-gray-200/80 dark:bg-white/[0.06] hover:bg-gray-300 dark:hover:bg-white/[0.1] text-sm font-semibold transition border border-gray-200/50 dark:border-white/[0.08]"><i class="fa-solid fa-arrow-left mr-1.5"></i>Back</button>
+                  <button onclick="submitOrder()" id="submit-btn" class="px-6 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white text-sm font-semibold transition shadow-lg shadow-green-600/20 flex items-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>Submit to WhatsApp
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ FAST REQUEST STEPS ============ -->
+          <div id="fast-checkout" class="hidden">
+
+            <!-- Fast Step 1: Quick Details -->
+            <div id="q-step-1" class="step-panel relative rounded-2xl bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl border border-gray-200/50 dark:border-white/[0.08] p-6 sm:p-8 shadow-lg shadow-black/[0.03] dark:shadow-none">
+              <div class="step-skel p-6 space-y-4">
+                <div class="skel h-6 w-52"></div><div class="skel h-4 w-72"></div><div class="skel h-11 w-full"></div><div class="skel h-11 w-full"></div><div class="skel h-40 w-full"></div><div class="skel h-11 w-32 ml-auto"></div>
+              </div>
+              <div class="step-body">
+                <h2 class="font-display text-xl font-bold mb-1">Fast Request</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">Skip package selection — set your custom budget and go.</p>
+                <div class="space-y-5">
+                  <div>
+                    <label class="block text-xs font-semibold mb-1.5 text-gray-600 dark:text-gray-300">Full Name <span class="text-red-600">*</span></label>
+                    <input id="q-name" type="text" placeholder="John Doe" oninput="autoSave()" class="w-full px-4 py-3 rounded-xl bg-white/80 dark:bg-white/[0.05] border border-gray-200 dark:border-white/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-red-600/40 focus:border-red-600 transition placeholder:text-gray-400 dark:placeholder:text-gray-500">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold mb-1.5 text-gray-600 dark:text-gray-300">Email <span class="text-red-600">*</span></label>
+                    <input id="q-email" type="email" placeholder="john@example.com" oninput="autoSave()" class="w-full px-4 py-3 rounded-xl bg-white/80 dark:bg-white/[0.05] border border-gray-200 dark:border-white/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-red-600/40 focus:border-red-600 transition placeholder:text-gray-400 dark:placeholder:text-gray-500">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold mb-3 text-gray-600 dark:text-gray-300">Your Budget <span class="text-red-600">*</span></label>
+                    <div class="flex items-center gap-4 mb-3">
+                      <input id="q-budget-slider" type="range" min="10" max="2000" value="200" oninput="syncBudget('slider')" class="flex-1 bg-gray-200 dark:bg-white/[0.08]">
+                      <div class="relative">
+                        <span id="q-budget-curr" class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">$</span>
+                        <input id="q-budget-input" type="number" min="10" max="2000" value="200" oninput="syncBudget('input')" class="w-28 pl-7 pr-3 py-2.5 rounded-xl bg-white/80 dark:bg-white/[0.05] border border-gray-200 dark:border-white/[0.1] text-sm font-display font-bold text-right focus:outline-none focus:ring-2 focus:ring-red-600/40">
+                      </div>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-gray-400 font-medium"><span>$10</span><span>$2,000</span></div>
+                  </div>
+                  <div class="flex justify-end pt-2">
+                    <button onclick="goNext('fast')" class="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition shadow-lg shadow-red-600/20">Next Step <i class="fa-solid fa-arrow-right ml-1.5"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fast Step 2: Payment (reuse same payment UI) -->
+            <div id="q-step-2" class="step-panel relative rounded-2xl bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl border border-gray-200/50 dark:border-white/[0.08] p-6 sm:p-8 shadow-lg shadow-black/[0.03] dark:shadow-none hidden">
+              <div class="step-skel p-6 space-y-4">
+                <div class="skel h-6 w-44"></div><div class="skel h-4 w-64 mb-2"></div><div class="grid grid-cols-2 gap-3"><div class="skel h-20 w-full"></div><div class="skel h-20 w-full"></div><div class="skel h-20 w-full"></div><div class="skel h-20 w-full"></div></div><div class="skel h-32 w-full mt-4"></div><div class="flex gap-3 justify-end mt-4"><div class="skel h-11 w-28"></div><div class="skel h-11 w-32"></div></div>
+              </div>
+              <div class="step-body" id="fast-pay-body">
+                <!-- Payment methods will be cloned here by JS -->
+              </div>
+            </div>
+
+            <!-- Fast Step 3: Summary -->
+            <div id="q-step-3" class="step-panel relative rounded-2xl bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl border border-gray-200/50 dark:border-white/[0.08] p-6 sm:p-8 shadow-lg shadow-black/[0.03] dark:shadow-none hidden">
+              <div class="step-skel p-6 space-y-4">
+                <div class="skel h-6 w-36"></div><div class="skel h-36 w-full"></div><div class="skel h-6 w-full"></div><div class="skel h-11 w-full"></div><div class="flex gap-3 justify-end mt-4"><div class="skel h-11 w-28"></div><div class="skel h-11 w-40"></div></div>
+              </div>
+              <div class="step-body">
+                <h2 class="font-display text-xl font-bold mb-5">Fast Request Summary</h2>
+                <div id="fast-summary-breakdown" class="rounded-xl border border-gray-200/50 dark:border-white/[0.06] bg-gray-50/50 dark:bg-white/[0.02] p-5 mb-5 text-sm space-y-3">
+                  <!-- Rendered by JS -->
+                </div>
+                <label id="fast-rules-label" class="flex items-start gap-3 mb-6 cursor-pointer">
+                  <div id="fast-rules-check" class="custom-check mt-0.5" onclick="toggleRules('fast')">
+                    <i class="fa-solid fa-check text-white text-[10px] hidden"></i>
+                  </div>
+                  <span class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">I agree to the <a href="#" class="text-red-600 hover:underline font-medium">Terms & Conditions</a> and confirm all details are correct.</span>
+                </label>
+                <div class="flex justify-between pt-2">
+                  <button onclick="goPrev('fast')" class="px-5 py-3 rounded-xl bg-gray-200/80 dark:bg-white/[0.06] hover:bg-gray-300 dark:hover:bg-white/[0.1] text-sm font-semibold transition border border-gray-200/50 dark:border-white/[0.08]"><i class="fa-solid fa-arrow-left mr-1.5"></i>Back</button>
+                  <button onclick="submitOrder()" class="px-6 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white text-sm font-semibold transition shadow-lg shadow-green-600/20 flex items-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>Submit to WhatsApp
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ===== SIDEBAR (Desktop) ===== -->
+        <div id="sidebar" class="hidden lg:block w-[320px] flex-shrink-0">
+          <div class="sticky top-24">
+            <div class="rounded-2xl bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl border border-gray-200/50 dark:border-white/[0.08] p-6 shadow-lg shadow-black/[0.03] dark:shadow-none">
+              <h3 class="font-display font-bold text-sm mb-4 flex items-center gap-2"><i class="fa-solid fa-receipt text-red-600"></i>Live Summary</h3>
+              <div id="sidebar-content" class="space-y-3 text-sm">
+                <p class="text-gray-400 dark:text-gray-500 text-xs text-center py-8">Select a package to see live pricing</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== WHATSAPP FLOATING WIDGET ===== -->
+  <a href="https://wa.me/94775048455" target="_blank" id="wa-widget" class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center shadow-lg shadow-green-600/30 transition-all duration-300 hover:scale-110 group">
+    <i class="fa-brands fa-whatsapp text-white text-2xl"></i>
+    <span class="absolute right-full mr-3 px-3 py-1.5 rounded-lg bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">Chat with us</span>
+  </a>
+
+  <!-- ===== MOBILE STICKY BAR ===== -->
+  <div id="mobile-bar" class="fixed bottom-0 left-0 right-0 z-50 hidden">
+    <div class="bg-white/90 dark:bg-[#111]/95 backdrop-blur-xl border-t border-gray-200/50 dark:border-white/[0.06] px-4 py-3 flex items-center justify-between slide-up">
+      <div>
+        <div class="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Total</div>
+        <div id="mobile-total" class="font-display font-bold text-lg">$0.00</div>
+      </div>
+      <button onclick="goNextFromMobile()" id="mobile-next-btn" class="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition shadow-lg shadow-red-600/20">
+        Next Step <i class="fa-solid fa-arrow-right ml-1"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== CONFETTI CANVAS ===== -->
+  <canvas id="confetti-canvas" class="fixed inset-0 z-[999] pointer-events-none hidden"></canvas>
+
+  <!-- ===== TOAST ===== -->
+  <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-[100] px-5 py-3 rounded-xl text-sm font-semibold shadow-xl transition-all duration-300 opacity-0 -translate-y-4 pointer-events-none"></div>
+
+  <script>
+    // ============================================================
+    //  CONSTANTS
+    // ============================================================
+    const RATE = 295;
+    const PACKAGES = [
+      { id:'basic', name:'Basic', monthly:49, lifetime:299, features:['5 Pages','Basic SEO','Responsive Design','1 Month Support','Contact Form'], popular:false, days:7, icon:'fa-cube' },
+      { id:'standard', name:'Standard', monthly:99, lifetime:599, features:['10 Pages','Advanced SEO','Responsive Design','3 Months Support','Contact Form','Blog Section','Social Integration'], popular:true, days:14, icon:'fa-rocket' },
+      { id:'pro', name:'Pro', monthly:199, lifetime:999, features:['20 Pages','Premium SEO','Responsive Design','6 Months Support','Contact Form','Blog','Social Integration','E-commerce Ready','Custom Animations'], popular:false, days:21, icon:'fa-gem' },
+      { id:'ultra', name:'Ultra Pro', monthly:399, lifetime:1999, features:['Unlimited Pages','Premium SEO','Responsive Design','12 Months Support','Full E-commerce','Custom Animations','Admin Dashboard','API Integration','Priority Queue'], popular:false, days:30, icon:'fa-crown' }
+    ];
+    const ADDONS = [
+      { id:'seo', name:'Advanced SEO Package', price:50, days:3, icon:'fa-magnifying-glass-chart' },
+      { id:'logo', name:'Custom Logo Design', price:30, days:5, icon:'fa-palette' },
+      { id:'support', name:'Priority Support (6mo)', price:25, days:-2, icon:'fa-headset' },
+      { id:'pages', name:'5 Extra Pages', price:75, days:4, icon:'fa-file-lines' },
+      { id:'analytics', name:'Analytics & Tracking', price:40, days:1, icon:'fa-chart-line' },
+      { id:'content', name:'Content Writing (5 articles)', price:60, days:3, icon:'fa-pen-nib' }
+    ];
+    const COUPONS = { 'SAVE10':{type:'percent',value:10,label:'10% Off'}, 'WELCOME20':{type:'percent',value:20,label:'20% Off'}, 'FLAT50':{type:'flat',value:50,label:'$50 Off'} };
+    const BANKS = [
+      { id:'boc', name:'Bank of Ceylon', acc:'8620-1234-5678', holder:'1Sense Digital', icon:'fa-building-columns' },
+      { id:'hnb', name:'HNB', acc:'1234-5678-9012', holder:'1Sense Digital', icon:'fa-building-columns' },
+      { id:'sampath', name:'Sampath Bank', acc:'9876-5432-1098', holder:'1Sense Digital', icon:'fa-building-columns' },
+      { id:'commercial', name:'Commercial Bank', acc:'5555-6666-7777', holder:'1Sense Digital', icon:'fa-building-columns' }
+    ];
+    const INSTALL_FEES = { '3':0.02, '6':0.04, '12':0.08, '24':0.16 };
+
+    // ============================================================
+    //  STATE
+    // ============================================================
+    let state = {
+      currency: 'USD',
+      billing: 'monthly',
+      tab: 'full',
+      fStep: 1,
+      qStep: 1,
+      selectedPkg: null,
+      addons: [],
+      method: null,
+      installmentPlan: '',
+      sameBank: true,
+      coupon: null,
+      rulesAgreed: false,
+      fastRulesAgreed: false,
+      fastBudget: 200
+    };
+
+    // ============================================================
+    //  UTILITIES
+    // ============================================================
+    function fmt(usd) {
+      if (state.currency === 'LKR') {
+        const lkr = Math.round(usd * RATE);
+        return 'LKR ' + lkr.toLocaleString();
+      }
+      return '$' + usd.toFixed(2);
+    }
+    function fmtShort(usd) {
+      if (state.currency === 'LKR') return 'LKR ' + Math.round(usd * RATE).toLocaleString();
+      return '$' + usd.toFixed(2);
+    }
+    function getPrice(pkg) {
+      return state.billing === 'monthly' ? pkg.monthly : pkg.lifetime;
+    }
+    function getLabel() {
+      return state.billing === 'monthly' ? '/mo' : ' one-time';
+    }
+
+    function getDeliveryDate() {
+      let days = 14; // default for fast request
+      if (state.selectedPkg) {
+        const pkg = PACKAGES.find(p => p.id === state.selectedPkg);
+        days = pkg ? pkg.days : 14;
+      }
+      state.addons.forEach(aId => {
+        const a = ADDONS.find(x => x.id === aId);
+        if (a) days += a.days;
+      });
+      if (days < 1) days = 1;
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      return d.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+    }
+
+    function calcTotal() {
+      let base = 0;
+      let addonsTotal = 0;
+      if (state.tab === 'full' && state.selectedPkg) {
+        const pkg = PACKAGES.find(p => p.id === state.selectedPkg);
+        base = getPrice(pkg);
+      } else if (state.tab === 'fast') {
+        base = state.fastBudget;
+      }
+      state.addons.forEach(aId => {
+        const a = ADDONS.find(x => x.id === aId);
+        if (a) addonsTotal += a.price;
+      });
+      const subtotal = base + addonsTotal;
+      let fee = 0;
+      let feeLabel = '';
+      if (state.method === 'bank') {
+        if (!state.sameBank) {
+          fee = state.currency === 'LKR' ? 25 : 25 / RATE;
+          feeLabel = 'Different bank fee';
+        }
+      } else if (state.method === 'installment' && INSTALL_FEES[state.installmentPlan]) {
+        fee = subtotal * INSTALL_FEES[state.installmentPlan];
+        feeLabel = `Installment fee (${state.installmentPlan}mo)`;
+      } else if (state.method === 'qr') {
+        fee = subtotal * 0.05;
+        feeLabel = 'QR convenience fee';
+      }
+      const preDiscount = subtotal + fee;
+      let discount = 0;
+      if (state.coupon) {
+        const c = COUPONS[state.coupon];
+        if (c) {
+          discount = c.type === 'percent' ? preDiscount * c.value / 100 : (state.currency === 'LKR' ? c.value * RATE : c.value);
+          if (discount > preDiscount) discount = preDiscount;
+        }
+      }
+      const total = Math.max(0, preDiscount - discount);
+      return { base, addonsTotal, subtotal, fee, feeLabel, discount, total };
+    }
+
+    function showToast(msg, type='error') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'fixed top-20 left-1/2 -translate-x-1/2 z-[100] px-5 py-3 rounded-xl text-sm font-semibold shadow-xl transition-all duration-300 pointer-events-none ';
+      if (type === 'error') t.className += 'bg-red-600 text-white';
+      else if (type === 'success') t.className += 'bg-green-600 text-white';
+      else t.className += 'bg-gray-900 dark:bg-white text-white dark:text-gray-900';
+      requestAnimationFrame(() => { t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)'; });
+      setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(-16px)'; }, 2500);
+    }
+
+    // ============================================================
+    //  THEME & CURRENCY
+    // ============================================================
+    function initTheme() {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    }
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    }
+    function toggleCurrency() {
+      state.currency = state.currency === 'USD' ? 'LKR' : 'USD';
+      document.getElementById('currency-label').textContent = state.currency;
+      renderPricingCards();
+      updateCalc();
+    }
+    function toggleBilling() {
+      state.billing = state.billing === 'monthly' ? 'lifetime' : 'monthly';
+      const dot = document.getElementById('billing-dot');
+      const toggle = document.getElementById('billing-toggle');
+      const lm = document.getElementById('lbl-monthly');
+      const ll = document.getElementById('lbl-lifetime');
+      const sb = document.getElementById('save-badge');
+      if (state.billing === 'lifetime') {
+        dot.style.transform = 'translateX(28px)';
+        toggle.classList.remove('bg-gray-300','dark:bg-gray-700');
+        toggle.classList.add('bg-red-600');
+        lm.classList.remove('text-gray-900','dark:text-white','font-semibold');
+        lm.classList.add('text-gray-400','dark:text-gray-500','font-medium');
+        ll.classList.remove('text-gray-400','dark:text-gray-500','font-medium');
+        ll.classList.add('text-gray-900','dark:text-white','font-semibold');
+        sb.classList.remove('hidden');
+      } else {
+        dot.style.transform = 'translateX(0)';
+        toggle.classList.add('bg-gray-300','dark:bg-gray-700');
+        toggle.classList.remove('bg-red-600');
+        lm.classList.add('text-gray-900','dark:text-white','font-semibold');
+        lm.classList.remove('text-gray-400','dark:text-gray-500','font-medium');
+        ll.classList.add('text-gray-400','dark:text-gray-500','font-medium');
+        ll.classList.remove('text-gray-900','dark:text-white','font-semibold');
+        sb.classList.add('hidden');
+      }
+      renderPricingCards();
+      updateCalc();
+      updatePkgBanner();
+    }
+
+    // ============================================================
+    //  PRICING CARDS
+    // ============================================================
+    function renderPricingCards() {
+      const grid = document.getElementById('pricing-grid');
+      grid.innerHTML = PACKAGES.map(pkg => {
+        const price = getPrice(pkg);
+        const selected = state.selectedPkg === pkg.id;
+        return `
+          <div class="relative rounded-2xl ${pkg.popular ? 'ring-2 ring-red-600' : ''} ${selected ? 'glow-selected ring-2 ring-red-600' : ''} bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl border ${selected ? 'border-red-600/50' : 'border-gray-200/50 dark:border-white/[0.08]'} p-6 shadow-lg shadow-black/[0.03] dark:shadow-none transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col ${pkg.popular ? 'scale-[1.02]' : ''}">
+            ${pkg.popular ? '<div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-red-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-full shadow-lg shadow-red-600/30">Most Popular</div>' : ''}
+            ${selected ? '<div class="absolute -top-3 right-4 px-2.5 py-1 bg-green-600 text-white text-[10px] font-bold uppercase tracking-wider rounded-full"><i class="fa-solid fa-check mr-1"></i>Selected</div>' : ''}
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl ${pkg.popular ? 'bg-red-600/15' : 'bg-gray-100 dark:bg-white/[0.05]'} flex items-center justify-center">
+                <i class="fa-solid ${pkg.icon} ${pkg.popular ? 'text-red-600' : 'text-gray-500 dark:text-gray-400'}"></i>
+              </div>
+              <div>
+                <h3 class="font-display font-bold text-lg">${pkg.name}</h3>
+                <span class="text-[11px] text-gray-400">${state.billing === 'monthly' ? 'Billed monthly' : 'One-time payment'}</span>
+              </div>
+            </div>
+            <div class="mb-5">
+              <span class="font-display text-3xl font-bold">${fmtShort(price)}</span>
+              <span class="text-sm text-gray-400">${getLabel()}</span>
+            </div>
+            <ul class="space-y-2.5 mb-6 flex-1">
+              ${pkg.features.map(f => `<li class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300"><i class="fa-solid fa-check text-green-600 text-xs"></i>${f}</li>`).join('')}
+            </ul>
+            <button onclick="selectPackage('${pkg.id}')" class="w-full py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${selected ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20' : pkg.popular ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-600/20' : 'bg-gray-900 dark:bg-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 text-white dark:text-gray-900'}">${selected ? '<i class=\"fa-solid fa-check mr-1.5\"></i>Selected' : 'Select Package'}</button>
+          </div>`;
+      }).join('');
+    }
+
+    function selectPackage(id) {
+      state.selectedPkg = id;
+      state.method = null;
+      state.installmentPlan = '';
+      state.sameBank = true;
+      state.coupon = null;
+      state.addons = [];
+      state.fStep = 1;
+      renderPricingCards();
+      updatePkgBanner();
+      switchTab('full');
+      document.getElementById('checkout-section').scrollIntoView({ behavior:'smooth', block:'start' });
+      showMobileBar();
+      updateCalc();
+    }
+    function clearPackage() {
+      state.selectedPkg = null;
+      renderPricingCards();
+      updatePkgBanner();
+      updateCalc();
+      window.scrollTo({ top:0, behavior:'smooth' });
+    }
+    function updatePkgBanner() {
+      const b = document.getElementById('pkg-banner');
+      if (state.selectedPkg) {
+        const pkg = PACKAGES.find(p => p.id === state.selectedPkg);
+        document.getElementById('pkg-banner-name').textContent = pkg.name + (state.billing === 'monthly' ? ' (Monthly)' : ' (Lifetime)');
+        document.getElementById('pkg-banner-price').textContent = fmtShort(getPrice(pkg));
+        b.classList.remove('hidden');
+      } else {
+        b.classList.add('hidden');
+      }
+    }
+
+    // ============================================================
+    //  TABS
+    // ============================================================
+    function switchTab(tab) {
+      state.tab = tab;
+      const tf = document.getElementById('tab-full');
+      const tq = document.getElementById('tab-fast');
+      const cf = document.getElementById('full-checkout');
+      const cq = document.getElementById('fast-checkout');
+      if (tab === 'full') {
+        tf.className = 'flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-300 bg-red-600 text-white shadow-lg shadow-red-600/25';
+        tq.className = 'flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-300 text-gray-500 dark:text-gray-400';
+        cf.classList.remove('hidden');
+        cq.classList.add('hidden');
+        updateProgress();
+        showStep('full', state.fStep);
+      } else {
+        tq.className = 'flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-300 bg-red-600 text-white shadow-lg shadow-red-600/25';
+        tf.className = 'flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-300 text-gray-500 dark:text-gray-400';
+        cq.classList.remove('hidden');
+        cf.classList.add('hidden');
+        state.qStep = 1;
+        buildFastPayment();
+        updateProgress();
+        showStep('fast', state.qStep);
+        showMobileBar();
+      }
+      updateCalc();
+    }
+
+    // ============================================================
+    //  PROGRESS BAR
+    // ============================================================
+    function updateProgress() {
+      const total = state.tab === 'full' ? 4 : 3;
+      const current = state.tab === 'full' ? state.fStep : state.qStep;
+      const pct = Math.round((current / total) * 100);
+      document.getElementById('progress-label').textContent = `Step ${current} of ${total}`;
+      document.getElementById('progress-pct').textContent = pct + '%';
+      document.getElementById('progress-bar').style.width = pct + '%';
+    }
+
+    // ============================================================
+    //  STEP NAVIGATION
+    // ============================================================
+    function showStep(mode, step) {
+      if (mode === 'full') {
+        for (let i = 1; i <= 4; i++) {
+          const el = document.getElementById('f-step-' + i);
+          if (i === step) {
+            el.classList.remove('hidden');
+            el.classList.add('skel-active');
+            setTimeout(() => el.classList.remove('skel-active'), 500);
+          } else {
+            el.classList.add('hidden');
+          }
+        }
+      } else {
+        for (let i = 1; i <= 3; i++) {
+          const el = document.getElementById('q-step-' + i);
+          if (i === step) {
+            el.classList.remove('hidden');
+            el.classList.add('skel-active');
+            setTimeout(() => el.classList.remove('skel-active'), 500);
+          } else {
+            el.classList.add('hidden');
+          }
+        }
+      }
+      updateProgress();
+    }
+
+    function validateField(inputId) {
+      const el = document.getElementById(inputId);
+      if (!el) return true;
+      if (!el.value.trim()) {
+        el.classList.add('border-red-500','shake');
+        el.classList.remove('border-gray-200','dark:border-white/[0.1]');
+        setTimeout(() => {
+          el.classList.remove('shake');
+          el.classList.add('border-gray-200','dark:border-white/[0.1]');
+          el.classList.remove('border-red-500');
+        }, 600);
+        return false;
+      }
+      return true;
+    }
+
+    function goNext(mode) {
+      if (mode === 'full') {
+        if (state.fStep === 1) {
+          if (!state.selectedPkg) { showToast('Please select a package first','error'); return; }
+          if (!validateField('f-name') || !validateField('f-email') || !validateField('f-whatsapp')) { showToast('Please fill in all required fields','error'); return; }
+        }
+        if (state.fStep === 3) {
+          if (!state.method) { showToast('Please select a payment method','error'); return; }
+          if (state.method === 'installment' && !state.installmentPlan) { showToast('Please select an installment plan','error'); return; }
+        }
+        if (state.fStep === 4) {
+          if (!state.rulesAgreed) { showToast('Please agree to the terms','error'); return; }
+          triggerConfetti();
+          return;
+        }
+        state.fStep++;
+        showStep('full', state.fStep);
+        if (state.fStep === 2) renderAddons();
+        if (state.fStep === 4) renderSummary();
+        updateCalc();
+      } else {
+        if (state.qStep === 1) {
+          if (!validateField('q-name') || !validateField('q-email')) { showToast('Please fill in all required fields','error'); return; }
+        }
+        if (state.qStep === 2) {
+          if (!state.method) { showToast('Please select a payment method','error'); return; }
+          if (state.method === 'installment' && !state.installmentPlan) { showToast('Please select an installment plan','error'); return; }
+        }
+        if (state.qStep === 3) {
+          if (!state.fastRulesAgreed) { showToast('Please agree to the terms','error'); return; }
+          triggerConfetti();
+          return;
+        }
+        state.qStep++;
+        showStep('fast', state.qStep);
+        if (state.qStep === 3) renderFastSummary();
+        updateCalc();
+      }
+    }
+    function goPrev(mode) {
+      if (mode === 'full' && state.fStep > 1) { state.fStep--; showStep('full', state.fStep); updateCalc(); }
+      if (mode === 'fast' && state.qStep > 1) { state.qStep--; showStep('fast', state.qStep); updateCalc(); }
+    }
+    function goNextFromMobile() {
+      goNext(state.tab);
+    }
+
+    // ============================================================
+    //  ADD-ONS
+    // ============================================================
+    function renderAddons() {
+      const list = document.getElementById('addons-list');
+      list.innerHTML = ADDONS.map(a => {
+        const checked = state.addons.includes(a.id);
+        return `
+          <div onclick="toggleAddon('${a.id}')" class="flex items-center gap-4 p-4 rounded-xl border ${checked ? 'border-red-600/50 bg-red-600/[0.04] dark:bg-red-600/[0.06]' : 'border-gray-200/50 dark:border-white/[0.06] bg-white/40 dark:bg-white/[0.01]'} cursor-pointer transition-all duration-200 hover:border-red-600/30">
+            <div class="custom-check ${checked ? 'checked' : ''}"><i class="fa-solid fa-check text-white text-[10px] ${checked ? '' : 'hidden'}"></i></div>
+            <div class="w-9 h-9 rounded-lg bg-gray-100 dark:bg-white/[0.05] flex items-center justify-center flex-shrink-0"><i class="fa-solid ${a.icon} text-sm text-gray-500 dark:text-gray-400"></i></div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-semibold">${a.name}</div>
+              <div class="text-[11px] text-gray-400">${a.days > 0 ? '+' + a.days + ' days delivery' : a.days < 0 ? Math.abs(a.days) + ' days faster' : 'No delivery impact'}</div>
+            </div>
+            <div class="text-sm font-display font-bold text-red-600 whitespace-nowrap">+${fmtShort(a.price)}</div>
+          </div>`;
+      }).join('');
+      updateDeliveryText();
+    }
+    function toggleAddon(id) {
+      const idx = state.addons.indexOf(id);
+      if (idx > -1) state.addons.splice(idx, 1);
+      else state.addons.push(id);
+      renderAddons();
+      updateCalc();
+    }
+    function updateDeliveryText() {
+      document.getElementById('delivery-text').textContent = 'Expected: ' + getDeliveryDate();
+    }
+
+    // ============================================================
+    //  PAYMENT METHODS
+    // ============================================================
+    function selectMethod(m) {
+      state.method = m;
+      state.installmentPlan = '';
+      document.getElementById('same-bank-check').checked = true;
+      state.sameBank = true;
+      // Highlight selected
+      ['bank','installment','later','qr'].forEach(k => {
+        const el = document.getElementById('meth-' + k);
+        if (!el) return;
+        if (k === m) {
+          el.classList.add('selected','border-red-600','bg-red-600/[0.05]');
+          el.classList.remove('border-gray-200','dark:border-white/[0.08]');
+        } else {
+          el.classList.remove('selected','border-red-600','bg-red-600/[0.05]');
+          el.classList.add('border-gray-200','dark:border-white/[0.08]');
+        }
+      });
+      // Also update fast payment if visible
+      document.querySelectorAll('[data-fast-meth]').forEach(el => {
+        const k = el.dataset.fastMeth;
+        if (k === m) {
+          el.classList.add('selected','border-red-600','bg-red-600/[0.05]');
+          el.classList.remove('border-gray-200','dark:border-white/[0.08]');
+        } else {
+          el.classList.remove('selected','border-red-600','bg-red-600/[0.05]');
+          el.classList.add('border-gray-200','dark:border-white/[0.08]');
+        }
+      });
+      // Show/hide panels
+      ['bank','installment','later','qr'].forEach(k => {
+        const el = document.getElementById('pay-' + k);
+        if (el) el.classList.toggle('hidden', k !== m);
+        const fel = document.getElementById('fast-pay-' + k);
+        if (fel) fel.classList.toggle('hidden', k !== m);
+      });
+      if (m === 'bank') renderBanks();
+      updateCalc();
+    }
+
+    function renderBanks() {
+      const list = document.getElementById('bank-list');
+      if (!list) return;
+      list.innerHTML = BANKS.map(b => `
+        <div class="flex items-center justify-between p-3 rounded-xl bg-white/60 dark:bg-white/[0.03] border border-gray-200/40 dark:border-white/[0.06]">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid ${b.icon} text-gray-500 dark:text-gray-400"></i>
+            <div>
+              <div class="text-xs font-semibold">${b.name}</div>
+              <div class="text-[11px] text-gray-400 font-mono">${b.acc}</div>
+              <div class="text-[10px] text-gray-400">${b.holder}</div>
+            </div>
+          </div>
+          <div class="relative">
+            <button onclick="copyAcc('${b.id}')" class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-white/[0.06] hover:bg-gray-200 dark:hover:bg-white/[0.1] text-[11px] font-semibold transition"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+            <span id="tip-${b.id}" class="copy-tip px-2 py-1 rounded-md bg-green-600 text-white text-[10px] font-bold whitespace-nowrap">Copied!</span>
+          </div>
+        </div>`).join('');
+    }
+
+    function copyAcc(bankId) {
+      const bank = BANKS.find(b => b.id === bankId);
+      if (!bank) return;
+      navigator.clipboard.writeText(bank.acc).catch(() => {});
+      const tip = document.getElementById('tip-' + bankId);
+      if (tip) {
+        tip.classList.add('show');
+        setTimeout(() => tip.classList.remove('show'), 1500);
+      }
+    }
+
+    // Same bank checkbox
+    document.addEventListener('change', e => {
+      if (e.target.id === 'same-bank-check') {
+        state.sameBank = e.target.checked;
+        updateCalc();
+      }
+      if (e.target.id === 'fast-same-bank-check') {
+        state.sameBank = e.target.checked;
+        updateCalc();
+      }
+      if (e.target.id === 'installment-select') {
+        state.installmentPlan = e.target.value;
+        updateCalc();
+      }
+      if (e.target.id === 'fast-installment-select') {
+        state.installmentPlan = e.target.value;
+        updateCalc();
+      }
+    });
+
+    // ============================================================
+    //  FAST REQUEST
+    // ============================================================
+    function syncBudget(from) {
+      const slider = document.getElementById('q-budget-slider');
+      const input = document.getElementById('q-budget-input');
+      const curr = document.getElementById('q-budget-curr');
+      if (from === 'slider') {
+        input.value = slider.value;
+      } else {
+        let v = parseInt(input.value) || 10;
+        v = Math.max(10, Math.min(2000, v));
+        slider.value = v;
+        input.value = v;
+      }
+      state.fastBudget = parseInt(slider.value);
+      curr.textContent = state.currency === 'LKR' ? 'LKR' : '$';
+      updateCalc();
+    }
+
+    function buildFastPayment() {
+      const body = document.getElementById('fast-pay-body');
+      body.innerHTML = `
+        <h2 class="font-display text-xl font-bold mb-1">Payment Method</h2>
+        <p class="text-gray-500 dark:text-gray-400 text-sm mb-5">Choose how you'd like to pay.</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+          <div data-fast-meth="bank" onclick="selectMethod('bank')" class="method-card rounded-xl p-4 text-center border-2 border-gray-200 dark:border-white/[0.08] bg-white/60 dark:bg-white/[0.03] hover:border-red-600/50">
+            <i class="fa-solid fa-building-columns text-2xl mb-2 text-gray-600 dark:text-gray-300"></i>
+            <div class="text-xs font-semibold">Bank Transfer</div>
+          </div>
+          <div data-fast-meth="installment" onclick="selectMethod('installment')" class="method-card rounded-xl p-4 text-center border-2 border-gray-200 dark:border-white/[0.08] bg-white/60 dark:bg-white/[0.03] hover:border-red-600/50">
+            <i class="fa-solid fa-calendar-check text-2xl mb-2 text-gray-600 dark:text-gray-300"></i>
+            <div class="text-xs font-semibold">Installments</div>
+          </div>
+          <div data-fast-meth="later" onclick="selectMethod('later')" class="method-card rounded-xl p-4 text-center border-2 border-gray-200 dark:border-white/[0.08] bg-white/60 dark:bg-white/[0.03] hover:border-red-600/50">
+            <i class="fa-solid fa-handshake text-2xl mb-2 text-gray-600 dark:text-gray-300"></i>
+            <div class="text-xs font-semibold">Pay Later</div>
+          </div>
+          <div data-fast-meth="qr" onclick="selectMethod('qr')" class="method-card rounded-xl p-4 text-center border-2 border-gray-200 dark:border-white/[0.08] bg-white/60 dark:bg-white/[0.03] hover:border-red-600/50">
+            <i class="fa-solid fa-qrcode text-2xl mb-2 text-gray-600 dark:text-gray-300"></i>
+            <div class="text-xs font-semibold">QR Pay</div>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-3 mb-6">
+          <div class="method-card disabled rounded-xl p-3 text-center border-2 border-dashed border-gray-200 dark:border-white/[0.06] bg-gray-50 dark:bg-white/[0.01]">
+            <i class="fa-solid fa-credit-card text-lg mb-1 text-gray-400"></i>
+            <div class="text-[10px] font-medium text-gray-400">Card <span class="text-red-500">Soon</span></div>
+          </div>
+          <div class="method-card disabled rounded-xl p-3 text-center border-2 border-dashed border-gray-200 dark:border-white/[0.06] bg-gray-50 dark:bg-white/[0.01]">
+            <i class="fa-brands fa-bitcoin text-lg mb-1 text-gray-400"></i>
+            <div class="text-[10px] font-medium text-gray-400">Binance <span class="text-red-500">Soon</span></div>
+          </div>
+          <div class="method-card disabled rounded-xl p-3 text-center border-2 border-dashed border-gray-200 dark:border-white/[0.06] bg-gray-50 dark:bg-white/[0.01]">
+            <i class="fa-solid fa-mobile-screen text-lg mb-1 text-gray-400"></i>
+            <div class="text-[10px] font-medium text-gray-400">eZ Cash <span class="text-red-500">Soon</span></div>
+          </div>
+        </div>
+        <div id="fast-pay-bank" class="hidden rounded-xl border border-gray-200/50 dark:border-white/[0.06] bg-gray-50/50 dark:bg-white/[0.02] p-5 mb-5 fade-up">
+          <h3 class="text-sm font-bold mb-3"><i class="fa-solid fa-building-columns mr-1.5 text-red-600"></i>Bank Transfer Details</h3>
+          <div class="space-y-3" id="fast-bank-list"></div>
+          <label class="flex items-center gap-2 mt-4 text-sm cursor-pointer">
+            <input type="checkbox" id="fast-same-bank-check" checked onchange="state.sameBank=this.checked;updateCalc()" class="w-4 h-4 rounded accent-red-600">
+            <span>I'm transferring from the <strong>same bank</strong> <span class="text-green-600 font-medium">(No extra fee)</span></span>
+          </label>
+        </div>
+        <div id="fast-pay-installment" class="hidden rounded-xl border border-gray-200/50 dark:border-white/[0.06] bg-gray-50/50 dark:bg-white/[0.02] p-5 mb-5 fade-up">
+          <h3 class="text-sm font-bold mb-3"><i class="fa-solid fa-calendar-check mr-1.5 text-red-600"></i>Installment Plan</h3>
+          <select id="fast-installment-select" onchange="state.installmentPlan=this.value;updateCalc()" class="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/[0.05] border border-gray-200 dark:border-white/[0.1] text-sm focus:outline-none focus:ring-2 focus:ring-red-600/40">
+            <option value="">Select plan...</option>
+            <option value="3">3 Months (+2% fee)</option>
+            <option value="6">6 Months (+4% fee)</option>
+            <option value="12">12 Months (+8% fee)</option>
+            <option value="24">24 Months (+16% fee)</option>
+          </select>
+          <div id="fast-installment-info" class="mt-3 text-sm text-gray-500 dark:text-gray-400 hidden"></div>
+        </div>
+        <div id="fast-pay-later" class="hidden rounded-xl border border-gray-200/50 dark:border-white/[0.06] bg-gray-50/50 dark:bg-white/[0.02] p-5 mb-5 fade-up">
+          <h3 class="text-sm font-bold mb-2"><i class="fa-solid fa-handshake mr-1.5 text-red-600"></i>Pay Later</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Pay 30% advance now, remaining 70% on delivery.</p>
+          <div id="fast-later-info" class="text-sm"></div>
+        </div>
+        <div id="fast-pay-qr" class="hidden rounded-xl border border-gray-200/50 dark:border-white/[0.06] bg-gray-50/50 dark:bg-white/[0.02] p-5 mb-5 fade-up">
+          <h3 class="text-sm font-bold mb-2"><i class="fa-solid fa-qrcode mr-1.5 text-red-600"></i>QR Pay</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Scan any bank QR and pay. <span class="text-red-600 font-medium">+5% convenience fee</span> applies.</p>
+          <div id="fast-qr-info" class="text-sm"></div>
+        </div>
+        <div class="flex justify-between pt-2">
+          <button onclick="goPrev('fast')" class="px-5 py-3 rounded-xl bg-gray-200/80 dark:bg-white/[0.06] hover:bg-gray-300 dark:hover:bg-white/[0.1] text-sm font-semibold transition border border-gray-200/50 dark:border-white/[0.08]"><i class="fa-solid fa-arrow-left mr-1.5"></i>Back</button>
+          <button onclick="goNext('fast')" class="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition shadow-lg shadow-red-600/20">Next Step <i class="fa-solid fa-arrow-right ml-1.5"></i></button>
+        </div>`;
+      // Render fast bank list
+      const fbl = document.getElementById('fast-bank-list');
+      if (fbl) {
+        fbl.innerHTML = BANKS.map(b => `
+          <div class="flex items-center justify-between p-3 rounded-xl bg-white/60 dark:bg-white/[0.03] border border-gray-200/40 dark:border-white/[0.06]">
+            <div class="flex items-center gap-3">
+              <i class="fa-solid ${b.icon} text-gray-500 dark:text-gray-400"></i>
+              <div>
+                <div class="text-xs font-semibold">${b.name}</div>
+                <div class="text-[11px] text-gray-400 font-mono">${b.acc}</div>
+              </div>
+            </div>
+            <div class="relative">
+              <button onclick="copyAcc('fast-${b.id}')" class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-white/[0.06] hover:bg-gray-200 dark:hover:bg-white/[0.1] text-[11px] font-semibold transition"><i class="fa-regular fa-copy mr-1"></i>Copy</button>
+              <span id="tip-fast-${b.id}" class="copy-tip px-2 py-1 rounded-md bg-green-600 text-white text-[10px] font-bold whitespace-nowrap">Copied!</span>
+            </div>
+          </div>`).join('');
+        // Override copy for fast banks
+        window.copyAcc = function(id) {
+          let bank;
+          if (id.startsWith('fast-')) {
+            const bid = id.replace('fast-','');
+            bank = BANKS.find(b => b.id === bid);
+          } else {
+            bank = BANKS.find(b => b.id === id);
+          }
+          if (!bank) return;
+          navigator.clipboard.writeText(bank.acc).catch(() => {});
+          const tip = document.getElementById('tip-' + id);
+          if (tip) { tip.classList.add('show'); setTimeout(() => tip.classList.remove('show'), 1500); }
+        };
+      }
+    }
+
+    // ============================================================
+    //  COUPONS
+    // ============================================================
+    function applyCoupon() {
+      const input = document.getElementById('coupon-input');
+      const msg = document.getElementById('coupon-msg');
+      const code = input.value.trim().toUpperCase();
+      if (!code) { showToast('Enter a promo code','error'); return; }
+      if (COUPONS[code]) {
+        state.coupon = code;
+        msg.classList.add('hidden');
+        document.getElementById('coupon-applied').classList.remove('hidden');
+        document.getElementById('coupon-applied-label').textContent = code + ' — ' + COUPONS[code].label;
+        input.value = '';
+        updateCalc();
+        showToast('Coupon applied!','success');
+      } else {
+        msg.classList.remove('hidden');
+        msg.className = 'text-sm mb-4 px-3 py-2 rounded-lg bg-red-600/[0.08] border border-red-600/15 text-red-600 text-sm';
+        msg.textContent = 'Invalid promo code. Try SAVE10, WELCOME20, or FLAT50.';
+        setTimeout(() => msg.classList.add('hidden'), 3000);
+      }
+    }
+    function removeCoupon() {
+      state.coupon = null;
+      document.getElementById('coupon-applied').classList.add('hidden');
+      document.getElementById('coupon-msg').classList.add('hidden');
+      updateCalc();
+    }
+
+    // ============================================================
+    //  RULES CHECKBOX
+    // ============================================================
+    function toggleRules(mode) {
+      if (mode === 'fast') {
+        state.fastRulesAgreed = !state.fastRulesAgreed;
+        const el = document.getElementById('fast-rules-check');
+        const icon = el.querySelector('i');
+        if (state.fastRulesAgreed) { el.classList.add('checked'); icon.classList.remove('hidden'); }
+        else { el.classList.remove('checked'); icon.classList.add('hidden'); }
+      } else {
+        state.rulesAgreed = !state.rulesAgreed;
+        const el = document.getElementById('rules-check');
+        const icon = el.querySelector('i');
+        if (state.rulesAgreed) { el.classList.add('checked'); icon.classList.remove('hidden'); }
+        else { el.classList.remove('checked'); icon.classList.add('hidden'); }
+      }
+    }
+
+    // ============================================================
+    //  CALCULATION & RENDERING
+    // ============================================================
+    function updateCalc() {
+      const c = calcTotal();
+      // Update sidebar
+      updateSidebar(c);
+      // Update mobile bar
+      document.getElementById('mobile-total').textContent = fmtShort(c.total);
+      // Update payment method info panels
+      updatePaymentInfos(c);
+    }
+
+    function updateSidebar(c) {
+      const sc = document.getElementById('sidebar-content');
+      if (state.tab === 'full' && !state.selectedPkg) {
+        sc.innerHTML = '<p class="text-gray-400 dark:text-gray-500 text-xs text-center py-8">Select a package to see live pricing</p>';
+        return;
+      }
+      let html = '';
+      if (state.tab === 'fast') {
+        html += `<div class="flex justify-between"><span class="text-gray-500 dark:text-gray-400">Custom Budget</span><span class="font-display font-bold">${fmtShort(c.base)}</span></div>`;
+      } else {
+        const pkg = PACKAGES.find(p => p.id === state.selectedPkg);
+        html += `<div class="flex justify-between"><span class="text-gray-500 dark:text-gray-400">${pkg.name} (${state.billing === 'monthly' ? 'Monthly' : 'Lifetime'})</span><span class="font-display font-bold">${fmtShort(c.base)}</span></div>`;
+      }
+      if (c.addonsTotal > 0) {
+        html += `<div class="flex justify-between"><span class="text-gray-500 dark:text-gray-400">Add-ons (${state.addons.length})</span><span class="font-display font-bold text-red-600">+${fmtShort(c.addonsTotal)}</span></div>`;
+      }
+      if (c.fee > 0) {
+        html += `<div class="flex justify-between"><span class="text-gray-500 dark:text-gray-400 text-xs">${c.feeLabel}</span><span class="font-display font-bold text-orange-500">+${fmtShort(c.fee)}</span></div>`;
+      }
+      if (c.discount > 0) {
+        html += `<div class="flex justify-between"><span class="text-gray-500 dark:text-gray-400">Discount</span><span class="font-display font-bold text-green-600">-${fmtShort(c.discount)}</span></div>`;
+      }
+      html += `<div class="border-t border-gray-200/50 dark:border-white/[0.06] pt-3 mt-3 flex justify-between items-end"><span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total</span><span class="font-display text-2xl font-bold">${fmtShort(c.total)}</span></div>`;
+      if (state.method === 'later') {
+        html += `<div class="bg-green-600/[0.06] rounded-lg p-2.5 text-xs"><span class="text-gray-500">Advance (30%):</span> <span class="font-bold text-green-600">${fmtShort(c.total * 0.3)}</span><br><span class="text-gray-500">On delivery (70%):</span> <span class="font-bold">${fmtShort(c.total * 0.7)}</span></div>`;
+      }
+      if (state.method === 'installment' && state.installmentPlan) {
+        const monthly = c.total / parseInt(state.installmentPlan);
+        html += `<div class="bg-blue-600/[0.06] rounded-lg p-2.5 text-xs"><span class="text-gray-500">${state.installmentPlan} monthly payments:</span> <span class="font-bold text-blue-600">${fmtShort(monthly)}/mo</span></div>`;
+      }
+      html += `<div class="flex items-center gap-2 text-xs text-gray-400 mt-2"><i class="fa-solid fa-truck-fast text-green-600"></i>${getDeliveryDate()}</div>`;
+      sc.innerHTML = html;
+    }
+
+    function updatePaymentInfos(c) {
+      // Bank fee info
+      if (state.method === 'bank') {
+        const feeText = state.sameBank ? '<span class="text-green-600 font-medium">No fee (same bank transfer)</span>' : `<span class="text-orange-500 font-medium">+${fmtShort(c.fee)} different bank fee</span>`;
+        // We don't have a dedicated info div for bank, it's handled via checkbox
+      }
+      // Installment info
+      if (state.method === 'installment' && state.installmentPlan) {
+        const monthly = c.total / parseInt(state.installmentPlan);
+        const info = document.getElementById('installment-info');
+        if (info) {
+          info.classList.remove('hidden');
+          info.innerHTML = `<span class="text-gray-600 dark:text-gray-300 font-medium">${state.installmentPlan} monthly payments of <span class="text-red-600 font-display font-bold">${fmtShort(monthly)}</span></span>`;
+        }
+        const finfo = document.getElementById('fast-installment-info');
+        if (finfo) {
+          finfo.classList.remove('hidden');
+          finfo.innerHTML = `<span class="text-gray-600 dark:text-gray-300 font-medium">${state.installmentPlan} monthly payments of <span class="text-red-600 font-display font-bold">${fmtShort(monthly)}</span></span>`;
+        }
+      }
+      // Pay later info
+      if (state.method === 'later') {
+        const info = document.getElementById('later-info');
+        if (info) info.innerHTML = `<div class="flex justify-between"><span class="text-gray-500">Advance (30%):</span><span class="font-bold text-green-600 font-display">${fmtShort(c.total * 0.3)}</span></div><div class="flex justify-between mt-1"><span class="text-gray-500">On delivery (70%):</span><span class="font-bold font-display">${fmtShort(c.total * 0.7)}</span></div>`;
+        const finfo = document.getElementById('fast-later-info');
+        if (finfo) finfo.innerHTML = info ? info.innerHTML : '';
+      }
+      // QR info
+      if (state.method === 'qr') {
+        const info = document.getElementById('qr-info');
+        if (info) info.innerHTML = `<span class="text-gray-500">Total with fee:</span> <span class="font-bold text-red-600 font-display">${fmtShort(c.total)}</span>`;
+        const finfo = document.getElementById('fast-qr-info');
+        if (finfo) finfo.innerHTML = info ? info.innerHTML : '';
+      }
+    }
+
+    // ============================================================
+    //  SUMMARY RENDERING
+    // ============================================================
+    function renderSummary() {
+      const c = calcTotal();
+      const pkg = PACKAGES.find(p => p.id === state.selectedPkg);
+      const bd = document.getElementById('summary-breakdown');
+      let html = '';
+      // Details
+      html += `<div class="pb-3 border-b border-gray-200/50 dark:border-white/[0.06]">
+        <div class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Customer Details</div>
+        <div class="grid grid-cols-2 gap-y-1.5 text-xs">
+          <span class="text-gray-400">Name</span><span class="font-medium">${document.getElementById('f-name').value}</span>
+          <span class="text-gray-400">Email</span><span class="font-medium">${document.getElementById('f-email').value}</span>
+          <span class="text-gray-400">WhatsApp</span><span class="font-medium">${document.getElementById('f-whatsapp').value}</span>
+        </div>
+      </div>`;
+      // Package
+      html += `<div class="pb-3 border-b border-gray-200/50 dark:border-white/[0.06]">
+        <div class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Package</div>
+        <div class="flex justify-between text-xs"><span>${pkg.name} (${state.billing === 'monthly' ? 'Monthly' : 'Lifetime'})</span><span class="font-display font-bold">${fmtShort(c.base)}</span></div>
+      </div>`;
+      // Add-ons
+      if (c.addonsTotal > 0) {
+        html += `<div class="pb-3 border-b border-gray-200/50 dark:border-white/[0.06]">
+          <div class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">
