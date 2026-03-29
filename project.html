@@ -1,287 +1,304 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vezlo - Project Showcase</title>
+    <title>Projects - Vezlo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Syne', 'sans-serif'],
+                        body: ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         :root {
-            --bg-primary: #0a0a0a;
+            --bg: #0a0a0a;
             --bg-secondary: #111111;
-            --bg-card: #161616;
-            --fg-primary: #ffffff;
-            --fg-secondary: #a3a3a3;
-            --fg-muted: #525252;
-            --accent-red: #dc2626;
-            --accent-green: #16a34a;
-            --accent-red-glow: rgba(220, 38, 38, 0.3);
-            --accent-green-glow: rgba(22, 163, 74, 0.3);
-            --border-color: #262626;
-            --card-hover: #1f1f1f;
+            --fg: #ffffff;
+            --fg-muted: #888888;
+            --accent: #00d46a;
+            --accent-hover: #00ff7f;
+            --accent-red: #ff3d3d;
+            --accent-red-hover: #ff6b6b;
+            --card: #161616;
+            --border: #2a2a2a;
+            --glass-bg: rgba(22, 22, 22, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        [data-theme="light"] {
-            --bg-primary: #fafafa;
-            --bg-secondary: #f5f5f5;
-            --bg-card: #ffffff;
-            --fg-primary: #0a0a0a;
-            --fg-secondary: #525252;
-            --fg-muted: #a3a3a3;
-            --accent-red: #b91c1c;
-            --accent-green: #15803d;
-            --accent-red-glow: rgba(185, 28, 28, 0.15);
-            --accent-green-glow: rgba(21, 128, 61, 0.15);
-            --border-color: #e5e5e5;
-            --card-hover: #f0f0f0;
+        .light {
+            --bg: #fafafa;
+            --bg-secondary: #ffffff;
+            --fg: #0a0a0a;
+            --fg-muted: #666666;
+            --accent: #00b354;
+            --accent-hover: #00d46a;
+            --accent-red: #e63946;
+            --accent-red-hover: #ff3d3d;
+            --card: #ffffff;
+            --border: #e5e5e5;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background: var(--bg-primary);
-            color: var(--fg-primary);
-            min-height: 100vh;
-            transition: background 0.4s ease, color 0.4s ease;
+            background: var(--bg);
+            color: var(--fg);
             overflow-x: hidden;
+            transition: background 0.5s ease, color 0.3s ease;
         }
 
-        .font-display {
-            font-family: 'Syne', sans-serif;
-        }
+        .font-display { font-family: 'Syne', sans-serif; }
 
-        /* Background Animation */
-        .bg-grid {
+        /* Animated Background */
+        .hero-bg {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                linear-gradient(var(--border-color) 1px, transparent 1px),
-                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
-            background-size: 60px 60px;
-            opacity: 0.3;
-            z-index: 0;
-            pointer-events: none;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
         }
 
-        .bg-gradient-blob {
-            position: fixed;
-            width: 600px;
-            height: 600px;
+        .gradient-orb {
+            position: absolute;
             border-radius: 50%;
             filter: blur(120px);
-            opacity: 0.15;
-            z-index: 0;
-            pointer-events: none;
-            animation: float 20s ease-in-out infinite;
+            opacity: 0.25;
+            animation: float 30s ease-in-out infinite;
         }
 
-        .blob-red {
-            background: var(--accent-red);
-            top: -200px;
-            right: -200px;
-        }
-
-        .blob-green {
-            background: var(--accent-green);
-            bottom: -200px;
-            left: -200px;
-            animation-delay: -10s;
-        }
+        .orb-1 { width: 500px; height: 500px; background: var(--accent); top: -150px; right: -100px; }
+        .orb-2 { width: 400px; height: 400px; background: var(--accent-red); bottom: -100px; left: -100px; animation-delay: -15s; }
+        .orb-3 { width: 350px; height: 350px; background: var(--accent); top: 45%; left: 35%; animation-delay: -8s; }
 
         @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(30px, 30px) scale(1.05); }
-            50% { transform: translate(0, 50px) scale(1); }
-            75% { transform: translate(-30px, 20px) scale(0.95); }
+            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            33% { transform: translate(30px, -40px) scale(1.08) rotate(3deg); }
+            66% { transform: translate(-20px, 25px) scale(0.95) rotate(-3deg); }
         }
 
-        /* Header */
-        header {
+        .grid-pattern {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.2;
+            mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            opacity: 0.03;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* Navigation */
+        .nav-glass {
             background: rgba(10, 10, 10, 0.8);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
-            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--border);
         }
-
-        [data-theme="light"] header {
-            background: rgba(250, 250, 250, 0.85);
-        }
-
-        .header-scrolled {
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-        }
+        .light .nav-glass { background: rgba(255, 255, 255, 0.9); }
 
         .nav-link {
             position: relative;
-            color: var(--fg-secondary);
-            font-weight: 500;
-            padding: 0.5rem 0;
+            color: var(--fg-muted);
             transition: color 0.3s ease;
         }
-
         .nav-link::after {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent-red), var(--accent-green));
+            bottom: -4px; left: 0;
+            width: 0; height: 2px;
+            background: var(--accent);
             transition: width 0.3s ease;
         }
+        .nav-link:hover, .nav-link.active { color: var(--accent); }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
 
-        .nav-link:hover {
-            color: var(--fg-primary);
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mobile-menu.active { transform: translateX(0); }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0, 212, 106, 0.3);
         }
 
-        .nav-link:hover::after {
-            width: 100%;
+        .btn-secondary {
+            background: transparent;
+            color: var(--fg);
+            font-weight: 500;
+            padding: 12px 28px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
         }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* Logo */
-        .logo {
-            font-family: 'Syne', sans-serif;
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 56px;
+            height: 28px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle::after {
+            content: '';
+            position: absolute;
+            width: 22px; height: 22px;
+            background: var(--accent);
+            border-radius: 50%;
+            top: 2px; left: 2px;
+            transition: transform 0.3s ease;
+        }
+        .light .theme-toggle::after { transform: translateX(28px); background: var(--accent-red); }
+
+        /* Stat Card */
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 28px;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+        .stat-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .stat-number {
+            font-size: 2.8rem;
             font-weight: 800;
-            font-size: 1.75rem;
-            background: linear-gradient(135deg, var(--accent-red), var(--accent-green));
+            background: linear-gradient(135deg, var(--accent), var(--accent-red));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        /* Theme Toggle */
-        .theme-toggle {
-            width: 48px;
-            height: 26px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 13px;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .theme-toggle::before {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            background: linear-gradient(135deg, var(--accent-red), var(--accent-green));
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-        }
-
-        [data-theme="light"] .theme-toggle::before {
-            transform: translateX(22px);
-        }
-
-        /* Search Bar */
-        .search-container {
-            position: relative;
-        }
-
+        /* Search */
+        .search-container { position: relative; }
         .search-input {
             width: 100%;
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 2px solid var(--glass-border);
             border-radius: 16px;
-            padding: 1rem 1.5rem 1rem 3.5rem;
-            color: var(--fg-primary);
+            padding: 16px 20px 16px 52px;
+            color: var(--fg);
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 1rem;
             transition: all 0.3s ease;
         }
-
         .search-input:focus {
             outline: none;
-            border-color: var(--accent-red);
-            box-shadow: 0 0 0 4px var(--accent-red-glow);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 212, 106, 0.15);
         }
-
-        .search-input::placeholder {
-            color: var(--fg-muted);
-        }
-
+        .search-input::placeholder { color: var(--fg-muted); }
         .search-icon {
             position: absolute;
-            left: 1.25rem;
-            top: 50%;
+            left: 18px; top: 50%;
             transform: translateY(-50%);
             color: var(--fg-muted);
             transition: color 0.3s ease;
+            pointer-events: none;
         }
+        .search-input:focus ~ .search-icon { color: var(--accent); }
 
-        .search-input:focus + .search-icon {
-            color: var(--accent-red);
-        }
-
-        /* Categories */
+        /* Category Buttons */
         .category-btn {
-            padding: 0.625rem 1.25rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
             border-radius: 100px;
-            color: var(--fg-secondary);
+            color: var(--fg-muted);
             font-size: 0.875rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
             white-space: nowrap;
+            font-family: 'Space Grotesk', sans-serif;
         }
-
         .category-btn:hover {
-            background: var(--card-hover);
+            background: var(--card);
             border-color: var(--fg-muted);
-            color: var(--fg-primary);
+            color: var(--fg);
+            transform: translateY(-2px);
         }
-
         .category-btn.active {
-            background: linear-gradient(135deg, var(--accent-red), var(--accent-green));
+            background: linear-gradient(135deg, var(--accent), var(--accent-red));
             border-color: transparent;
             color: white;
-            box-shadow: 0 4px 20px var(--accent-red-glow);
+            box-shadow: 0 4px 20px rgba(0, 212, 106, 0.3);
         }
 
-        /* Cards */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
+        /* Project Card */
+        .project-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
             border-radius: 20px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
             text-decoration: none;
+            color: var(--fg);
             display: block;
         }
-
-        .card:hover {
-            transform: translateY(-8px);
-            border-color: var(--accent-red);
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.3),
-                0 0 0 1px var(--accent-red),
-                0 0 60px var(--accent-red-glow);
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            z-index: 2;
+        }
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 212, 106, 0.4);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 212, 106, 0.1);
         }
 
         .card-image-container {
@@ -290,254 +307,338 @@
             overflow: hidden;
             background: var(--bg-secondary);
         }
-
         .card-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        .project-card:hover .card-image { transform: scale(1.08); }
 
-        .card:hover .card-image {
-            transform: scale(1.08);
-        }
-
-        .card-category {
+        .card-image-overlay {
             position: absolute;
-            top: 12px;
-            right: 12px;
-            padding: 0.375rem 0.875rem;
-            background: rgba(0, 0, 0, 0.75);
+            inset: 0;
+            background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.6) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+        }
+        .project-card:hover .card-image-overlay { opacity: 1; }
+
+        .card-badge {
+            position: absolute;
+            top: 12px; left: 12px;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            z-index: 3;
+            backdrop-filter: blur(10px);
+        }
+        .badge-new {
+            background: rgba(0, 212, 106, 0.9);
+            color: #000;
+        }
+        .badge-popular {
+            background: rgba(255, 61, 61, 0.9);
+            color: white;
+        }
+        .card-category-tag {
+            position: absolute;
+            top: 12px; right: 12px;
+            padding: 4px 12px;
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
             border-radius: 100px;
             color: white;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            z-index: 3;
         }
 
-        .card-content {
-            padding: 1.25rem;
-        }
+        .card-content { padding: 20px; position: relative; }
 
         .card-title {
             font-family: 'Syne', sans-serif;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            color: var(--fg-primary);
-            margin-bottom: 0.5rem;
+            margin-bottom: 6px;
             transition: color 0.3s ease;
         }
-
-        .card:hover .card-title {
-            color: var(--accent-green);
-        }
+        .project-card:hover .card-title { color: var(--accent); }
 
         .card-caption {
-            color: var(--fg-secondary);
-            font-size: 0.875rem;
-            line-height: 1.5;
-            margin-bottom: 1rem;
+            color: var(--fg-muted);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
         }
 
-        .card-btn {
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .card-tag {
+            padding: 3px 10px;
+            background: rgba(0, 212, 106, 0.1);
+            border: 1px solid rgba(0, 212, 106, 0.2);
+            border-radius: 6px;
+            color: var(--accent);
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .card-view-btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, var(--accent-red), var(--accent-green));
+            gap: 8px;
+            padding: 8px 18px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-red));
             border: none;
             border-radius: 10px;
             color: white;
             font-weight: 600;
-            font-size: 0.875rem;
-            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: 'Space Grotesk', sans-serif;
             transition: all 0.3s ease;
         }
-
-        .card:hover .card-btn {
-            transform: scale(1.02);
-            box-shadow: 0 4px 20px var(--accent-green-glow);
+        .project-card:hover .card-view-btn {
+            box-shadow: 0 4px 20px rgba(0, 212, 106, 0.3);
+            transform: translateX(4px);
         }
 
-        /* Footer */
-        footer {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border-color);
-            margin-top: 6rem;
+        .card-arrow {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            color: var(--fg-muted);
+        }
+        .project-card:hover .card-arrow {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+            transform: translate(4px, -4px);
         }
 
-        .footer-link {
-            color: var(--fg-secondary);
-            text-decoration: none;
-            transition: color 0.3s ease;
+        /* Fallback Image */
+        .card-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--card), var(--bg-secondary));
+            gap: 8px;
         }
-
-        .footer-link:hover {
-            color: var(--accent-green);
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-in {
-            animation: fadeInUp 0.6s ease forwards;
-            opacity: 0;
-        }
-
-        .stagger-1 { animation-delay: 0.1s; }
-        .stagger-2 { animation-delay: 0.2s; }
-        .stagger-3 { animation-delay: 0.3s; }
-        .stagger-4 { animation-delay: 0.4s; }
-        .stagger-5 { animation-delay: 0.5s; }
-        .stagger-6 { animation-delay: 0.6s; }
-        .stagger-7 { animation-delay: 0.7s; }
-        .stagger-8 { animation-delay: 0.8s; }
-        .stagger-9 { animation-delay: 0.9s; }
-        .stagger-10 { animation-delay: 1.0s; }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .logo {
-                font-size: 1.5rem;
-            }
-
-            .card-content {
-                padding: 1rem;
-            }
-
-            .card-title {
-                font-size: 1.1rem;
-            }
-        }
-
-        /* Focus States */
-        *:focus-visible {
-            outline: 2px solid var(--accent-green);
-            outline-offset: 2px;
-        }
-
-        /* Reduced Motion */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--fg-muted);
+        .card-fallback-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 212, 106, 0.1);
         }
 
         /* No Results */
         .no-results {
             text-align: center;
-            padding: 4rem 2rem;
-            color: var(--fg-muted);
+            padding: 5rem 2rem;
         }
 
-        .no-results-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+        /* CTA Section */
+        .cta-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .cta-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        }
+
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* Card Reveal */
+        .card-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* Footer */
+        .footer-link { color: var(--fg-muted); transition: color 0.3s ease; text-decoration: none; }
+        .footer-link:hover { color: var(--accent); }
+
+        /* Focus States */
+        *:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stat-number { font-size: 2rem; }
         }
     </style>
 </head>
-<body>
-    <!-- Background Elements -->
-    <div class="bg-grid"></div>
-    <div class="bg-gradient-blob blob-red"></div>
-    <div class="bg-gradient-blob blob-green"></div>
+<body class="dark">
+    <!-- Background -->
+    <div class="hero-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+        <div class="grid-pattern"></div>
+        <div class="noise-overlay"></div>
+    </div>
 
-    <!-- Header -->
-    <header id="header">
+    <!-- Navigation -->
+    <nav class="nav-glass fixed top-0 left-0 right-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16 sm:h-20">
-                <!-- Logo -->
-                <a href="index.html" class="logo">Vezlo</a>
-
-                <!-- Navigation -->
-                <nav class="hidden sm:flex items-center gap-8">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="contact.html" class="nav-link">Contact</a>
-                    <a href="login.html" class="nav-link">Login</a>
-                </nav>
-
-                <!-- Mobile Menu & Theme Toggle -->
+            <div class="flex items-center justify-between h-16 lg:h-20">
+                <a href="index.html" class="flex items-center gap-2">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent)] to-[var(--accent-red)] flex items-center justify-center">
+                        <span class="font-display font-bold text-black text-lg">V</span>
+                    </div>
+                    <span class="font-display font-bold text-xl" style="color: var(--fg);">Vezlo</span>
+                </a>
+                <div class="hidden lg:flex items-center gap-8">
+                    <a href="index.html" class="nav-link font-medium">Home</a>
+                    <a href="about.html" class="nav-link font-medium">About Us</a>
+                    <a href="project.html" class="nav-link font-medium active">Projects</a>
+                    <a href="contact.html" class="nav-link font-medium">Contact</a>
+                </div>
                 <div class="flex items-center gap-4">
-                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode"></button>
-                    
-                    <!-- Mobile Menu Button -->
-                    <button class="sm:hidden p-2" id="mobileMenuBtn" aria-label="Open menu">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <line x1="3" y1="12" x2="21" y2="12"></line>
-                            <line x1="3" y1="18" x2="21" y2="18"></line>
-                        </svg>
+                    <div class="theme-toggle" id="themeToggle" role="button" tabindex="0" aria-label="Toggle theme"></div>
+                    <a href="notwork.html" class="hidden sm:flex btn-secondary text-sm">Login</a>
+                    <a href="notwork.html" class="hidden sm:flex btn-primary text-sm">Get Started</a>
+                    <button class="lg:hidden p-2" id="mobileMenuBtn" aria-label="Open menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     </button>
                 </div>
             </div>
-
-            <!-- Mobile Menu -->
-            <nav class="sm:hidden hidden pb-4" id="mobileMenu">
-                <div class="flex flex-col gap-4">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="contact.html" class="nav-link">Contact</a>
-                    <a href="login.html" class="nav-link">Login</a>
-                </div>
-            </nav>
         </div>
-    </header>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu fixed inset-y-0 right-0 w-80 max-w-full z-50" id="mobileMenu" style="background: var(--card);">
+        <div class="p-6">
+            <div class="flex justify-end mb-8">
+                <button id="closeMobileMenu" class="p-2" aria-label="Close menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="flex flex-col gap-4">
+                <a href="index.html" class="nav-link text-lg font-medium py-2">Home</a>
+                <a href="about.html" class="nav-link text-lg font-medium py-2">About Us</a>
+                <a href="project.html" class="nav-link text-lg font-medium py-2">Projects</a>
+                <a href="contact.html" class="nav-link text-lg font-medium py-2">Contact</a>
+                <a href="notwork.html" class="nav-link text-lg font-medium py-2">Login</a>
+                <div class="pt-4 border-t" style="border-color: var(--border);">
+                    <a href="notwork.html" class="btn-primary w-full text-center block">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Content -->
-    <main class="relative z-10 pt-28 sm:pt-32 pb-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <!-- Hero Section -->
-            <section class="text-center mb-12 sm:mb-16 animate-in">
-                <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-800 mb-4 leading-tight">
-                    Discover Amazing
-                    <span class="block bg-gradient-to-r from-[var(--accent-red)] to-[var(--accent-green)] bg-clip-text text-transparent">
-                        Projects
-                    </span>
-                </h1>
-                <p class="text-lg sm:text-xl text-[var(--fg-secondary)] max-w-2xl mx-auto">
-                    Explore our curated collection of innovative web solutions and digital experiences
-                </p>
-            </section>
+    <main class="pt-24 lg:pt-32 pb-20">
 
-            <!-- Search Section -->
-            <section class="mb-8 animate-in stagger-1">
-                <div class="search-container max-w-2xl mx-auto">
-                    <input 
-                        type="text" 
-                        id="searchInput" 
-                        class="search-input" 
-                        placeholder="Search projects by name or category..."
+        <!-- Hero Section -->
+        <section class="py-12 lg:py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <span class="reveal inline-block px-4 py-2 rounded-full text-sm font-medium mb-4" style="background: rgba(0, 212, 106, 0.15); color: var(--accent);">
+                        Our Portfolio
+                    </span>
+                    <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 reveal reveal-delay-1">
+                        Discover Amazing
+                        <span class="block" style="background: linear-gradient(135deg, var(--accent), var(--accent-red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Projects</span>
+                    </h1>
+                    <p class="text-lg max-w-2xl mx-auto reveal reveal-delay-2" style="color: var(--fg-muted);">
+                        Explore our curated collection of innovative web solutions and digital experiences built for real clients.
+                    </p>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-16">
+                    <div class="stat-card reveal reveal-delay-1">
+                        <div class="stat-number" data-count="20">0</div>
+                        <p class="font-medium mt-1 text-sm" style="color: var(--fg-muted);">Projects Delivered</p>
+                    </div>
+                    <div class="stat-card reveal reveal-delay-2">
+                        <div class="stat-number">6</div>
+                        <p class="font-medium mt-1 text-sm" style="color: var(--fg-muted);">Categories</p>
+                    </div>
+                    <div class="stat-card reveal reveal-delay-3">
+                        <div class="stat-number">99%</div>
+                        <p class="font-medium mt-1 text-sm" style="color: var(--fg-muted);">Client Satisfaction</p>
+                    </div>
+                    <div class="stat-card reveal reveal-delay-4">
+                        <div class="stat-number">24/7</div>
+                        <p class="font-medium mt-1 text-sm" style="color: var(--fg-muted);">Post-Launch Support</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search & Filter Section -->
+        <section class="pb-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Search -->
+                <div class="search-container max-w-2xl mx-auto mb-8 reveal">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="search-input"
+                        placeholder="Search projects by name, category, or technology..."
                         aria-label="Search projects"
                     >
                     <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -545,11 +646,9 @@
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
                 </div>
-            </section>
 
-            <!-- Categories Section -->
-            <section class="mb-10 animate-in stagger-2">
-                <div class="flex flex-wrap justify-center gap-2 sm:gap-3" id="categoryContainer">
+                <!-- Categories -->
+                <div class="flex flex-wrap justify-center gap-2 sm:gap-3 reveal reveal-delay-1" id="categoryContainer">
                     <button class="category-btn active" data-category="all">All Projects</button>
                     <button class="category-btn" data-category="voting">Voting</button>
                     <button class="category-btn" data-category="lms">LMS</button>
@@ -558,194 +657,321 @@
                     <button class="category-btn" data-category="portfolio">Portfolio</button>
                     <button class="category-btn" data-category="dashboard">Dashboard</button>
                 </div>
-            </section>
 
-            <!-- Projects Grid -->
-            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="projectsGrid">
-                <!-- Cards will be rendered by JavaScript -->
-            </section>
-
-            <!-- No Results Message -->
-            <div class="no-results hidden" id="noResults">
-                <div class="no-results-icon">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto;">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
+                <!-- Results Count -->
+                <div class="text-center mt-6 reveal reveal-delay-2">
+                    <p class="text-sm" style="color: var(--fg-muted);">
+                        Showing <span id="resultsCount" class="font-semibold" style="color: var(--fg);">10</span> projects
+                    </p>
                 </div>
-                <h3 class="text-xl font-semibold mb-2">No projects found</h3>
-                <p class="text-[var(--fg-muted)]">Try adjusting your search or filter criteria</p>
             </div>
+        </section>
 
-        </div>
+        <!-- Projects Grid -->
+        <section class="pb-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="projectsGrid">
+                    <!-- Cards rendered by JavaScript -->
+                </div>
+
+                <!-- No Results -->
+                <div class="no-results hidden" id="noResults">
+                    <div class="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center" style="background: rgba(255, 61, 61, 0.1);">
+                        <svg class="w-10 h-10" style="color: var(--accent-red);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold mb-2">No Projects Found</h3>
+                    <p style="color: var(--fg-muted);">Try adjusting your search or filter criteria</p>
+                    <button class="btn-secondary mt-6" id="resetFilters">Clear Filters</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="pb-12">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="cta-card p-8 lg:p-12 text-center reveal">
+                    <h2 class="font-display text-3xl lg:text-4xl font-bold mb-4">
+                        Have a Project in Mind?
+                    </h2>
+                    <p class="text-lg mb-8" style="color: var(--fg-muted);">
+                        Let's turn your idea into reality. Get a free consultation and quote today.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <a href="contact.html" class="btn-primary text-lg px-8 py-4">Start Your Project</a>
+                        <a href="https://wa.me/94775048455?text=Hello%20Vezlo!%20I%20want%20to%20start%20a%20new%20project." target="_blank" class="btn-secondary text-lg px-8 py-4">Chat on WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- Footer -->
     <!-- Footer -->
     <footer class="py-12 border-t" style="background: var(--bg-secondary); border-color: var(--border);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                 <div class="lg:col-span-2">
-                    <div class="flex items-center gap-2 mb-4"><div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent)] to-[var(--accent-red)] flex items-center justify-center"><span class="font-display font-bold text-black text-lg">V</span></div><span class="font-display font-bold text-xl" style="color: var(--fg);">Vezlo</span></div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--accent)] to-[var(--accent-red)] flex items-center justify-center">
+                            <span class="font-display font-bold text-black text-lg">V</span>
+                        </div>
+                        <span class="font-display font-bold text-xl" style="color: var(--fg);">Vezlo</span>
+                    </div>
                     <p class="mb-4 max-w-sm" style="color: var(--fg-muted);">Premium web solutions with 24/7 support, high-level security, and professional design.</p>
                 </div>
-                <div><h4 class="font-display font-bold mb-4" style="color: var(--fg);">Quick Links</h4><ul class="space-y-3"><li><a href="index.html" class="footer-link">Home</a></li><li><a href="about.html" class="footer-link">About Us</a></li><li><a href="project.html" class="footer-link">Projects</a></li><li><a href="contact.html" class="footer-link">Contact</a></li></ul></div>
-                <div><h4 class="font-display font-bold mb-4" style="color: var(--fg);">Legal</h4><ul class="space-y-3"><li><a href="notwork.html" class="footer-link">Terms & Services</a></li><li><a href="notwork.html" class="footer-link">Privacy Policy</a></li><li><a href="notwork.html" class="footer-link">Login</a></li></ul></div>
+                <div>
+                    <h4 class="font-display font-bold mb-4" style="color: var(--fg);">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="index.html" class="footer-link">Home</a></li>
+                        <li><a href="about.html" class="footer-link">About Us</a></li>
+                        <li><a href="project.html" class="footer-link">Projects</a></li>
+                        <li><a href="contact.html" class="footer-link">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-display font-bold mb-4" style="color: var(--fg);">Legal</h4>
+                    <ul class="space-y-3">
+                        <li><a href="notwork.html" class="footer-link">Terms & Services</a></li>
+                        <li><a href="notwork.html" class="footer-link">Privacy Policy</a></li>
+                        <li><a href="notwork.html" class="footer-link">Login</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4" style="border-color: var(--border);">
                 <p style="color: var(--fg-muted);">2026 Copyright. All rights reserved.</p>
-                <div class="flex flex-wrap justify-center gap-4 text-sm" style="color: var(--fg-muted);"><span>Powered by <a href="https://vezlo-web.vercel.app/" target="_blank" class="font-medium" style="color: var(--accent);">Vezlo</a></span><span>|</span><span>Developed by <a href="https://dmkaawya.vercel.app/" target="_blank" class="font-medium" style="color: var(--accent);">dmkaawya</a></span></div>
+                <div class="flex flex-wrap justify-center gap-4 text-sm" style="color: var(--fg-muted);">
+                    <span>Powered by <a href="https://vezlo-web.vercel.app/" target="_blank" rel="noopener noreferrer" class="font-medium" style="color: var(--accent);">Vezlo</a></span>
+                    <span>|</span>
+                    <span>Developed by <a href="https://dmkaawya.vercel.app/" target="_blank" rel="noopener noreferrer" class="font-medium" style="color: var(--accent);">dmkaawya</a></span>
+                </div>
             </div>
         </div>
     </footer>
 
-    
+    <!-- Scroll to Top -->
+    <button id="scrollTop" class="fixed bottom-6 right-6 w-12 h-12 rounded-full flex items-center justify-center opacity-0 transition-all duration-300 z-40" style="background: var(--accent); transform: translateY(20px);" aria-label="Scroll to top">
+        <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+    </button>
+
     <script>
-        // Project Data - Edit links and details here
+        // Project Data — edit links, images, badges, and tags here
         const projects = [
             {
                 id: 1,
                 image: "pissu.png",
                 title: "Inceptra",
-                caption: "Live voting system with real-time results and analytics",
+                caption: "Live voting system with real-time results, analytics, and multi-round support",
                 category: "Voting",
                 categorySlug: "voting",
+                tags: ["Real-time", "Analytics"],
+                badge: "new",
                 link: "project1.html"
             },
             {
                 id: 2,
                 image: "huthd.png",
                 title: "NovaX Edu",
-                caption: "Learning Management System for modern education",
+                caption: "Learning Management System with courses, quizzes, and progress tracking",
                 category: "LMS",
                 categorySlug: "lms",
+                tags: ["CMS", "Quizzes"],
+                badge: "popular",
                 link: "novaxedu.html"
             },
             {
                 id: 3,
                 image: "hdhhdud.png",
                 title: "NovaX Team",
-                caption: "Promotions Booking System for event management",
+                caption: "Promotions Booking System for streamlined event management",
                 category: "PBS",
                 categorySlug: "pbs",
+                tags: ["Booking", "Events"],
+                badge: null,
                 link: "novaxteam.html"
             },
             {
                 id: 4,
                 image: "hutfffhd.png",
                 title: "DMC Stores",
-                caption: "Online e-commerce platform with secure checkout",
+                caption: "Full-featured e-commerce platform with secure checkout and inventory",
                 category: "E-Commerce",
                 categorySlug: "e-commerce",
+                tags: ["Payments", "Inventory"],
+                badge: "popular",
                 link: "dmcstores.html"
             },
             {
                 id: 5,
                 image: "portfolio.png",
                 title: "DevFolio",
-                caption: "Developer portfolio with interactive showcases",
+                caption: "Interactive developer portfolio with project showcases and animations",
                 category: "Portfolio",
                 categorySlug: "portfolio",
+                tags: ["Animations", "Responsive"],
+                badge: null,
                 link: "devfolio.html"
             },
             {
                 id: 6,
                 image: "dashboard.png",
                 title: "Analytics Hub",
-                caption: "Business intelligence dashboard with live metrics",
+                caption: "Business intelligence dashboard with live metrics and charts",
                 category: "Dashboard",
                 categorySlug: "dashboard",
+                tags: ["Charts", "Real-time"],
+                badge: "new",
                 link: "analyticshub.html"
             },
             {
                 id: 7,
                 image: "voting2.png",
                 title: "PollMaster",
-                caption: "Create and manage custom polls with ease",
+                caption: "Create and manage custom polls with sharing and embed options",
                 category: "Voting",
                 categorySlug: "voting",
+                tags: ["Embed", "Sharing"],
+                badge: null,
                 link: "pollmaster.html"
             },
             {
                 id: 8,
                 image: "lms2.png",
                 title: "SkillStream",
-                caption: "Video-based learning with progress tracking",
+                caption: "Video-based learning platform with progress tracking and certificates",
                 category: "LMS",
                 categorySlug: "lms",
+                tags: ["Video", "Certificates"],
+                badge: null,
                 link: "skillstream.html"
             },
             {
                 id: 9,
                 image: "ecom2.png",
                 title: "QuickCart",
-                caption: "Fast checkout experience for digital products",
+                caption: "Fast checkout experience optimized for digital products and downloads",
                 category: "E-Commerce",
                 categorySlug: "e-commerce",
+                tags: ["Digital", "Downloads"],
+                badge: "new",
                 link: "quickcart.html"
             },
             {
                 id: 10,
                 image: "dash2.png",
                 title: "FinanceFlow",
-                caption: "Personal finance tracker with smart insights",
+                caption: "Personal finance tracker with smart insights and budget planning",
                 category: "Dashboard",
                 categorySlug: "dashboard",
+                tags: ["Finance", "Reports"],
+                badge: null,
                 link: "financeflow.html"
             }
         ];
 
-        // Initialize variables
+        // State
         let currentCategory = 'all';
         let searchQuery = '';
+
+        // DOM
         const projectsGrid = document.getElementById('projectsGrid');
         const categoryContainer = document.getElementById('categoryContainer');
         const searchInput = document.getElementById('searchInput');
         const noResults = document.getElementById('noResults');
+        const resultsCount = document.getElementById('resultsCount');
+        const resetFilters = document.getElementById('resetFilters');
 
-        // Render Cards
+        // Render fallback SVG
+        function getFallbackHTML(title) {
+            const initials = title.substring(0, 2).toUpperCase();
+            return `
+                <div class="card-fallback">
+                    <div class="card-fallback-icon">
+                        <svg class="w-6 h-6" style="color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <span class="font-display font-bold text-lg" style="color: var(--fg-muted);">${initials}</span>
+                </div>
+            `;
+        }
+
+        // Render badge HTML
+        function getBadgeHTML(badge) {
+            if (!badge) return '';
+            const labels = { new: 'New', popular: 'Popular' };
+            return `<span class="card-badge badge-${badge}">${labels[badge] || badge}</span>`;
+        }
+
+        // Render tags HTML
+        function getTagsHTML(tags) {
+            if (!tags || tags.length === 0) return '';
+            return `<div class="card-tags">${tags.map(t => `<span class="card-tag">${t}</span>`).join('')}</div>`;
+        }
+
+        // Render Projects
         function renderProjects() {
-            const filteredProjects = projects.filter(project => {
-                const matchesCategory = currentCategory === 'all' || project.categorySlug === currentCategory;
-                const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                     project.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                     project.caption.toLowerCase().includes(searchQuery.toLowerCase());
-                return matchesCategory && matchesSearch;
+            const filtered = projects.filter(p => {
+                const matchCat = currentCategory === 'all' || p.categorySlug === currentCategory;
+                const matchSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                   p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                   p.caption.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                   (p.tags && p.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase())));
+                return matchCat && matchSearch;
             });
 
-            if (filteredProjects.length === 0) {
+            resultsCount.textContent = filtered.length;
+
+            if (filtered.length === 0) {
                 projectsGrid.innerHTML = '';
                 noResults.classList.remove('hidden');
                 return;
             }
 
             noResults.classList.add('hidden');
-            
-            projectsGrid.innerHTML = filteredProjects.map((project, index) => `
-                <a href="${project.link}" class="card animate-in stagger-${Math.min(index + 3, 10)}" data-category="${project.categorySlug}">
+
+            projectsGrid.innerHTML = filtered.map((project, index) => `
+                <a href="${project.link}" class="project-card card-reveal" style="transition-delay: ${index * 0.08}s;" data-category="${project.categorySlug}">
                     <div class="card-image-container">
-                        <img 
-                            src="${project.image}" 
-                            alt="${project.title}" 
+                        <img
+                            src="${project.image}"
+                            alt="${project.title}"
                             class="card-image"
                             loading="lazy"
-                            onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22250%22 viewBox=%220 0 400 250%22><rect fill=%22%23161616%22 width=%22400%22 height=%22250%22/><text x=%22200%22 y=%22125%22 text-anchor=%22middle%22 fill=%22%23525252%22 font-family=%22sans-serif%22 font-size=%2216%22>Image</text></svg>'"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                         >
-                        <span class="card-category">${project.category}</span>
+                        <div style="display:none;">${getFallbackHTML(project.title)}</div>
+                        <div class="card-image-overlay"></div>
+                        ${getBadgeHTML(project.badge)}
+                        <span class="card-category-tag">${project.category}</span>
                     </div>
                     <div class="card-content">
                         <h3 class="card-title">${project.title}</h3>
                         <p class="card-caption">${project.caption}</p>
-                        <span class="card-btn">
-                            View Price
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                                <polyline points="12 5 19 12 12 19"></polyline>
-                            </svg>
-                        </span>
+                        ${getTagsHTML(project.tags)}
+                        <div class="card-footer">
+                            <span class="card-view-btn">
+                                View Details
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </span>
+                            <div class="card-arrow">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                                    <polyline points="7 7 17 7 17 17"></polyline>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </a>
             `).join('');
+
+            // Trigger card reveal animations
+            requestAnimationFrame(() => {
+                document.querySelectorAll('.card-reveal').forEach(card => {
+                    cardObserver.observe(card);
+                });
+            });
         }
 
         // Category Filter
@@ -759,43 +985,126 @@
         });
 
         // Search Filter
+        let searchTimeout;
         searchInput.addEventListener('input', (e) => {
-            searchQuery = e.target.value;
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchQuery = e.target.value;
+                renderProjects();
+            }, 200);
+        });
+
+        // Reset Filters
+        resetFilters.addEventListener('click', () => {
+            searchQuery = '';
+            currentCategory = 'all';
+            searchInput.value = '';
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('[data-category="all"]').classList.add('active');
             renderProjects();
         });
 
+        // Scroll Reveal Observer
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Card Reveal Observer
+        const cardObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    cardObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+
+        // Counter Animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('[data-count]');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = parseInt(entry.target.dataset.count);
+                        const duration = 2000;
+                        const step = target / (duration / 16);
+                        let current = 0;
+                        const update = () => {
+                            current += step;
+                            if (current < target) {
+                                entry.target.textContent = Math.floor(current) + '+';
+                                requestAnimationFrame(update);
+                            } else {
+                                entry.target.textContent = target + '+';
+                            }
+                        };
+                        update();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            counters.forEach(c => observer.observe(c));
+        }
+
         // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const savedTheme = localStorage.getItem('vezlo-theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
+        function initThemeToggle() {
+            const toggle = document.getElementById('themeToggle');
+            if (!toggle) return;
+            const fn = () => {
+                document.body.classList.toggle('light');
+                document.body.classList.toggle('dark');
+            };
+            toggle.addEventListener('click', fn);
+            toggle.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); }
+            });
+        }
 
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('vezlo-theme', newTheme);
+        // Mobile Menu
+        function initMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const openBtn = document.getElementById('mobileMenuBtn');
+            const closeBtn = document.getElementById('closeMobileMenu');
+            if (!menu || !openBtn || !closeBtn) return;
+            openBtn.addEventListener('click', () => menu.classList.add('active'));
+            closeBtn.addEventListener('click', () => menu.classList.remove('active'));
+            menu.addEventListener('click', (e) => {
+                if (e.target === menu) menu.classList.remove('active');
+            });
+        }
+
+        // Scroll to Top
+        function initScrollTop() {
+            const btn = document.getElementById('scrollTop');
+            if (!btn) return;
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 500) {
+                    btn.style.opacity = '1';
+                    btn.style.transform = 'translateY(0)';
+                } else {
+                    btn.style.opacity = '0';
+                    btn.style.transform = 'translateY(20px)';
+                }
+            });
+            btn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initThemeToggle();
+            initMobileMenu();
+            initScrollTop();
+            animateCounters();
+            renderProjects();
         });
-
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // Header Scroll Effect
-        const header = document.getElementById('header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('header-scrolled');
-            } else {
-                header.classList.remove('header-scrolled');
-            }
-        });
-
-        // Initial Render
-        renderProjects();
     </script>
 </body>
 </html>
