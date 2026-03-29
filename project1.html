@@ -3,88 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vezlo - Premium Website Solutions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Vezlo - EduPro LMS Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ============================================
-           CSS VARIABLES - THEME SYSTEM
-           ============================================ */
         :root {
-            /* Light Mode */
-            --bg-primary: #ffffff;
-            --bg-secondary: #f5f5f7;
-            --bg-tertiary: #e8e8ed;
-            --text-primary: #1d1d1f;
-            --text-secondary: #424245;
-            --text-muted: #86868b;
-            --border-color: #d2d2d7;
-            --card-bg: #ffffff;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            
-            /* Brand Colors */
-            --red-primary: #e63946;
-            --red-dark: #c1121f;
-            --red-light: #ffd6d6;
-            --red-glow: rgba(230, 57, 70, 0.15);
-            
-            --green-primary: #2d6a4f;
-            --green-dark: #1b4332;
-            --green-light: #d8f3dc;
-            --green-glow: rgba(45, 106, 79, 0.15);
-            
-            --black-primary: #1d1d1f;
-            
-            /* Gradients */
-            --gradient-primary: linear-gradient(135deg, var(--red-primary) 0%, #ff6b6b 100%);
-            --gradient-success: linear-gradient(135deg, var(--green-primary) 0%, #40916c 100%);
-            --gradient-dark: linear-gradient(135deg, #2d3436 0%, #1d1d1f 100%);
-            
-            /* Glass Effect */
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            
-            /* Spacing */
-            --space-xs: 0.5rem;
-            --space-sm: 0.75rem;
-            --space-md: 1rem;
-            --space-lg: 1.5rem;
-            --space-xl: 2rem;
-            --space-2xl: 3rem;
-            
-            /* Radius */
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 20px;
-            --radius-xl: 28px;
-            --radius-full: 9999px;
-            
-            /* Transitions */
-            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg: #050505;
+            --bg-secondary: #0a0a0a;
+            --bg-card: #111111;
+            --fg: #ffffff;
+            --fg-muted: #71717a;
+            --fg-secondary: #a1a1aa;
+            --accent: #dc2626;
+            --accent-green: #16a34a;
+            --border: #1f1f1f;
+            --border-light: #2a2a2a;
         }
 
-        /* Dark Mode */
-        [data-theme="dark"] {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #141414;
-            --bg-tertiary: #1f1f1f;
-            --text-primary: #f5f5f7;
-            --text-secondary: #a1a1a6;
-            --text-muted: #6e6e73;
-            --border-color: #333333;
-            --card-bg: #1c1c1e;
-            --card-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
-            --glass-bg: rgba(20, 20, 20, 0.9);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --red-glow: rgba(230, 57, 70, 0.25);
-            --green-glow: rgba(45, 106, 79, 0.25);
+        [data-theme="light"] {
+            --bg: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-card: #f4f4f5;
+            --fg: #09090b;
+            --fg-muted: #71717a;
+            --fg-secondary: #52525b;
+            --border: #e4e4e7;
+            --border-light: #d4d4d8;
         }
 
-        /* ============================================
-           BASE RESET & TYPOGRAPHY
-           ============================================ */
-        *, *::before, *::after {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -92,1313 +41,1202 @@
 
         html {
             scroll-behavior: smooth;
-            font-size: 16px;
         }
 
         body {
-            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
             line-height: 1.6;
-            min-height: 100vh;
             overflow-x: hidden;
-            transition: background var(--transition-base), color var(--transition-base);
         }
 
-        h1, h2, h3, h4, h5 {
+        h1, h2, h3, h4, h5, h6 {
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 600;
-            line-height: 1.2;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        button {
-            font-family: inherit;
-            cursor: pointer;
-        }
-
-        /* Background Effects */
-        .bg-effects {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .bg-blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.4;
-            animation: blobFloat 25s ease-in-out infinite;
-        }
-
-        .bg-blob-1 {
-            width: 600px;
-            height: 600px;
-            background: var(--red-glow);
-            top: -200px;
-            right: -200px;
-        }
-
-        .bg-blob-2 {
-            width: 500px;
-            height: 500px;
-            background: var(--green-glow);
-            bottom: -150px;
-            left: -150px;
-            animation-delay: -10s;
-        }
-
-        @keyframes blobFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.05); }
-            66% { transform: translate(-20px, 20px) scale(0.95); }
-        }
-
-        /* Grid Pattern */
-        .bg-grid {
-            position: absolute;
-            inset: 0;
-            background-image: 
-                linear-gradient(var(--border-color) 1px, transparent 1px),
-                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
-            background-size: 60px 60px;
-            opacity: 0.3;
-            mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
-        }
-
-        /* ============================================
-           HEADER
-           ============================================ */
+        /* Header */
         .header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            padding: var(--space-md) var(--space-xl);
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px) saturate(180%);
-            border-bottom: 1px solid var(--glass-border);
-            transition: all var(--transition-base);
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .header {
+            background: rgba(255, 255, 255, 0.95);
         }
 
         .header-inner {
             max-width: 1400px;
             margin: 0 auto;
+            padding: 0 24px;
+            height: 70px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
         }
 
         .logo {
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
+            font-size: 28px;
             font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient-primary);
-            border-radius: var(--radius-md);
-            display: grid;
-            place-items: center;
-            color: white;
-            font-weight: 700;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .logo-icon::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
-            animation: logoShine 3s infinite;
-        }
-
-        @keyframes logoShine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            background: linear-gradient(135deg, #dc2626, #16a34a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
         }
 
         .nav-menu {
             display: flex;
             align-items: center;
-            gap: var(--space-sm);
+            gap: 8px;
         }
 
         .nav-link {
-            padding: var(--space-sm) var(--space-md);
+            color: var(--fg-secondary);
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 8px;
             font-weight: 500;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            border-radius: var(--radius-full);
-            transition: all var(--transition-fast);
+            font-size: 15px;
+            transition: all 0.2s ease;
         }
 
         .nav-link:hover {
-            color: var(--text-primary);
-            background: var(--bg-tertiary);
+            color: var(--fg);
+            background: var(--bg-card);
         }
 
         .nav-link.active {
-            color: var(--red-primary);
-            background: var(--red-glow);
+            color: #dc2626;
+            background: rgba(220, 38, 38, 0.1);
         }
 
-        .theme-toggle {
-            width: 52px;
-            height: 30px;
-            background: var(--bg-tertiary);
-            border: none;
-            border-radius: var(--radius-full);
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .theme-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             cursor: pointer;
-            position: relative;
-            transition: all var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
         }
 
-        .theme-toggle::before {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            transition: all var(--transition-base);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        .theme-btn:hover {
+            border-color: var(--accent);
+            background: rgba(220, 38, 38, 0.1);
         }
 
-        [data-theme="dark"] .theme-toggle::before {
-            left: 25px;
-            background: var(--gradient-success);
+        .theme-btn svg {
+            width: 20px;
+            height: 20px;
+            color: var(--fg);
         }
 
         .mobile-toggle {
             display: none;
-            flex-direction: column;
-            gap: 5px;
-            background: none;
-            border: none;
-            padding: var(--space-sm);
+            width: 44px;
+            height: 44px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
             cursor: pointer;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
 
         .mobile-toggle span {
-            display: block;
-            width: 24px;
+            width: 20px;
             height: 2px;
-            background: var(--text-primary);
-            transition: all var(--transition-fast);
+            background: var(--fg);
+            border-radius: 2px;
+            transition: all 0.3s ease;
         }
 
-        /* ============================================
-           HERO SECTION
-           ============================================ */
+        /* Main Layout */
         .main-wrapper {
-            position: relative;
-            z-index: 1;
-            padding-top: 100px;
-        }
-
-        .hero-section {
-            padding: var(--space-2xl) 0;
+            padding-top: 70px;
         }
 
         .container {
-            max-width: 1300px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 var(--space-xl);
+            padding: 0 24px;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(220, 38, 38, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -200px;
+            left: -200px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(22, 163, 74, 0.1) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .hero-grid {
             display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: var(--space-2xl);
-            align-items: start;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 60px;
+            align-items: flex-start;
         }
 
-        /* Carousel */
-        .media-carousel {
+        .hero-content {
             position: relative;
-            background: var(--card-bg);
-            border-radius: var(--radius-xl);
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--card-shadow);
-        }
-
-        .carousel-viewport {
-            position: relative;
-            aspect-ratio: 16/10;
-        }
-
-        .carousel-track {
-            display: flex;
-            height: 100%;
-            transition: transform var(--transition-slow);
-        }
-
-        .carousel-slide {
-            min-width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        .carousel-slide img,
-        .carousel-slide video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .carousel-arrows {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 var(--space-md);
-            pointer-events: none;
-        }
-
-        .carousel-arrow {
-            width: 48px;
-            height: 48px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
-            cursor: pointer;
-            pointer-events: auto;
-            transition: all var(--transition-fast);
-            color: var(--text-primary);
-        }
-
-        .carousel-arrow:hover {
-            background: var(--red-primary);
-            color: white;
-            transform: scale(1.1);
-        }
-
-        .carousel-dots {
-            position: absolute;
-            bottom: var(--space-md);
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: var(--space-xs);
-            z-index: 10;
-        }
-
-        .carousel-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
-            border: none;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-
-        .carousel-dot.active {
-            background: white;
-            transform: scale(1.3);
-            box-shadow: 0 0 10px rgba(255,255,255,0.5);
-        }
-
-        .swipe-hint {
-            display: none;
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: var(--space-xs) var(--space-md);
-            border-radius: var(--radius-full);
-            font-size: 0.8rem;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-
-        /* Project Info Card */
-        .project-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-xl);
-            padding: var(--space-xl);
-            box-shadow: var(--card-shadow);
+            z-index: 1;
         }
 
         .project-badge {
             display: inline-flex;
             align-items: center;
-            gap: var(--space-xs);
-            background: var(--green-glow);
-            color: var(--green-primary);
-            padding: var(--space-xs) var(--space-md);
-            border-radius: var(--radius-full);
-            font-size: 0.85rem;
+            gap: 8px;
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: #dc2626;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: var(--space-md);
+            margin-bottom: 24px;
         }
 
-        .project-title {
-            font-size: 2.25rem;
-            font-weight: 700;
-            margin-bottom: var(--space-sm);
-            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+        .project-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .hero-title {
+            font-size: clamp(36px, 5vw, 56px);
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, #dc2626, #16a34a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .project-category {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: var(--space-lg);
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--fg-secondary);
+            margin-bottom: 32px;
+            max-width: 500px;
         }
 
-        .project-description {
-            color: var(--text-secondary);
-            line-height: 1.8;
-            margin-bottom: var(--space-xl);
-        }
-
-        /* Feature Tags */
-        .feature-tags {
+        .hero-meta {
             display: flex;
             flex-wrap: wrap;
-            gap: var(--space-sm);
-            margin-bottom: var(--space-xl);
+            gap: 24px;
+            margin-bottom: 32px;
         }
 
-        .feature-tag {
+        .meta-item {
             display: flex;
             align-items: center;
-            gap: var(--space-xs);
-            padding: var(--space-sm) var(--space-md);
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-full);
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            transition: all var(--transition-fast);
+            gap: 10px;
         }
 
-        .feature-tag:hover {
-            border-color: var(--red-primary);
-            color: var(--red-primary);
-            transform: translateY(-2px);
-        }
-
-        .feature-tag svg {
-            width: 16px;
-            height: 16px;
-            color: var(--green-primary);
-        }
-
-        /* Price Box */
-        .price-box {
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: var(--space-lg);
-            margin-bottom: var(--space-xl);
-        }
-
-        .price-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: var(--space-sm);
-        }
-
-        .price-label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .price-value {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--green-primary);
-        }
-
-        .price-value span {
-            font-size: 1rem;
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-
-        .price-lkr {
-            color: var(--text-secondary);
-            font-size: 1rem;
-        }
-
-        /* Action Button */
-        .btn-primary-main {
-            width: 100%;
-            padding: var(--space-lg);
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            border-radius: var(--radius-lg);
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--space-sm);
-            transition: all var(--transition-fast);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary-main::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
-        }
-
-        .btn-primary-main:hover::before {
-            transform: translateX(100%);
-        }
-
-        .btn-primary-main:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(230, 57, 70, 0.35);
-        }
-
-        .btn-primary-main svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        /* ============================================
-           DETAILS TABS
-           ============================================ */
-        .details-section {
-            padding: var(--space-2xl) 0;
-        }
-
-        .tabs-container {
-            display: flex;
-            gap: var(--space-xs);
-            background: var(--bg-secondary);
-            padding: var(--space-xs);
-            border-radius: var(--radius-lg);
-            margin-bottom: var(--space-xl);
-            overflow-x: auto;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: var(--space-md) var(--space-lg);
-            background: transparent;
-            border: none;
-            border-radius: var(--radius-md);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            transition: all var(--transition-fast);
-            min-width: 140px;
-        }
-
-        .tab-btn:hover {
-            color: var(--text-primary);
-        }
-
-        .tab-btn.active {
-            background: var(--card-bg);
-            color: var(--red-primary);
-            box-shadow: var(--card-shadow);
-        }
-
-        .tab-panel {
-            display: none;
-            animation: fadeSlide 0.4s ease;
-        }
-
-        .tab-panel.active {
-            display: block;
-        }
-
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Info Cards Grid */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: var(--space-lg);
-        }
-
-        .info-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: var(--space-lg);
-            transition: all var(--transition-fast);
-        }
-
-        .info-card:hover {
-            border-color: var(--red-primary);
-            transform: translateY(-4px);
-            box-shadow: var(--card-shadow);
-        }
-
-        .info-card-header {
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-            margin-bottom: var(--space-md);
-        }
-
-        .info-icon {
+        .meta-icon {
             width: 40px;
             height: 40px;
-            background: var(--red-glow);
-            border-radius: var(--radius-md);
-            display: grid;
-            place-items: center;
-            color: var(--red-primary);
-        }
-
-        .info-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .info-list {
-            list-style: none;
-        }
-
-        .info-list li {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: var(--space-sm) 0;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.95rem;
-        }
-
-        .info-list li:last-child {
-            border-bottom: none;
-        }
-
-        .info-list .value {
-            font-weight: 500;
-            color: var(--green-primary);
-        }
-
-        /* ============================================
-           MODAL SYSTEM
-           ============================================ */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(10px);
-            z-index: 2000;
-            display: none;
-            place-items: center;
-            padding: var(--space-lg);
-            overflow-y: auto;
-        }
-
-        .modal-overlay.active {
-            display: grid;
-        }
-
-        .modal-container {
-            background: var(--card-bg);
-            border-radius: var(--radius-xl);
-            width: 100%;
-            max-width: 750px;
-            max-height: 90vh;
-            overflow: hidden;
-            animation: modalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes modalIn {
-            from { opacity: 0; transform: scale(0.9) translateY(30px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        .modal-header {
-            padding: var(--space-xl);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-secondary);
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .modal-close {
-            width: 44px;
-            height: 44px;
-            background: var(--bg-tertiary);
-            border: none;
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            color: var(--text-primary);
-        }
-
-        .modal-close:hover {
-            background: var(--red-primary);
-            color: white;
-        }
-
-        .modal-body {
-            padding: var(--space-xl);
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-
-        /* Steps Indicator */
-        .steps-indicator {
-            display: flex;
             justify-content: center;
-            gap: var(--space-md);
-            margin-bottom: var(--space-xl);
-            position: relative;
         }
 
-        .steps-indicator::before {
-            content: '';
-            position: absolute;
-            top: 24px;
-            left: 15%;
-            right: 15%;
-            height: 2px;
-            background: var(--border-color);
-            z-index: 0;
+        .meta-icon svg {
+            width: 18px;
+            height: 18px;
+            color: var(--accent);
         }
 
-        .step-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: var(--space-sm);
-            position: relative;
-            z-index: 1;
-        }
-
-        .step-circle {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            display: grid;
-            place-items: center;
-            font-weight: 600;
-            transition: all var(--transition-base);
-        }
-
-        .step-item.active .step-circle {
-            background: var(--gradient-primary);
-            border-color: transparent;
-            color: white;
-            box-shadow: 0 4px 15px var(--red-glow);
-        }
-
-        .step-item.completed .step-circle {
-            background: var(--gradient-success);
-            border-color: transparent;
-            color: white;
-        }
-
-        .step-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .step-item.active .step-label {
-            color: var(--red-primary);
-        }
-
-        /* Step Content */
-        .step-content {
-            display: none;
-            animation: fadeSlide 0.3s ease;
-        }
-
-        .step-content.active {
+        .meta-text strong {
             display: block;
+            font-size: 15px;
         }
 
-        /* Option Cards */
-        .option-cards {
-            display: grid;
-            gap: var(--space-md);
+        .meta-text span {
+            font-size: 13px;
+            color: var(--fg-muted);
         }
 
-        .option-card {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: var(--space-lg);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            position: relative;
-        }
-
-        .option-card:hover {
-            border-color: var(--text-muted);
-        }
-
-        .option-card.selected {
-            border-color: var(--green-primary);
-            background: var(--green-glow);
-        }
-
-        .option-header {
+        .hero-actions {
             display: flex;
-            align-items: center;
-            gap: var(--space-md);
-        }
-
-        .option-radio {
-            width: 22px;
-            height: 22px;
-            accent-color: var(--green-primary);
-        }
-
-        .option-title {
-            font-weight: 600;
-            font-size: 1.05rem;
-        }
-
-        .option-price {
-            margin-left: auto;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 600;
-            color: var(--green-primary);
-        }
-
-        .option-description {
-            margin-top: var(--space-sm);
-            margin-left: 38px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        /* Expandable Content */
-        .expandable-content {
-            display: none;
-            margin-top: var(--space-md);
-            padding-top: var(--space-md);
-            border-top: 1px solid var(--border-color);
-            margin-left: 38px;
-        }
-
-        .expandable-content.show {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Bank Cards */
-        .bank-cards {
-            display: grid;
-            gap: var(--space-sm);
-        }
-
-        .bank-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--space-md);
-            background: var(--card-bg);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
-        }
-
-        .bank-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .bank-name {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .bank-detail {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .copy-btn {
-            padding: var(--space-sm) var(--space-md);
-            background: var(--green-primary);
-            color: white;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-
-        .copy-btn:hover {
-            background: var(--green-dark);
-        }
-
-        /* Installment Grid */
-        .installment-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--space-sm);
-        }
-
-        .installment-option {
-            padding: var(--space-md);
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-md);
-            text-align: center;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-
-        .installment-option:hover {
-            border-color: var(--text-muted);
-        }
-
-        .installment-option.selected {
-            border-color: var(--green-primary);
-            background: var(--green-glow);
-        }
-
-        .installment-months {
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .installment-interest {
-            font-size: 0.85rem;
-            color: var(--red-primary);
-            margin-top: var(--space-xs);
-        }
-
-        /* Notice Box */
-        .notice-box {
-            padding: var(--space-md);
-            background: var(--red-glow);
-            border: 1px solid var(--red-light);
-            border-radius: var(--radius-md);
-            font-size: 0.9rem;
-            color: var(--red-dark);
-            margin-top: var(--space-md);
-        }
-
-        [data-theme="dark"] .notice-box {
-            color: var(--red-light);
-        }
-
-        .notice-box.green {
-            background: var(--green-glow);
-            border-color: var(--green-light);
-            color: var(--green-dark);
-        }
-
-        [data-theme="dark"] .notice-box.green {
-            color: var(--green-light);
-        }
-
-        /* Unavailable Methods */
-        .unavailable-section {
-            margin-top: var(--space-lg);
-            padding-top: var(--space-lg);
-            border-top: 1px solid var(--border-color);
-        }
-
-        .unavailable-title {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: var(--space-sm);
-        }
-
-        .unavailable-grid {
-            display: flex;
-            gap: var(--space-sm);
+            gap: 16px;
             flex-wrap: wrap;
-        }
-
-        .unavailable-badge {
-            padding: var(--space-sm) var(--space-md);
-            background: var(--bg-tertiary);
-            border-radius: var(--radius-full);
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            opacity: 0.6;
-        }
-
-        /* Form Styles */
-        .form-group {
-            margin-bottom: var(--space-lg);
-        }
-
-        .form-label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: var(--space-sm);
-            color: var(--text-primary);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: var(--space-md);
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-md);
-            font-family: inherit;
-            font-size: 1rem;
-            color: var(--text-primary);
-            transition: all var(--transition-fast);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--red-primary);
-            background: var(--card-bg);
-        }
-
-        .form-textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        /* Summary Box */
-        .summary-box {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            padding: var(--space-lg);
-        }
-
-        .summary-section {
-            margin-bottom: var(--space-lg);
-        }
-
-        .summary-section-title {
-            font-weight: 600;
-            margin-bottom: var(--space-md);
-            padding-bottom: var(--space-sm);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            padding: var(--space-sm) 0;
-            font-size: 0.95rem;
-        }
-
-        .summary-row.highlight {
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: var(--green-primary);
-            padding-top: var(--space-md);
-            margin-top: var(--space-sm);
-            border-top: 2px solid var(--border-color);
-        }
-
-        /* Agree Section */
-        .agree-section {
-            margin-top: var(--space-lg);
-            padding: var(--space-md);
-            background: var(--bg-secondary);
-            border-radius: var(--radius-md);
-        }
-
-        .agree-label {
-            display: flex;
-            align-items: flex-start;
-            gap: var(--space-md);
-            cursor: pointer;
-        }
-
-        .agree-checkbox {
-            width: 22px;
-            height: 22px;
-            accent-color: var(--green-primary);
-            margin-top: 2px;
-        }
-
-        .agree-text {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .agree-text a {
-            color: var(--red-primary);
-            font-weight: 500;
-        }
-
-        /* Modal Footer */
-        .modal-footer {
-            padding: var(--space-xl);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            gap: var(--space-md);
-            background: var(--bg-secondary);
         }
 
         .btn {
-            padding: var(--space-md) var(--space-xl);
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: 1rem;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: var(--space-sm);
-            transition: all var(--transition-fast);
-            border: 2px solid transparent;
+            gap: 10px;
+            padding: 16px 28px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 12px;
             cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
         }
 
         .btn-primary {
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
             color: white;
-            border: none;
+            box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px var(--red-glow);
+            box-shadow: 0 8px 30px rgba(220, 38, 38, 0.4);
         }
 
         .btn-secondary {
-            background: transparent;
-            color: var(--text-primary);
-            border-color: var(--border-color);
+            background: var(--bg-card);
+            color: var(--fg);
+            border: 1px solid var(--border);
         }
 
         .btn-secondary:hover {
-            border-color: var(--text-muted);
+            border-color: #16a34a;
+            background: rgba(22, 163, 74, 0.1);
         }
 
-        /* ============================================
-           FOOTER
-           ============================================ */
-        .footer {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border-color);
-            padding: var(--space-xl) 0;
-            margin-top: var(--space-2xl);
-        }
-
-        .footer-inner {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 var(--space-xl);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: var(--space-lg);
-        }
-
-        .footer-links {
-            display: flex;
-            gap: var(--space-lg);
-            flex-wrap: wrap;
-        }
-
-        .footer-link {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            transition: color var(--transition-fast);
-        }
-
-        .footer-link:hover {
-            color: var(--red-primary);
-        }
-
-        .footer-developer {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .footer-developer a {
-            color: var(--green-primary);
-            font-weight: 600;
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: var(--space-xl);
-            right: var(--space-xl);
-            background: var(--green-primary);
+        .btn-green {
+            background: linear-gradient(135deg, #16a34a, #15803d);
             color: white;
-            padding: var(--space-md) var(--space-xl);
-            border-radius: var(--radius-md);
-            font-weight: 500;
-            z-index: 3000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all var(--transition-base);
+            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3);
         }
 
-        .toast.show {
-            transform: translateY(0);
+        .btn-green:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(22, 163, 74, 0.4);
+        }
+
+        /* Media Gallery */
+        .media-gallery {
+            position: relative;
+            z-index: 1;
+        }
+
+        .gallery-main {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            aspect-ratio: 16/10;
+        }
+
+        .gallery-slider {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .gallery-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .gallery-slide.active {
             opacity: 1;
         }
 
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
+        .gallery-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            color: white;
+            z-index: 10;
+        }
+
+        .gallery-nav:hover {
+            background: var(--accent);
+        }
+
+        .gallery-nav.prev { left: 16px; }
+        .gallery-nav.next { right: 16px; }
+
+        .gallery-nav svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .gallery-dots {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .gallery-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .gallery-dot.active {
+            background: var(--accent);
+            transform: scale(1.2);
+        }
+
+        .gallery-counter {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .gallery-thumbs {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .thumb-item {
+            width: 80px;
+            height: 60px;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid var(--border);
+            transition: all 0.2s ease;
+            opacity: 0.5;
+        }
+
+        .thumb-item.active {
+            border-color: var(--accent);
+            opacity: 1;
+        }
+
+        .thumb-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .section-header {
+            margin-bottom: 48px;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 4vw, 40px);
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            color: var(--fg-secondary);
+            font-size: 17px;
+            max-width: 600px;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-green));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-light);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(22, 163, 74, 0.1));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon svg {
+            width: 26px;
+            height: 26px;
+            color: var(--accent);
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: var(--fg-secondary);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* Options Section */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .option-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .option-card:hover {
+            border-color: var(--accent-green);
+            background: rgba(22, 163, 74, 0.05);
+        }
+
+        .option-check {
+            width: 24px;
+            height: 24px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .option-check svg {
+            width: 14px;
+            height: 14px;
+            color: white;
+        }
+
+        .option-text {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* Tech Stack */
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .tech-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .tech-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .tech-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .stat-card {
+            text-align: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px 24px;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--fg-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 32px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -33px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: 3px solid var(--bg);
+        }
+
+        .timeline-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .timeline-date {
+            font-size: 13px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .timeline-title {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+
+        .timeline-desc {
+            color: var(--fg-secondary);
+            font-size: 14px;
+        }
+
+        /* Pricing Box */
+        .pricing-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-green));
+        }
+
+        .pricing-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent), var(--accent-green));
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .pricing-title {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .pricing-price {
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .pricing-price span {
+            font-size: 18px;
+            color: var(--fg-muted);
+            font-weight: 400;
+        }
+
+        .pricing-desc {
+            color: var(--fg-secondary);
+            margin-bottom: 32px;
+        }
+
+        .pricing-features {
+            text-align: left;
+            margin-bottom: 32px;
+        }
+
+        .pricing-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pricing-feature:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-feature svg {
+            width: 18px;
+            height: 18px;
+            color: var(--accent-green);
+        }
+
+        .pricing-feature span {
+            font-size: 14px;
+        }
+
+        /* Team Section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .team-card {
+            text-align: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px 24px;
+            transition: all 0.2s ease;
+        }
+
+        .team-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .team-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .team-name {
+            font-size: 17px;
+            margin-bottom: 4px;
+        }
+
+        .team-role {
+            color: var(--fg-muted);
+            font-size: 13px;
+        }
+
+        /* FAQ Section */
+        .faq-list {
+            max-width: 800px;
+        }
+
+        .faq-item {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            background: var(--bg-card);
+        }
+
+        .faq-question {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            background: none;
+            border: none;
+            color: var(--fg);
+            font-size: 16px;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--accent);
+        }
+
+        .faq-question svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.open .faq-question svg {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer-inner {
+            padding: 0 24px 20px;
+            color: var(--fg-secondary);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.05), rgba(22, 163, 74, 0.05));
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 60px;
+            text-align: center;
+            margin: 60px 0;
+        }
+
+        .cta-title {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .cta-desc {
+            color: var(--fg-secondary);
+            font-size: 17px;
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+
+        .cta-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 60px 0 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-brand p {
+            color: var(--fg-secondary);
+            font-size: 14px;
+            line-height: 1.8;
+            margin-top: 16px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            color: var(--fg-muted);
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col a {
+            color: var(--fg-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-copyright {
+            color: var(--fg-muted);
+            font-size: 14px;
+        }
+
+        .footer-developer {
+            font-size: 14px;
+            color: var(--fg-muted);
+        }
+
+        .footer-developer a {
+            color: var(--accent-green);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-developer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
         @media (max-width: 1024px) {
             .hero-grid {
                 grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 768px) {
             .nav-menu {
-                display: none;
-                position: absolute;
-                top: 100%;
+                position: fixed;
+                top: 70px;
                 left: 0;
                 right: 0;
-                background: var(--card-bg);
+                background: var(--bg-secondary);
                 flex-direction: column;
-                padding: var(--space-lg);
-                border-bottom: 1px solid var(--border-color);
+                padding: 20px;
+                gap: 4px;
+                border-bottom: 1px solid var(--border);
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
             }
 
-            .nav-menu.show {
-                display: flex;
+            .nav-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
             }
 
             .mobile-toggle {
                 display: flex;
             }
 
-            .project-title {
-                font-size: 1.75rem;
-            }
-
-            .tabs-container {
-                flex-wrap: nowrap;
-            }
-
-            .installment-grid {
+            .features-grid {
                 grid-template-columns: 1fr;
             }
 
-            .steps-indicator {
-                gap: var(--space-sm);
+            .options-grid {
+                grid-template-columns: 1fr;
             }
 
-            .step-label {
-                font-size: 0.75rem;
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
 
-            .swipe-hint {
-                display: block;
+            .team-grid {
+                grid-template-columns: 1fr;
             }
 
-            .footer-inner {
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .footer-bottom {
                 flex-direction: column;
                 text-align: center;
+            }
+
+            .cta-section {
+                padding: 40px 24px;
+            }
+
+            .pricing-price {
+                font-size: 42px;
+            }
+
+            .gallery-thumbs {
+                display: none;
             }
         }
 
         @media (max-width: 480px) {
-            .modal-footer {
-                flex-direction: column-reverse;
+            .hero-meta {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
             }
 
             .btn {
                 width: 100%;
             }
+
+            .stat-number {
+                font-size: 36px;
+            }
         }
 
-        /* Reduced Motion */
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
+            * {
                 animation-duration: 0.01ms !important;
                 transition-duration: 0.01ms !important;
             }
         }
+
+        /* Focus States */
+        button:focus-visible,
+        a:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
-    <!-- Background Effects -->
-    <div class="bg-effects">
-        <div class="bg-grid"></div>
-        <div class="bg-blob bg-blob-1"></div>
-        <div class="bg-blob bg-blob-2"></div>
-    </div>
-
     <!-- Header -->
     <header class="header">
         <div class="header-inner">
-            <a href="index.html" class="logo">
-                <div class="logo-icon">V</div>
-                <span>Vezlo</span>
-            </a>
-
+            <a href="index.html" class="logo">Vezlo</a>
+            
             <nav class="nav-menu" id="navMenu">
                 <a href="index.html" class="nav-link">Home</a>
+                <a href="project.html" class="nav-link active">Projects</a>
+                <a href="price.html" class="nav-link">Pricing</a>
                 <a href="contact.html" class="nav-link">Contact</a>
                 <a href="login.html" class="nav-link">Login</a>
             </nav>
 
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"></button>
-                <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+            <div class="header-actions">
+                <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">
+                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                </button>
+                <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -1410,346 +1248,750 @@
     <!-- Main Content -->
     <main class="main-wrapper">
         <!-- Hero Section -->
-        <section class="hero-section">
+        <section class="hero">
             <div class="container">
                 <div class="hero-grid">
-                    <!-- Media Carousel -->
-                    <div class="media-carousel">
-                        <div class="carousel-viewport">
-                            <div class="carousel-track" id="carouselTrack">
-                                <div class="carousel-slide">
-                                    <img src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=900&h=600&fit=crop" alt="LMS Dashboard">
-                                </div>
-                                <div class="carousel-slide">
-                                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=900&h=600&fit=crop" alt="Learning Platform">
-                                </div>
-                                <div class="carousel-slide">
-                                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=900&h=600&fit=crop" alt="Online Classes">
-                                </div>
-                                <div class="carousel-slide">
-                                    <video muted loop playsinline id="carouselVideo">
-                                        <source src="https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4" type="video/mp4">
-                                    </video>
-                                </div>
-                            </div>
-
-                            <div class="carousel-arrows">
-                                <button class="carousel-arrow" id="prevSlide" aria-label="Previous">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="15 18 9 12 15 6"></polyline>
-                                    </svg>
-                                </button>
-                                <button class="carousel-arrow" id="nextSlide" aria-label="Next">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="9 18 15 12 9 6"></polyline>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="carousel-dots" id="carouselDots">
-                            <button class="carousel-dot active" data-index="0"></button>
-                            <button class="carousel-dot" data-index="1"></button>
-                            <button class="carousel-dot" data-index="2"></button>
-                            <button class="carousel-dot" data-index="3"></button>
-                        </div>
-
-                        <div class="swipe-hint">Swipe to view more</div>
-                    </div>
-
-                    <!-- Project Card -->
-                    <div class="project-card">
-                        <span class="project-badge">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    <div class="hero-content">
+                        <div class="project-badge">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                             </svg>
-                            Ready to Deploy
-                        </span>
-
-                        <h1 class="project-title">Learning Management System</h1>
-                        <p class="project-category">Category: Education / LMS / Online Courses</p>
-
-                        <p class="project-description">
-                            A comprehensive LMS platform for educational institutions, tutoring centers, and online course providers. Includes student management, course creation, progress tracking, live classes, and detailed analytics dashboard.
+                            Featured Project
+                        </div>
+                        
+                        <h1 class="hero-title">
+                            <span>EduPro LMS</span><br>
+                            Learning Management System
+                        </h1>
+                        
+                        <p class="hero-subtitle">
+                            A comprehensive Learning Management System designed for educational institutions. Features course management, student tracking, live classes, assignments, and detailed analytics.
                         </p>
 
-                        <div class="feature-tags">
-                            <span class="feature-tag">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                Student Management
-                            </span>
-                            <span class="feature-tag">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                Live Classes
-                            </span>
-                            <span class="feature-tag">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                Course Builder
-                            </span>
-                            <span class="feature-tag">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                Analytics
-                            </span>
-                            <span class="feature-tag">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                Payment Gateway
-                            </span>
-                        </div>
-
-                        <div class="price-box">
-                            <div class="price-row">
-                                <span class="price-label">Starting From</span>
+                        <div class="hero-meta">
+                            <div class="meta-item">
+                                <div class="meta-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6"/>
+                                        <line x1="8" y1="2" x2="8" y2="6"/>
+                                        <line x1="3" y1="10" x2="21" y2="10"/>
+                                    </svg>
+                                </div>
+                                <div class="meta-text">
+                                    <strong>Delivery Time</strong>
+                                    <span>14-21 Business Days</span>
+                                </div>
                             </div>
-                            <div class="price-value">$299 <span>USD</span></div>
-                            <p class="price-lkr">Approximately LKR 89,700</p>
+                            <div class="meta-item">
+                                <div class="meta-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                    </svg>
+                                </div>
+                                <div class="meta-text">
+                                    <strong>Category</strong>
+                                    <span>Education / LMS</span>
+                                </div>
+                            </div>
+                            <div class="meta-item">
+                                <div class="meta-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                </div>
+                                <div class="meta-text">
+                                    <strong>Users</strong>
+                                    <span>Unlimited Students</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <button class="btn-primary-main" id="openRequestModal">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                            </svg>
-                            Request Website
-                        </button>
+                        <div class="hero-actions">
+                            <a href="price.html" class="btn btn-primary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                                View Price
+                            </a>
+                            <a href="contact.html" class="btn btn-secondary">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                                Contact Us
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="media-gallery">
+                        <div class="gallery-main">
+                            <div class="gallery-slider" id="gallerySlider">
+                                <div class="gallery-slide active">
+                                    <img src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=900&q=80" alt="LMS Dashboard" loading="lazy">
+                                </div>
+                                <div class="gallery-slide">
+                                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=900&q=80" alt="Course Interface" loading="lazy">
+                                </div>
+                                <div class="gallery-slide">
+                                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=900&q=80" alt="Study Platform" loading="lazy">
+                                </div>
+                                <div class="gallery-slide">
+                                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=900&q=80" alt="Collaboration" loading="lazy">
+                                </div>
+                                <div class="gallery-slide">
+                                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=900&q=80" alt="Classroom" loading="lazy">
+                                </div>
+                            </div>
+                            
+                            <button class="gallery-nav prev" id="prevBtn" aria-label="Previous">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M15 18l-6-6 6-6"/>
+                                </svg>
+                            </button>
+                            <button class="gallery-nav next" id="nextBtn" aria-label="Next">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 18l6-6-6-6"/>
+                                </svg>
+                            </button>
+                            
+                            <div class="gallery-dots" id="galleryDots"></div>
+                            <div class="gallery-counter"><span id="currentSlide">1</span> / <span id="totalSlides">5</span></div>
+                        </div>
+                        
+                        <div class="gallery-thumbs" id="galleryThumbs"></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Details Section -->
-        <section class="details-section">
+        <!-- Stats Section -->
+        <section class="section" style="background: var(--bg-secondary);">
             <div class="container">
-                <div class="tabs-container">
-                    <button class="tab-btn active" data-tab="details">Details & Options</button>
-                    <button class="tab-btn" data-tab="customize">Customize</button>
-                    <button class="tab-btn" data-tab="plans">Price Plans</button>
-                    <button class="tab-btn" data-tab="service">After Service</button>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">Pages Included</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Responsive Design</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Months Support</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Technical Support</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="section" id="features">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                            <polyline points="2 17 12 22 22 17"/>
+                            <polyline points="2 12 12 17 22 12"/>
+                        </svg>
+                        Features
+                    </div>
+                    <h2 class="section-title">Key Features Included</h2>
+                    <p class="section-desc">Everything you need to run a successful online education platform</p>
                 </div>
 
-                <!-- Details Tab -->
-                <div class="tab-panel active" id="details">
-                    <div class="info-grid">
-                        <div class="info-card">
-                            <div class="info-card-header">
-                                <div class="info-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                        <line x1="3" y1="9" x2="21" y2="9"></line>
-                                        <line x1="9" y1="21" x2="9" y2="9"></line>
-                                    </svg>
-                                </div>
-                                <h3 class="info-title">Included Pages</h3>
-                            </div>
-                            <ul class="info-list">
-                                <li><span>Home / Landing Page</span><span class="value">Included</span></li>
-                                <li><span>Course Catalog</span><span class="value">Included</span></li>
-                                <li><span>Student Dashboard</span><span class="value">Included</span></li>
-                                <li><span>Teacher Dashboard</span><span class="value">Included</span></li>
-                                <li><span>Admin Panel</span><span class="value">Included</span></li>
-                                <li><span>Login / Registration</span><span class="value">Included</span></li>
-                            </ul>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                            </svg>
                         </div>
+                        <h3>Course Management</h3>
+                        <p>Create, organize, and manage unlimited courses with drag-and-drop interface. Support for video lessons, documents, quizzes, and interactive content.</p>
+                    </div>
 
-                        <div class="info-card">
-                            <div class="info-card-header">
-                                <div class="info-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                                    </svg>
-                                </div>
-                                <h3 class="info-title">Domain & Hosting</h3>
-                            </div>
-                            <ul class="info-list">
-                                <li><span>.com Domain (1 Year)</span><span class="value">$12</span></li>
-                                <li><span>Hosting 5GB SSD (1 Year)</span><span class="value">$50</span></li>
-                                <li><span>SSL Certificate</span><span class="value">Free</span></li>
-                                <li><span>Email Accounts</span><span class="value">5 Accounts</span></li>
-                            </ul>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
                         </div>
+                        <h3>Student Management</h3>
+                        <p>Complete student tracking with progress reports, attendance monitoring, performance analytics, and automated notifications for parents.</p>
+                    </div>
 
-                        <div class="info-card">
-                            <div class="info-card-header">
-                                <div class="info-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                                    </svg>
-                                </div>
-                                <h3 class="info-title">Technical Details</h3>
-                            </div>
-                            <ul class="info-list">
-                                <li><span>Technology Stack</span><span>React, Node.js</span></li>
-                                <li><span>Database</span><span>MongoDB</span></li>
-                                <li><span>Responsive Design</span><span class="value">Yes</span></li>
-                                <li><span>SEO Optimized</span><span class="value">Yes</span></li>
-                                <li><span>Delivery Time</span><span>14-21 Days</span></li>
-                            </ul>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="23 7 16 12 23 17 23 7"/>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                            </svg>
+                        </div>
+                        <h3>Live Classes</h3>
+                        <p>Built-in video conferencing for live sessions with screen sharing, virtual whiteboard, breakout rooms, recording, and chat features.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                            </svg>
+                        </div>
+                        <h3>Assignment System</h3>
+                        <p>Online assignment submission with automated grading, plagiarism detection, deadline management, and detailed feedback system.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="20" x2="18" y2="10"/>
+                                <line x1="12" y1="20" x2="12" y2="4"/>
+                                <line x1="6" y1="20" x2="6" y2="14"/>
+                            </svg>
+                        </div>
+                        <h3>Analytics Dashboard</h3>
+                        <p>Comprehensive analytics with visual reports, student engagement metrics, revenue tracking, and exportable data for stakeholders.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                <line x1="1" y1="10" x2="23" y2="10"/>
+                            </svg>
+                        </div>
+                        <h3>Payment Integration</h3>
+                        <p>Secure payment gateway integration with Stripe, PayPal support. Automatic invoicing, subscription management, and scholarship options.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Options Section -->
+        <section class="section" id="options" style="background: var(--bg-secondary);">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 11 12 14 22 4"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                        Included
+                    </div>
+                    <h2 class="section-title">Everything You Get</h2>
+                    <p class="section-desc">Complete list of features and deliverables included in this project</p>
+                </div>
+
+                <div class="options-grid">
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">Fully Responsive Design (Mobile, Tablet, Desktop)</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">Dark and Light Mode Toggle</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">Admin Dashboard with Full Control</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">Teacher/Instructor Portal</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">Student Dashboard and Profile</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">Parent Portal for Progress Monitoring</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">Secure User Authentication System</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">Email and SMS Notifications</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">Quiz and Exam Module</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">Certificate Generation System</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">Discussion Forums and Chat</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">Complete Source Code</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">Documentation and User Manual</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">6 Months Free Technical Support</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">Free Installation and Setup</span>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-check">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <span class="option-text">SEO Optimized Structure</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack Section -->
+        <section class="section" id="tech">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 18 22 12 16 6"/>
+                            <polyline points="8 6 2 12 8 18"/>
+                        </svg>
+                        Technology
+                    </div>
+                    <h2 class="section-title">Built With Modern Tech</h2>
+                    <p class="section-desc">Using the latest and most reliable technologies for optimal performance</p>
+                </div>
+
+                <div class="tech-list">
+                    <div class="tech-item">
+                        <svg viewBox="0 0 24 24" fill="#E44D26">
+                            <path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/>
+                        </svg>
+                        HTML5
+                    </div>
+                    <div class="tech-item">
+                        <svg viewBox="0 0 24 24" fill="#1572B6">
+                            <path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.413z"/>
+                        </svg>
+                        CSS3
+                    </div>
+                    <div class="tech-item">
+                        <svg viewBox="0 0 24 24" fill="#F7DF1E">
+                            <path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z"/>
+                        </svg>
+                        JavaScript
+                    </div>
+                    <div class="tech-item">
+                        <svg viewBox="0 0 24 24" fill="#38B2AC">
+                            <path d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z"/>
+                        </svg>
+                        Tailwind CSS
+                    </div>
+                    <div class="tech-item">
+                        <svg viewBox="0 0 24 24" fill="#43853D">
+                            <path d="M11.998,24c-0.321,0-0.641-0.084-0.922-0.247l-2.936-1.737c-0.438-0.245-0.224-0.332-0.08-0.383 c0.585-0.203,0.703-0.25,1.328-0.604c0.065-0.037,0.151-0.023,0.218,0.017l2.256,1.339c0.082,0.045,0.197,0.045,0.272,0l8.795-5.076 c0.082-0.047,0.134-0.141,0.134-0.238V6.921c0-0.099-0.053-0.192-0.137-0.242l-8.791-5.072c-0.081-0.047-0.189-0.047-0.271,0 L3.075,6.68C2.99,6.729,2.936,6.825,2.936,6.921v10.15c0,0.097,0.054,0.189,0.139,0.235l2.409,1.392 c1.307,0.654,2.108-0.116,2.108-0.89V7.787c0-0.142,0.114-0.253,0.256-0.253h1.115c0.139,0,0.255,0.112,0.255,0.253v10.021 c0,1.745-0.95,2.745-2.604,2.745c-0.508,0-0.909,0-2.026-0.551L2.28,18.675c-0.57-0.329-0.922-0.945-0.922-1.604V6.921 c0-0.659,0.353-1.275,0.922-1.603l8.795-5.082c0.557-0.315,1.296-0.315,1.848,0l8.794,5.082c0.57,0.329,0.924,0.944,0.924,1.603 v10.15c0,0.659-0.354,1.273-0.924,1.604l-8.794,5.078C12.643,23.916,12.324,24,11.998,24z M19.099,13.993 c0-1.9-1.284-2.406-3.987-2.763c-2.731-0.361-3.009-0.548-3.009-1.187c0-0.528,0.235-1.233,2.258-1.233 c1.807,0,2.473,0.389,2.747,1.607c0.024,0.115,0.129,0.199,0.247,0.199h1.141c0.071,0,0.138-0.031,0.186-0.081 c0.048-0.054,0.074-0.123,0.067-0.196c-0.177-2.098-1.571-3.076-4.388-3.076c-2.508,0-4.004,1.058-4.004,2.833 c0,1.925,1.488,2.457,3.895,2.695c2.88,0.282,3.103,0.703,3.103,1.269c0,0.983-0.789,1.402-2.642,1.402 c-2.327,0-2.839-0.584-3.011-1.742c-0.02-0.124-0.126-0.215-0.253-0.215h-1.137c-0.141,0-0.254,0.112-0.254,0.253 c0,1.482,0.806,3.248,4.655,3.248C17.501,17.007,19.099,15.91,19.099,13.993z"/>
+                        </svg>
+                        Node.js
+                    </div>
+                    <div class="tech-item">
+                        <svg viewBox="0 0 24 24" fill="#47A248">
+                            <path d="M17.193 9.555c-1.264-5.58-4.252-7.414-4.573-8.115-.28-.394-.53-.954-.735-1.44-.036.495-.055.685-.523 1.184-.723.566-4.438 3.682-4.74 10.02-.282 5.912 4.27 9.435 4.888 9.884l.07.05A73.49 73.49 0 0111.91 24h.481c.114-1.032.284-2.056.51-3.07.417-.296.604-.463.85-.693a11.342 11.342 0 003.639-8.464c.01-.814-.103-1.662-.197-2.218zm-5.336 8.195s0-8.291.275-8.29c.213 0 .49 10.695.49 10.695-.381-.045-.765-1.76-.765-2.405z"/>
+                        </svg>
+                        MongoDB
+                    </div>
+                    <div class="tech-item">
+                        <svg viewBox="0 0 24 24" fill="#FFCA28">
+                            <path d="M12.005 0L8.461 1.828l-5.48 3.33L0 7.262v9.476l2.98 2.104 5.482 3.33 3.543 1.828 3.544-1.828 5.48-3.33L24 16.738V7.262l-2.981-2.104-5.48-3.33L12.005 0zm0 2.547l2.23 1.151 4.677 2.842 1.887 1.332v7.256l-1.887 1.332-4.676 2.842-2.231 1.151-2.229-1.151-4.678-2.842-1.886-1.332V7.872l1.886-1.332 4.678-2.842 2.229-1.151zM12.005 6.4a5.6 5.6 0 100 11.2 5.6 5.6 0 000-11.2zm0 2.4a3.2 3.2 0 110 6.4 3.2 3.2 0 010-6.4z"/>
+                        </svg>
+                        Firebase
+                    </div>
+                    <div class="tech-item">
+                        <svg viewBox="0 0 24 24" fill="#000000">
+                            <path d="M11.77 0C5.27 0 0 5.27 0 11.77c0 5.2 3.38 9.6 8.06 11.16.59.11.8-.26.8-.57v-2.16c-3.28.71-3.97-1.58-3.97-1.58-.54-1.37-1.31-1.73-1.31-1.73-1.07-.73.08-.72.08-.72 1.18.08 1.81 1.22 1.81 1.22 1.05 1.8 2.76 1.28 3.43.98.11-.76.41-1.28.75-1.57-2.62-.3-5.37-1.31-5.37-5.83 0-1.29.46-2.34 1.22-3.17-.12-.3-.53-1.5.12-3.13 0 0 .99-.32 3.25 1.21.94-.26 1.95-.39 2.96-.4 1 .01 2.02.14 2.96.4 2.26-1.53 3.25-1.21 3.25-1.21.65 1.63.24 2.83.12 3.13.76.83 1.22 1.88 1.22 3.17 0 4.53-2.76 5.53-5.39 5.82.42.37.81 1.1.81 2.22v3.29c0 .31.21.68.8.57C20.62 21.37 24 16.97 24 11.77 24 5.27 18.73 0 12.23 0h-.46z"/>
+                        </svg>
+                        GitHub
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Section -->
+        <section class="section" style="background: var(--bg-secondary);">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Timeline
+                    </div>
+                    <h2 class="section-title">Development Process</h2>
+                    <p class="section-desc">Our structured approach to deliver your project on time</p>
+                </div>
+
+                <div class="timeline" style="max-width: 700px; margin: 0 auto;">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">Day 1-2</div>
+                            <h4 class="timeline-title">Requirements Analysis</h4>
+                            <p class="timeline-desc">Detailed discussion about your requirements, features, and design preferences.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">Day 3-5</div>
+                            <h4 class="timeline-title">Design & Wireframes</h4>
+                            <p class="timeline-desc">Creating UI/UX designs, wireframes, and getting your approval on the visual design.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">Day 6-12</div>
+                            <h4 class="timeline-title">Development Phase</h4>
+                            <p class="timeline-desc">Core development including frontend, backend, database setup, and API integrations.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">Day 13-16</div>
+                            <h4 class="timeline-title">Testing & QA</h4>
+                            <p class="timeline-desc">Comprehensive testing, bug fixes, performance optimization, and security audits.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">Day 17-19</div>
+                            <h4 class="timeline-title">Client Review</h4>
+                            <p class="timeline-desc">Demo session, feedback collection, and final adjustments based on your input.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-date">Day 20-21</div>
+                            <h4 class="timeline-title">Deployment & Handover</h4>
+                            <p class="timeline-desc">Final deployment, documentation handover, and training session for your team.</p>
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <!-- Customize Tab -->
-                <div class="tab-panel" id="customize">
-                    <div class="info-grid">
-                        <div class="info-card">
-                            <div class="info-card-header">
-                                <div class="info-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                        <polyline points="14 2 14 8 20 8"></polyline>
-                                    </svg>
-                                </div>
-                                <h3 class="info-title">Additional Pages</h3>
+        <!-- Pricing Box -->
+        <section class="section" id="pricing">
+            <div class="container">
+                <div class="section-header" style="text-align: center;">
+                    <div class="section-label" style="justify-content: center;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        Pricing
+                    </div>
+                    <h2 class="section-title" style="margin: 0 auto 16px;">Investment for Your LMS</h2>
+                    <p class="section-desc" style="margin: 0 auto;">One-time payment with complete ownership and lifetime access</p>
+                </div>
+
+                <div style="max-width: 500px; margin: 0 auto;">
+                    <div class="pricing-box">
+                        <div class="pricing-badge">Complete Package</div>
+                        <h3 class="pricing-title">EduPro LMS</h3>
+                        <div class="pricing-price">$1,499 <span>USD</span></div>
+                        <p class="pricing-desc">Complete Learning Management System with all features</p>
+                        
+                        <div class="pricing-features">
+                            <div class="pricing-feature">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                <span>Complete Source Code</span>
                             </div>
-                            <ul class="info-list">
-                                <li><span>Blog Section</span><span class="value">+$25</span></li>
-                                <li><span>Forum / Discussion Board</span><span class="value">+$30</span></li>
-                                <li><span>Events Calendar</span><span class="value">+$20</span></li>
-                                <li><span>Certificate Generator</span><span class="value">+$35</span></li>
-                                <li><span>Quiz / Exam System</span><span class="value">+$40</span></li>
-                            </ul>
+                            <div class="pricing-feature">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                <span>All 15+ Pages Included</span>
+                            </div>
+                            <div class="pricing-feature">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                <span>6 Months Free Support</span>
+                            </div>
+                            <div class="pricing-feature">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                <span>Free Installation</span>
+                            </div>
+                            <div class="pricing-feature">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                <span>Documentation Included</span>
+                            </div>
+                            <div class="pricing-feature">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                <span>Custom Branding</span>
+                            </div>
                         </div>
 
-                        <div class="info-card">
-                            <div class="info-card-header">
-                                <div class="info-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                                        <polyline points="2 17 12 22 22 17"></polyline>
-                                        <polyline points="2 12 12 17 22 12"></polyline>
-                                    </svg>
-                                </div>
-                                <h3 class="info-title">Enhanced Features</h3>
-                            </div>
-                            <ul class="info-list">
-                                <li><span>Video Conferencing</span><span class="value">+$50</span></li>
-                                <li><span>Email Notifications</span><span class="value">+$25</span></li>
-                                <li><span>SMS Notifications</span><span class="value">+$30</span></li>
-                                <li><span>Advanced Analytics</span><span class="value">+$45</span></li>
-                                <li><span>Mobile App (Android)</span><span class="value">+$150</span></li>
-                            </ul>
-                        </div>
-
-                        <div class="info-card">
-                            <div class="info-card-header">
-                                <div class="info-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                                    </svg>
-                                </div>
-                                <h3 class="info-title">Domain Extensions</h3>
-                            </div>
-                            <ul class="info-list">
-                                <li><span>.com Domain</span><span class="value">$12/yr</span></li>
-                                <li><span>.net Domain</span><span class="value">+$5/yr</span></li>
-                                <li><span>.org Domain</span><span class="value">+$8/yr</span></li>
-                                <li><span>.lk Domain (Sri Lanka)</span><span class="value">+$15/yr</span></li>
-                            </ul>
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                            <a href="contact.html" class="btn btn-primary" style="flex: 1;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                                Get Started
+                            </a>
+                            <a href="price.html" class="btn btn-secondary" style="flex: 1;">
+                                View Details
+                            </a>
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <!-- Plans Tab -->
-                <div class="tab-panel" id="plans">
-                    <div class="info-grid" style="grid-template-columns: repeat(4, 1fr);">
-                        <div class="info-card">
-                            <h3 class="info-title" style="margin-bottom: 0.5rem;">Basic</h3>
-                            <p style="font-size: 1.75rem; font-weight: 700; color: var(--green-primary); margin-bottom: 1rem;">$299</p>
-                            <ul class="info-list" style="font-size: 0.9rem;">
-                                <li><span>5 Core Pages</span></li>
-                                <li><span>Basic Student Mgmt</span></li>
-                                <li><span>Course Upload</span></li>
-                                <li><span>Mobile Responsive</span></li>
-                                <li><span>1 Month Support</span></li>
-                            </ul>
+        <!-- Team Section -->
+        <section class="section" style="background: var(--bg-secondary);">
+            <div class="container">
+                <div class="section-header" style="text-align: center;">
+                    <div class="section-label" style="justify-content: center;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Our Team
+                    </div>
+                    <h2 class="section-title" style="margin: 0 auto 16px;">Meet the Developers</h2>
+                    <p class="section-desc" style="margin: 0 auto;">Experienced professionals dedicated to delivering quality</p>
+                </div>
+
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="team-avatar">D</div>
+                        <h4 class="team-name">dmkaawya</h4>
+                        <p class="team-role">Lead Developer</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-avatar">S</div>
+                        <h4 class="team-name">Sarah J.</h4>
+                        <p class="team-role">UI/UX Designer</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-avatar">M</div>
+                        <h4 class="team-name">Mike R.</h4>
+                        <p class="team-role">Backend Developer</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-avatar">A</div>
+                        <h4 class="team-name">Anna L.</h4>
+                        <p class="team-role">QA Engineer</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="section" id="faq">
+            <div class="container">
+                <div class="section-header" style="text-align: center;">
+                    <div class="section-label" style="justify-content: center;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        FAQ
+                    </div>
+                    <h2 class="section-title" style="margin: 0 auto 16px;">Frequently Asked Questions</h2>
+                    <p class="section-desc" style="margin: 0 auto;">Common questions about our LMS project</p>
+                </div>
+
+                <div class="faq-list" style="margin: 0 auto;">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            What is included in the source code?
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9l6 6 6-6"/>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                You receive the complete source code including all HTML, CSS, JavaScript files, backend code (Node.js), database schemas, API endpoints, and configuration files. The code is well-documented and easy to customize.
+                            </div>
                         </div>
-                        <div class="info-card">
-                            <h3 class="info-title" style="margin-bottom: 0.5rem;">Standard</h3>
-                            <p style="font-size: 1.75rem; font-weight: 700; color: var(--green-primary); margin-bottom: 1rem;">$449</p>
-                            <ul class="info-list" style="font-size: 0.9rem;">
-                                <li><span>All Basic Features</span></li>
-                                <li><span>Quiz & Exam System</span></li>
-                                <li><span>Certificates</span></li>
-                                <li><span>Payment Gateway</span></li>
-                                <li><span>3 Months Support</span></li>
-                            </ul>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Can I customize the design and features?
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9l6 6 6-6"/>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Absolutely! You have full access to the source code, so you can modify colors, layouts, add new features, or integrate with other services. We also offer custom development services if needed.
+                            </div>
                         </div>
-                        <div class="info-card" style="border-color: var(--green-primary); background: var(--green-glow);">
-                            <h3 class="info-title" style="margin-bottom: 0.5rem;">Pro</h3>
-                            <p style="font-size: 1.75rem; font-weight: 700; color: var(--green-primary); margin-bottom: 1rem;">$699</p>
-                            <ul class="info-list" style="font-size: 0.9rem;">
-                                <li><span>All Standard Features</span></li>
-                                <li><span>Live Classes</span></li>
-                                <li><span>Advanced Analytics</span></li>
-                                <li><span>Email Notifications</span></li>
-                                <li><span>6 Months Support</span></li>
-                            </ul>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            What kind of support do you provide?
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9l6 6 6-6"/>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                We provide 6 months of free technical support including bug fixes, minor updates, and assistance with deployment. Support is available via email, chat, and scheduled video calls.
+                            </div>
                         </div>
-                        <div class="info-card">
-                            <h3 class="info-title" style="margin-bottom: 0.5rem;">Ultra Pro</h3>
-                            <p style="font-size: 1.75rem; font-weight: 700; color: var(--green-primary); margin-bottom: 1rem;">$999</p>
-                            <ul class="info-list" style="font-size: 0.9rem;">
-                                <li><span>All Pro Features</span></li>
-                                <li><span>Custom Features</span></li>
-                                <li><span>Priority Support</span></li>
-                                <li><span>1 Year Updates</span></li>
-                                <li><span>Dedicated Manager</span></li>
-                            </ul>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            How long does it take to set up?
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9l6 6 6-6"/>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Basic setup can be done within 24-48 hours. For custom configurations, branding, and deployment to your server, we typically complete everything within 5-7 business days.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Do you offer hosting services?
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9l6 6 6-6"/>
+                            </svg>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                We don't provide hosting directly, but we can recommend reliable hosting providers and help you deploy the application. We support deployment on AWS, Google Cloud, DigitalOcean, and most VPS providers.
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <!-- Service Tab -->
-                <div class="tab-panel" id="service">
-                    <div class="info-grid">
-                        <div class="info-card">
-                            <div class="info-card-header">
-                                <div class="info-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                    </svg>
-                                </div>
-                                <h3 class="info-title">Included Services</h3>
-                            </div>
-                            <ul class="info-list">
-                                <li><span>Free Bug Fixes</span><span class="value">Warranty Period</span></li>
-                                <li><span>Technical Support</span><span class="value">WhatsApp</span></li>
-                                <li><span>Training Sessions</span><span class="value">1-2 Hours</span></li>
-                                <li><span>Documentation</span><span class="value">Full Guide</span></li>
-                                <li><span>Security Updates</span><span class="value">Regular</span></li>
-                            </ul>
-                        </div>
-
-                        <div class="info-card">
-                            <div class="info-card-header">
-                                <div class="info-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <polyline points="12 6 12 12 16 14"></polyline>
-                                    </svg>
-                                </div>
-                                <h3 class="info-title">Extended Support</h3>
-                            </div>
-                            <ul class="info-list">
-                                <li><span>Monthly Maintenance</span><span class="value">$29/mo</span></li>
-                                <li><span>Priority Support</span><span class="value">$49/mo</span></li>
-                                <li><span>Full Service Package</span><span class="value">$99/mo</span></li>
-                            </ul>
-                        </div>
+        <!-- CTA Section -->
+        <section class="section">
+            <div class="container">
+                <div class="cta-section">
+                    <h2 class="cta-title">Ready to Launch Your LMS?</h2>
+                    <p class="cta-desc">Get a fully functional Learning Management System for your institution. Contact us today to discuss your requirements.</p>
+                    <div class="cta-actions">
+                        <a href="price.html" class="btn btn-primary">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                            View Pricing
+                        </a>
+                        <a href="contact.html" class="btn btn-green">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            Contact Us
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1758,733 +2000,265 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-inner">
-            <p>2026 Vezlo. All rights reserved.</p>
-            <div class="footer-links">
-                <a href="rules.html" class="footer-link">Terms & Conditions</a>
-                <a href="#" class="footer-link">License</a>
-                <a href="rules.html" class="footer-link">Privacy Policy</a>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">Vezlo</a>
+                    <p>We create modern, responsive websites and web applications. Quality code, beautiful design, and dedicated support for every project.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="project.html">Projects</a></li>
+                        <li><a href="price.html">Pricing</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">License Agreement</a></li>
+                        <li><a href="#">Refund Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Community</a></li>
+                    </ul>
+                </div>
             </div>
-            <p class="footer-developer">Developed by <a href="https://dmkaawya.vercel.app" target="_blank">dmkaawya</a></p>
+            <div class="footer-bottom">
+                <div class="footer-copyright">2026 Vezlo. All rights reserved.</div>
+                <div class="footer-developer">Developed by <a href="https://dmkaawyavercel.app" target="_blank" rel="noopener noreferrer">dmkaawya</a></div>
+            </div>
         </div>
     </footer>
 
-    <!-- Request Modal -->
-    <div class="modal-overlay" id="requestModal">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h2 class="modal-title">Request Website</h2>
-                <button class="modal-close" id="closeModal">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-
-            <div class="modal-body">
-                <!-- Steps Indicator -->
-                <div class="steps-indicator">
-                    <div class="step-item active" data-step="1">
-                        <div class="step-circle">1</div>
-                        <span class="step-label">Select Option</span>
-                    </div>
-                    <div class="step-item" data-step="2">
-                        <div class="step-circle">2</div>
-                        <span class="step-label">Details</span>
-                    </div>
-                    <div class="step-item" data-step="3">
-                        <div class="step-circle">3</div>
-                        <span class="step-label">Summary</span>
-                    </div>
-                </div>
-
-                <!-- Step 1: Select Option -->
-                <div class="step-content active" id="step1">
-                    <div class="option-cards">
-                        <div class="option-card" data-option="package">
-                            <div class="option-header">
-                                <input type="radio" name="requestType" class="option-radio" value="package">
-                                <span class="option-title">Select a Package</span>
-                            </div>
-                            <p class="option-description">Choose Basic, Standard, Pro, or Ultra Pro plan</p>
-                            
-                            <div class="expandable-content" id="packageOptions">
-                                <div class="installment-grid">
-                                    <div class="installment-option" data-plan="basic" data-price="299">
-                                        <div class="installment-months">Basic</div>
-                                        <div style="color: var(--green-primary); font-weight: 600;">$299</div>
-                                    </div>
-                                    <div class="installment-option" data-plan="standard" data-price="449">
-                                        <div class="installment-months">Standard</div>
-                                        <div style="color: var(--green-primary); font-weight: 600;">$449</div>
-                                    </div>
-                                    <div class="installment-option" data-plan="pro" data-price="699">
-                                        <div class="installment-months">Pro</div>
-                                        <div style="color: var(--green-primary); font-weight: 600;">$699</div>
-                                    </div>
-                                    <div class="installment-option" data-plan="ultra" data-price="999">
-                                        <div class="installment-months">Ultra Pro</div>
-                                        <div style="color: var(--green-primary); font-weight: 600;">$999</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="option-card" data-option="fast">
-                            <div class="option-header">
-                                <input type="radio" name="requestType" class="option-radio" value="fast">
-                                <span class="option-title">Fast Request</span>
-                                <span class="option-price">Custom Quote</span>
-                            </div>
-                            <p class="option-description">Submit a quick request with your budget and requirements</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 2: Details & Payment -->
-                <div class="step-content" id="step2">
-                    <!-- Customer Details -->
-                    <div class="form-group">
-                        <label class="form-label">Your Name *</label>
-                        <input type="text" class="form-input" id="customerName" placeholder="Full name">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Email Address *</label>
-                        <input type="email" class="form-input" id="customerEmail" placeholder="your@email.com">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Phone Number *</label>
-                        <input type="tel" class="form-input" id="customerPhone" placeholder="+94 77 123 4567">
-                    </div>
-                    <div class="form-group" id="budgetField" style="display: none;">
-                        <label class="form-label">Your Budget</label>
-                        <input type="text" class="form-input" id="customerBudget" placeholder="e.g., $200 - $500">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Additional Notes</label>
-                        <textarea class="form-input form-textarea" id="customerNotes" placeholder="Any specific requirements..."></textarea>
-                    </div>
-
-                    <!-- Payment Methods -->
-                    <div id="paymentSection">
-                        <h4 style="margin: var(--space-lg) 0 var(--space-md); font-weight: 600;">Payment Method</h4>
-                        
-                        <div class="option-cards">
-                            <!-- Bank Transfer -->
-                            <div class="option-card" data-payment="bank">
-                                <div class="option-header">
-                                    <input type="radio" name="paymentMethod" class="option-radio" value="bank">
-                                    <span class="option-title">Bank Transfer</span>
-                                </div>
-                                <p class="option-description">Transfer to our bank account directly</p>
-                                
-                                <div class="expandable-content" id="bankDetails">
-                                    <div class="notice-box green">
-                                        Same bank transfers are tax-free. If your bank is different, LKR 25,000 bank tax applies.
-                                    </div>
-                                    <div class="bank-cards" style="margin-top: var(--space-md);">
-                                        <div class="bank-card">
-                                            <div class="bank-info">
-                                                <span class="bank-name">Commercial Bank</span>
-                                                <span class="bank-detail">Acc: 1234567890 | Branch: Colombo 03</span>
-                                                <span class="bank-detail">Name: Vezlo Technologies</span>
-                                            </div>
-                                            <button class="copy-btn" onclick="copyText('Commercial Bank, 1234567890, Colombo 03, Vezlo Technologies')">Copy</button>
-                                        </div>
-                                        <div class="bank-card">
-                                            <div class="bank-info">
-                                                <span class="bank-name">People's Bank</span>
-                                                <span class="bank-detail">Acc: 0987654321 | Branch: Kandy</span>
-                                                <span class="bank-detail">Name: Vezlo Technologies</span>
-                                            </div>
-                                            <button class="copy-btn" onclick="copyText('People\\'s Bank, 0987654321, Kandy, Vezlo Technologies')">Copy</button>
-                                        </div>
-                                        <div class="bank-card">
-                                            <div class="bank-info">
-                                                <span class="bank-name">Sampath Bank</span>
-                                                <span class="bank-detail">Acc: 1122334455 | Branch: Galle</span>
-                                                <span class="bank-detail">Name: Vezlo Technologies</span>
-                                            </div>
-                                            <button class="copy-btn" onclick="copyText('Sampath Bank, 1122334455, Galle, Vezlo Technologies')">Copy</button>
-                                        </div>
-                                        <div class="bank-card">
-                                            <div class="bank-info">
-                                                <span class="bank-name">HNB Bank</span>
-                                                <span class="bank-detail">Acc: 5566778899 | Branch: Negombo</span>
-                                                <span class="bank-detail">Name: Vezlo Technologies</span>
-                                            </div>
-                                            <button class="copy-btn" onclick="copyText('HNB Bank, 5566778899, Negombo, Vezlo Technologies')">Copy</button>
-                                        </div>
-                                    </div>
-                                    <div class="notice-box" style="margin-top: var(--space-md);">
-                                        Send payment screenshot via WhatsApp after transfer.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Pay Later -->
-                            <div class="option-card" data-payment="paylater">
-                                <div class="option-header">
-                                    <input type="radio" name="paymentMethod" class="option-radio" value="paylater">
-                                    <span class="option-title">Pay Later</span>
-                                </div>
-                                <p class="option-description">30% advance payment required to start the project</p>
-                            </div>
-
-                            <!-- Installment -->
-                            <div class="option-card" data-payment="installment">
-                                <div class="option-header">
-                                    <input type="radio" name="paymentMethod" class="option-radio" value="installment">
-                                    <span class="option-title">Monthly Installment</span>
-                                </div>
-                                <p class="option-description">Flexible payment plans with interest</p>
-                                
-                                <div class="expandable-content" id="installmentOptions">
-                                    <div class="installment-grid">
-                                        <div class="installment-option" data-months="3" data-interest="2">
-                                            <div class="installment-months">3 Months</div>
-                                            <div class="installment-interest">+2% Interest</div>
-                                        </div>
-                                        <div class="installment-option" data-months="6" data-interest="4">
-                                            <div class="installment-months">6 Months</div>
-                                            <div class="installment-interest">+4% Interest</div>
-                                        </div>
-                                        <div class="installment-option" data-months="12" data-interest="8">
-                                            <div class="installment-months">12 Months</div>
-                                            <div class="installment-interest">+8% Interest</div>
-                                        </div>
-                                        <div class="installment-option" data-months="24" data-interest="16">
-                                            <div class="installment-months">24 Months</div>
-                                            <div class="installment-interest">+16% Interest</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- QR Pay -->
-                            <div class="option-card" data-payment="qr">
-                                <div class="option-header">
-                                    <input type="radio" name="paymentMethod" class="option-radio" value="qr">
-                                    <span class="option-title">QR Pay</span>
-                                </div>
-                                <p class="option-description">Scan and pay instantly</p>
-                                <div class="expandable-content">
-                                    <div class="notice-box">5% tax fee applies for QR payments</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Unavailable Methods -->
-                        <div class="unavailable-section">
-                            <p class="unavailable-title">Coming Soon:</p>
-                            <div class="unavailable-grid">
-                                <span class="unavailable-badge">Card Payment</span>
-                                <span class="unavailable-badge">Binance Pay</span>
-                                <span class="unavailable-badge">Ez Cash</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 3: Summary -->
-                <div class="step-content" id="step3">
-                    <div class="summary-box">
-                        <div class="summary-section">
-                            <h4 class="summary-section-title">Order Summary</h4>
-                            <div class="summary-row">
-                                <span>Package</span>
-                                <span id="summaryPackage">-</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Domain (1 Year)</span>
-                                <span>$12</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Hosting (1 Year)</span>
-                                <span>$50</span>
-                            </div>
-                            <div class="summary-row" id="summaryInterestRow" style="display: none;">
-                                <span>Interest</span>
-                                <span id="summaryInterest">-</span>
-                            </div>
-                            <div class="summary-row" id="summaryTaxRow" style="display: none;">
-                                <span>Tax / Fee</span>
-                                <span id="summaryTax">-</span>
-                            </div>
-                            <div class="summary-row highlight">
-                                <span>Total</span>
-                                <span id="summaryTotal">-</span>
-                            </div>
-                            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">
-                                Approx LKR <span id="summaryTotalLKR">-</span>
-                            </p>
-                        </div>
-
-                        <div class="summary-section">
-                            <h4 class="summary-section-title">Customer Details</h4>
-                            <div class="summary-row">
-                                <span>Name</span>
-                                <span id="summaryName">-</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Email</span>
-                                <span id="summaryEmail">-</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Phone</span>
-                                <span id="summaryPhone">-</span>
-                            </div>
-                            <div class="summary-row">
-                                <span>Payment</span>
-                                <span id="summaryPayment">-</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="agree-section">
-                        <label class="agree-label">
-                            <input type="checkbox" class="agree-checkbox" id="agreeRules">
-                            <span class="agree-text">I agree to the <a href="rules.html" target="_blank">Terms & Conditions</a> and understand the project scope and payment terms.</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="prevBtn" style="display: none;">Previous</button>
-                <button class="btn btn-primary" id="nextBtn">Next</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast -->
-    <div class="toast" id="toast"></div>
-
     <script>
-        /* ============================================
-           INITIALIZATION
-           ============================================ */
-        
-        // State
-        let currentStep = 1;
-        let selectedRequestType = null;
-        let selectedPlan = null;
-        let selectedPayment = null;
-        let selectedInstallment = null;
-        let basePrice = 299;
-        const USD_TO_LKR = 300;
-
-        // DOM Elements
-        const themeToggle = document.getElementById('themeToggle');
-        const mobileToggle = document.getElementById('mobileToggle');
-        const navMenu = document.getElementById('navMenu');
-        const requestModal = document.getElementById('requestModal');
-        const openModalBtn = document.getElementById('openRequestModal');
-        const closeModalBtn = document.getElementById('closeModal');
+        // Initialize all variables first
+        const slides = document.querySelectorAll('.gallery-slide');
+        const dotsContainer = document.getElementById('galleryDots');
+        const thumbsContainer = document.getElementById('galleryThumbs');
+        const currentSlideEl = document.getElementById('currentSlide');
+        const totalSlidesEl = document.getElementById('totalSlides');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        let autoSlideInterval = null;
 
-        /* ============================================
-           THEME MANAGEMENT
-           ============================================ */
-        
-        function initTheme() {
-            const saved = localStorage.getItem('vezlo-theme');
-            if (saved) {
-                document.documentElement.setAttribute('data-theme', saved);
-            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
+        // Theme Toggle
+        const themeBtn = document.getElementById('themeBtn');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        themeBtn.addEventListener('click', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            const sunIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+            const moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+            themeBtn.innerHTML = theme === 'dark' ? sunIcon : moonIcon;
         }
+        updateThemeIcon(savedTheme);
 
-        themeToggle.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('vezlo-theme', next);
+        // Mobile Menu
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
         });
 
-        initTheme();
-
-        /* ============================================
-           MOBILE MENU
-           ============================================ */
-        
-        mobileToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('show');
+        // Close menu when clicking links
+        document.querySelectorAll('.nav-link').forEach(function(link) {
+            link.addEventListener('click', function() {
+                navMenu.classList.remove('active');
+            });
         });
 
-        /* ============================================
-           CAROUSEL
-           ============================================ */
-        
-        const track = document.getElementById('carouselTrack');
-        const dots = document.querySelectorAll('.carousel-dot');
-        const prevSlide = document.getElementById('prevSlide');
-        const nextSlide = document.getElementById('nextSlide');
-        const video = document.getElementById('carouselVideo');
-        let slideIndex = 0;
-        const totalSlides = 4;
+        // Gallery Functions
+        function initGallery() {
+            // Create dots
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'gallery-dot' + (i === 0 ? ' active' : '');
+                dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+                dot.addEventListener('click', function() {
+                    goToSlide(i);
+                    resetAutoSlide();
+                });
+                dotsContainer.appendChild(dot);
+            }
+
+            // Create thumbs
+            const thumbImages = [
+                'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=200&q=80',
+                'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=200&q=80',
+                'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=200&q=80',
+                'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=200&q=80',
+                'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=200&q=80'
+            ];
+
+            for (let i = 0; i < totalSlides; i++) {
+                const thumb = document.createElement('div');
+                thumb.className = 'thumb-item' + (i === 0 ? ' active' : '');
+                thumb.innerHTML = '<img src="' + thumbImages[i] + '" alt="Thumbnail ' + (i + 1) + '">';
+                thumb.addEventListener('click', function() {
+                    goToSlide(i);
+                    resetAutoSlide();
+                });
+                thumbsContainer.appendChild(thumb);
+            }
+
+            totalSlidesEl.textContent = totalSlides;
+        }
 
         function goToSlide(index) {
-            slideIndex = index;
-            track.style.transform = `translateX(-${index * 100}%)`;
-            dots.forEach((d, i) => d.classList.toggle('active', i === index));
+            currentSlide = ((index % totalSlides) + totalSlides) % totalSlides;
             
-            if (video) {
-                if (index === 3) {
-                    video.play().catch(() => {});
-                } else {
-                    video.pause();
-                }
-            }
+            // Update slides
+            slides.forEach(function(slide, i) {
+                slide.classList.toggle('active', i === currentSlide);
+            });
+
+            // Update dots
+            const dots = dotsContainer.querySelectorAll('.gallery-dot');
+            dots.forEach(function(dot, i) {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+
+            // Update thumbs
+            const thumbs = thumbsContainer.querySelectorAll('.thumb-item');
+            thumbs.forEach(function(thumb, i) {
+                thumb.classList.toggle('active', i === currentSlide);
+            });
+
+            // Update counter
+            currentSlideEl.textContent = currentSlide + 1;
         }
 
-        prevSlide.addEventListener('click', () => goToSlide((slideIndex - 1 + totalSlides) % totalSlides));
-        nextSlide.addEventListener('click', () => goToSlide((slideIndex + 1) % totalSlides));
-        dots.forEach(d => d.addEventListener('click', () => goToSlide(parseInt(d.dataset.index))));
+        function nextSlideFunc() {
+            goToSlide(currentSlide + 1);
+        }
 
-        setInterval(() => goToSlide((slideIndex + 1) % totalSlides), 6000);
+        function prevSlideFunc() {
+            goToSlide(currentSlide - 1);
+        }
+
+        function startAutoSlide() {
+            if (autoSlideInterval) clearInterval(autoSlideInterval);
+            autoSlideInterval = setInterval(nextSlideFunc, 5000);
+        }
+
+        function resetAutoSlide() {
+            startAutoSlide();
+        }
+
+        // Initialize gallery
+        initGallery();
+        startAutoSlide();
+
+        // Gallery navigation
+        prevBtn.addEventListener('click', function() {
+            prevSlideFunc();
+            resetAutoSlide();
+        });
+
+        nextBtn.addEventListener('click', function() {
+            nextSlideFunc();
+            resetAutoSlide();
+        });
 
         // Touch support
+        const galleryMain = document.querySelector('.gallery-main');
         let touchStartX = 0;
-        const viewport = document.querySelector('.carousel-viewport');
-        viewport.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
-        viewport.addEventListener('touchend', e => {
-            const diff = touchStartX - e.changedTouches[0].screenX;
-            if (Math.abs(diff) > 50) {
-                goToSlide(diff > 0 ? (slideIndex + 1) % totalSlides : (slideIndex - 1 + totalSlides) % totalSlides);
-            }
-        });
+        let touchEndX = 0;
 
-        /* ============================================
-           TABS
-           ============================================ */
-        
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-                btn.classList.add('active');
-                document.getElementById(btn.dataset.tab).classList.add('active');
-            });
-        });
+        galleryMain.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
 
-        /* ============================================
-           MODAL
-           ============================================ */
-        
-        openModalBtn.addEventListener('click', () => {
-            requestModal.classList.add('active');
-            resetModal();
-        });
+        galleryMain.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
 
-        closeModalBtn.addEventListener('click', () => requestModal.classList.remove('active'));
-        requestModal.addEventListener('click', e => {
-            if (e.target === requestModal) requestModal.classList.remove('active');
-        });
-
-        function resetModal() {
-            currentStep = 1;
-            selectedRequestType = null;
-            selectedPlan = null;
-            selectedPayment = null;
-            selectedInstallment = null;
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
             
-            document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
-            document.querySelectorAll('input[name="requestType"], input[name="paymentMethod"]').forEach(r => r.checked = false);
-            document.querySelectorAll('.installment-option').forEach(o => o.classList.remove('selected'));
-            document.getElementById('packageOptions').classList.remove('show');
-            document.getElementById('bankDetails').classList.remove('show');
-            document.getElementById('installmentOptions').classList.remove('show');
-            document.getElementById('budgetField').style.display = 'none';
-            document.getElementById('paymentSection').style.display = 'block';
-            document.getElementById('customerName').value = '';
-            document.getElementById('customerEmail').value = '';
-            document.getElementById('customerPhone').value = '';
-            document.getElementById('customerBudget').value = '';
-            document.getElementById('customerNotes').value = '';
-            document.getElementById('agreeRules').checked = false;
-            
-            updateStepUI();
-        }
-
-        function updateStepUI() {
-            // Update step indicators
-            document.querySelectorAll('.step-item').forEach((item, i) => {
-                item.classList.remove('active', 'completed');
-                if (i + 1 < currentStep) item.classList.add('completed');
-                if (i + 1 === currentStep) item.classList.add('active');
-            });
-
-            // Show/hide step content
-            document.querySelectorAll('.step-content').forEach((c, i) => {
-                c.classList.toggle('active', i + 1 === currentStep);
-            });
-
-            // Update buttons
-            prevBtn.style.display = currentStep > 1 ? 'inline-flex' : 'none';
-            
-            if (currentStep === 3) {
-                nextBtn.innerHTML = `
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                    </svg>
-                    Send to WhatsApp
-                `;
-                updateSummary();
-            } else {
-                nextBtn.innerHTML = 'Next';
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlideFunc();
+                } else {
+                    prevSlideFunc();
+                }
+                resetAutoSlide();
             }
         }
 
-        /* ============================================
-           OPTION SELECTION (STEP 1)
-           ============================================ */
-        
-        document.querySelectorAll('[data-option]').forEach(card => {
-            card.addEventListener('click', () => {
-                document.querySelectorAll('[data-option]').forEach(c => c.classList.remove('selected'));
-                card.classList.add('selected');
-                const radio = card.querySelector('input[type="radio"]');
-                if (radio) radio.checked = true;
-                selectedRequestType = radio.value;
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(function(button) {
+            button.addEventListener('click', function() {
+                const item = this.parentElement;
+                const isOpen = item.classList.contains('open');
                 
-                // Toggle expandable content
-                document.getElementById('packageOptions').classList.toggle('show', selectedRequestType === 'package');
+                // Close all other items
+                document.querySelectorAll('.faq-item').forEach(function(faq) {
+                    faq.classList.remove('open');
+                });
+                
+                // Toggle current item
+                if (!isOpen) {
+                    item.classList.add('open');
+                }
             });
         });
 
-        // Plan selection
-        document.querySelectorAll('[data-plan]').forEach(opt => {
-            opt.addEventListener('click', (e) => {
-                e.stopPropagation();
-                document.querySelectorAll('[data-plan]').forEach(o => o.classList.remove('selected'));
-                opt.classList.add('selected');
-                selectedPlan = opt.dataset.plan;
-                basePrice = parseInt(opt.dataset.price);
+        // Scroll Animation
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
             });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .option-card, .stat-card, .team-card').forEach(function(el) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(el);
         });
 
-        /* ============================================
-           PAYMENT SELECTION (STEP 2)
-           ============================================ */
-        
-        document.querySelectorAll('[data-payment]').forEach(card => {
-            card.addEventListener('click', () => {
-                document.querySelectorAll('[data-payment]').forEach(c => c.classList.remove('selected'));
-                card.classList.add('selected');
-                const radio = card.querySelector('input[type="radio"]');
-                if (radio) radio.checked = true;
-                selectedPayment = radio.value;
-                
-                // Toggle expandable content
-                document.getElementById('bankDetails').classList.toggle('show', selectedPayment === 'bank');
-                document.getElementById('installmentOptions').classList.toggle('show', selectedPayment === 'installment');
-            });
+        // Stagger animation for options
+        document.querySelectorAll('.option-card').forEach(function(card, index) {
+            card.style.transitionDelay = (index * 0.05) + 's';
         });
 
-        // Installment selection
-        document.querySelectorAll('[data-months]').forEach(opt => {
-            opt.addEventListener('click', (e) => {
-                e.stopPropagation();
-                document.querySelectorAll('[data-months]').forEach(o => o.classList.remove('selected'));
-                opt.classList.add('selected');
-                selectedInstallment = {
-                    months: parseInt(opt.dataset.months),
-                    interest: parseInt(opt.dataset.interest)
-                };
-            });
-        });
-
-        /* ============================================
-           NAVIGATION
-           ============================================ */
-        
-        nextBtn.addEventListener('click', () => {
-            if (currentStep === 1) {
-                if (!selectedRequestType) {
-                    showToast('Please select an option');
-                    return;
-                }
-                if (selectedRequestType === 'package' && !selectedPlan) {
-                    showToast('Please select a plan');
-                    return;
-                }
-                
-                // Show/hide budget field for fast request
-                document.getElementById('budgetField').style.display = selectedRequestType === 'fast' ? 'block' : 'none';
-                document.getElementById('paymentSection').style.display = selectedRequestType === 'fast' ? 'none' : 'block';
-                
-                currentStep = 2;
-                updateStepUI();
-            } else if (currentStep === 2) {
-                const name = document.getElementById('customerName').value.trim();
-                const email = document.getElementById('customerEmail').value.trim();
-                const phone = document.getElementById('customerPhone').value.trim();
-                
-                if (!name || !email || !phone) {
-                    showToast('Please fill in all required fields');
-                    return;
-                }
-                
-                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                    showToast('Please enter a valid email');
-                    return;
-                }
-                
-                if (selectedRequestType !== 'fast' && !selectedPayment) {
-                    showToast('Please select a payment method');
-                    return;
-                }
-                
-                if (selectedPayment === 'installment' && !selectedInstallment) {
-                    showToast('Please select an installment plan');
-                    return;
-                }
-                
-                currentStep = 3;
-                updateStepUI();
-            } else if (currentStep === 3) {
-                if (!document.getElementById('agreeRules').checked) {
-                    showToast('Please agree to the Terms & Conditions');
-                    return;
-                }
-                sendToWhatsApp();
-            }
-        });
-
-        prevBtn.addEventListener('click', () => {
-            if (currentStep > 1) {
-                currentStep--;
-                updateStepUI();
-            }
-        });
-
-        /* ============================================
-           SUMMARY
-           ============================================ */
-        
-        function updateSummary() {
-            const name = document.getElementById('customerName').value;
-            const email = document.getElementById('customerEmail').value;
-            const phone = document.getElementById('customerPhone').value;
-            
-            document.getElementById('summaryName').textContent = name;
-            document.getElementById('summaryEmail').textContent = email;
-            document.getElementById('summaryPhone').textContent = phone;
-            
-            let total = basePrice + 12 + 50; // base + domain + hosting
-            let interestAmount = 0;
-            let taxAmount = 0;
-            
-            // Package name
-            const planNames = { basic: 'Basic - $299', standard: 'Standard - $449', pro: 'Pro - $699', ultra: 'Ultra Pro - $999' };
-            document.getElementById('summaryPackage').textContent = selectedRequestType === 'fast' ? 'Custom Quote' : planNames[selectedPlan];
-            
-            // Payment method name
-            const paymentNames = {
-                bank: 'Bank Transfer',
-                paylater: 'Pay Later (30% Advance)',
-                installment: `Installment (${selectedInstallment ? selectedInstallment.months + ' months' : ''})`,
-                qr: 'QR Pay'
-            };
-            document.getElementById('summaryPayment').textContent = selectedRequestType === 'fast' ? 'To be discussed' : paymentNames[selectedPayment];
-            
-            // Calculate fees
-            if (selectedPayment === 'qr') {
-                taxAmount = total * 0.05;
-                document.getElementById('summaryTaxRow').style.display = 'flex';
-                document.getElementById('summaryTax').textContent = `$${taxAmount.toFixed(2)} (5%)`;
-            } else {
-                document.getElementById('summaryTaxRow').style.display = 'none';
-            }
-            
-            if (selectedPayment === 'installment' && selectedInstallment) {
-                interestAmount = total * (selectedInstallment.interest / 100);
-                document.getElementById('summaryInterestRow').style.display = 'flex';
-                document.getElementById('summaryInterest').textContent = `$${interestAmount.toFixed(2)} (${selectedInstallment.interest}%)`;
-            } else {
-                document.getElementById('summaryInterestRow').style.display = 'none';
-            }
-            
-            const finalTotal = total + taxAmount + interestAmount;
-            
-            if (selectedRequestType === 'fast') {
-                document.getElementById('summaryTotal').textContent = 'To be discussed';
-                document.getElementById('summaryTotalLKR').textContent = 'To be discussed';
-            } else {
-                document.getElementById('summaryTotal').textContent = `$${finalTotal.toFixed(2)}`;
-                document.getElementById('summaryTotalLKR').textContent = Math.round(finalTotal * USD_TO_LKR).toLocaleString();
-            }
-        }
-
-        /* ============================================
-           WHATSAPP
-           ============================================ */
-        
-        function sendToWhatsApp() {
-            const name = document.getElementById('customerName').value;
-            const email = document.getElementById('customerEmail').value;
-            const phone = document.getElementById('customerPhone').value;
-            const budget = document.getElementById('customerBudget').value;
-            const notes = document.getElementById('customerNotes').value;
-            
-            let message = `🌐 *Vezlo - Website Request*\n\n`;
-            message += `━━━━━━━━━━━━━━━━━━\n`;
-            
-            if (selectedRequestType === 'fast') {
-                message += `⚡ *FAST REQUEST*\n\n`;
-                message += `📦 Category: LMS / Education\n`;
-                message += `💰 Budget: ${budget || 'Not specified'}\n\n`;
-            } else {
-                const planNames = { basic: 'Basic', standard: 'Standard', pro: 'Pro', ultra: 'Ultra Pro' };
-                const total = document.getElementById('summaryTotal').textContent;
-                const totalLKR = document.getElementById('summaryTotalLKR').textContent;
-                
-                message += `📦 *Package:* ${planNames[selectedPlan]}\n`;
-                message += `💰 *Total:* ${total} USD (LKR ${totalLKR})\n`;
-                message += `💳 *Payment:* ${document.getElementById('summaryPayment').textContent}\n\n`;
-            }
-            
-            message += `👤 *Customer Details*\n`;
-            message += `━━━━━━━━━━━━━━━━━━\n`;
-            message += `📛 Name: ${name}\n`;
-            message += `📧 Email: ${email}\n`;
-            message += `📱 Phone: ${phone}\n`;
-            
-            if (notes) {
-                message += `\n📝 *Notes:* ${notes}\n`;
-            }
-            
-            message += `\n✅ Agreed to Terms & Conditions`;
-            
-            const url = `https://wa.me/94775048455?text=${encodeURIComponent(message)}`;
-            window.open(url, '_blank');
-            
-            requestModal.classList.remove('active');
-            showToast('Redirecting to WhatsApp...');
-        }
-
-        /* ============================================
-           UTILITIES
-           ============================================ */
-        
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
-        function copyText(text) {
-            navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
-        }
-
-        // Keyboard support
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') requestModal.classList.remove('active');
+        // Stagger animation for features
+        document.querySelectorAll('.feature-card').forEach(function(card, index) {
+            card.style.transitionDelay = (index * 0.1) + 's';
         });
     </script>
 </body>
