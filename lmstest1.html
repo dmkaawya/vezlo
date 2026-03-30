@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChemMarks Analytics — A/L Chemistry Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class',theme:{extend:{fontFamily:{sans:['Inter','sans-serif']}}}}</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*{font-family:'Inter',sans-serif;box-sizing:border-box}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+
+/* === LOGIN BG === */
+.login-bg{background:linear-gradient(135deg,#1e1b4b,#312e81 40%,#1e1b4b 70%,#0f172a);background-size:400% 400%;animation:gShift 12s ease infinite}
+@keyframes gShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.15;animation:fl 8s ease-in-out infinite}
+.orb-1{width:400px;height:400px;background:#6366f1;top:-100px;left:-100px}
+.orb-2{width:300px;height:300px;background:#818cf8;bottom:-50px;right:-50px;animation-delay:-3s}
+.orb-3{width:250px;height:250px;background:#a78bfa;top:40%;right:20%;animation-delay:-5s}
+@keyframes fl{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+.glass{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.2)}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.shake{animation:shake .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:fadeUp .5s ease forwards}.d1{animation-delay:.1s;opacity:0}.d2{animation-delay:.2s;opacity:0}.d3{animation-delay:.3s;opacity:0}.d4{animation-delay:.4s;opacity:0}
+
+/* === SIDEBAR === */
+.sidebar{width:260px;transition:transform .3s ease}
+@media(max-width:1023px){.sidebar{transform:translateX(-100%);position:fixed;z-index:50;height:100vh}.sidebar.open{transform:translateX(0)}}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:40}
+.sidebar-overlay.show{display:block}
+.nav-item{transition:all .2s}.nav-item:hover{background:#f1f5f9}.nav-item.active{background:#eef2ff;color:#4f46e5;font-weight:600}.nav-item.active .ni{color:#4f46e5}
+
+/* === CARDS === */
+.card{background:#fff;border:1px solid #f1f5f9;border-radius:1rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.stat-card{transition:all .25s ease}.stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 25px -5px rgba(0,0,0,.08)}
+
+/* === TOGGLE === */
+.tog{width:44px;height:24px;border-radius:12px;background:#cbd5e1;transition:background .25s;cursor:pointer;position:relative;flex-shrink:0}
+.tog.on{background:#4f46e5}.tog-knob{width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:transform .25s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.tog.on .tog-knob{transform:translateX(20px)}
+
+/* === TOAST === */
+.toast-box{position:fixed;top:20px;right:20px;z-index:200;display:flex;flex-direction:column;gap:8px}
+.toast{background:#fff;border-radius:12px;padding:14px 20px;box-shadow:0 10px 40px rgba(0,0,0,.12);border-left:4px solid #10b981;display:flex;align-items:center;gap:10px;font-size:14px;animation:tIn .35s ease forwards;min-width:300px}
+.toast.out{animation:tOut .3s ease forwards}
+@keyframes tIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+@keyframes tOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(40px)}}
+
+/* === INPUT === */
+.ifield:focus{box-shadow:0 0 0 3px rgba(99,102,241,.15)}
+.ifield.valid{border-color:#10b981!important;background:#f0fdf4!important}
+.ifield.invalid{border-color:#ef4444!important;background:#fef2f2!important}
+
+/* === UPLOAD === */
+.upload-zone{border:2px dashed #cbd5e1;transition:all .3s}.upload-zone:hover,.upload-zone.drag{border-color:#6366f1;background:#eef2ff}
+
+/* === WEAKNESS PULSE === */
+@keyframes wpulse{0%,100%{opacity:1}50%{opacity:.7}}.wpulse{animation:wpulse 1.5s ease-in-out infinite}
+@keyframes bPulse{0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,.2)}50%{box-shadow:0 0 0 8px rgba(99,102,241,0)}}.bpulse{animation:bPulse 2s ease-in-out infinite}
+
+/* === BACK TO TOP === */
+#btt{transition:all .3s;opacity:0;pointer-events:none}#btt.show{opacity:1;pointer-events:auto}
+
+/* === DARK MODE === */
+.dark body,.dark .login-bg{background:#0f172a!important}
+.dark .card{background:#1e293b!important;border-color:#334155!important}
+.dark .sb-bg{background:#1e293b!important;border-color:#334155!important}
+.dark .hd-bg{background:#1e293b!important;border-color:#334155!important}
+.dark .t-main{color:#f1f5f9!important}.dark .t-sub{color:#cbd5e1!important}.dark .t-mut{color:#64748b!important}
+.dark .bg-slate-50,.dark .bg-slate-100{background:#0f172a!important}
+.dark .bg-red-50,.dark .bg-emerald-50,.dark .bg-amber-50,.dark .bg-indigo-50{background:#1e293b!important}
+.dark input,.dark select,.dark textarea{background:#0f172a!important;color:#e2e8f0!important;border-color:#334155!important}
+.dark .divide-red-50> :not([hidden])~ :not([hidden]){border-color:#334155!important}
+.dark .hover\:bg-slate-50:hover{background:#334155!important}
+
+/* === PRINT === */
+@media print{.sidebar,.sidebar-overlay,.hd-bg,#btt,.toast-box{display:none!important}main{margin-left:0!important;padding-top:0!important}.fixed{position:static!important}body{background:#fff!important}.shadow-sm{box-shadow:none!important}canvas{max-height:200px!important}}
+</style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+<!-- TOP BRAND BAR -->
+<div class="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 z-[100]"></div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-box" id="toastBox"></div>
+
+<!-- BACK TO TOP -->
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="fixed bottom-6 right-6 z-50 w-11 h-11 rounded-full bg-indigo-600 text-white shadow-lg shadow-indigo-200 flex items-center justify-center hover:bg-indigo-700 transition-colors">
+    <i class="fas fa-arrow-up text-sm"></i>
+</button>
+
+<!-- KEYBOARD SHORTCUTS MODAL -->
+<div id="shortcutsModal" class="hidden fixed inset-0 z-[150] flex items-center justify-center bg-black/40 backdrop-blur-sm" onclick="if(event.target===this)this.classList.add('hidden')">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6">
+        <div class="flex items-center justify-between mb-5">
+            <h3 class="text-base font-bold t-main">Keyboard Shortcuts</h3>
+            <button onclick="document.getElementById('shortcutsModal').classList.add('hidden')" class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-colors"><i class="fas fa-xmark text-sm"></i></button>
+        </div>
+        <div class="space-y-3 text-sm">
+            <div class="flex justify-between"><span class="t-sub">Focus Search</span><kbd class="bg-slate-100 t-mut px-2 py-0.5 rounded text-xs font-mono">Ctrl + K</kbd></div>
+            <div class="flex justify-between"><span class="t-sub">Teacher Dashboard</span><kbd class="bg-slate-100 t-mut px-2 py-0.5 rounded text-xs font-mono">Ctrl + 1</kbd></div>
+            <div class="flex justify-between"><span class="t-sub">Student Analytics</span><kbd class="bg-slate-100 t-mut px-2 py-0.5 rounded text-xs font-mono">Ctrl + 2</kbd></div>
+            <div class="flex justify-between"><span class="t-sub">Staff Data Entry</span><kbd class="bg-slate-100 t-mut px-2 py-0.5 rounded text-xs font-mono">Ctrl + 3</kbd></div>
+            <div class="flex justify-between"><span class="t-sub">Toggle Dark Mode</span><kbd class="bg-slate-100 t-mut px-2 py-0.5 rounded text-xs font-mono">Ctrl + D</kbd></div>
+            <div class="flex justify-between"><span class="t-sub">Show Shortcuts</span><kbd class="bg-slate-100 t-mut px-2 py-0.5 rounded text-xs font-mono">?</kbd></div>
+            <div class="flex justify-between"><span class="t-sub">Close Modal / Go Back</span><kbd class="bg-slate-100 t-mut px-2 py-0.5 rounded text-xs font-mono">Esc</kbd></div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ==================== LOGIN PAGE ============================= -->
+<!-- ============================================================ -->
+<section id="loginPage" class="login-bg min-h-screen flex items-center justify-center relative overflow-hidden">
+    <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+    <div class="glass rounded-2xl shadow-2xl w-full max-w-md mx-4 p-8 anim relative z-10">
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-indigo-600 text-white mb-4 shadow-lg shadow-indigo-200"><i class="fas fa-flask text-xl"></i></div>
+            <h1 class="text-2xl font-bold text-slate-800">ChemMarks Analytics</h1>
+            <p class="text-slate-500 text-sm mt-1">A/L Chemistry Paper Marks Dashboard</p>
+        </div>
+        <div id="loginErr" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-5 text-sm flex items-center gap-2">
+            <i class="fas fa-circle-exclamation"></i><span id="loginErrTxt"></span>
+        </div>
+        <form onsubmit="doLogin(event)" novalidate>
+            <div class="space-y-4 d1">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Username</label>
+                    <div class="relative">
+                        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"><i class="fas fa-user text-sm"></i></span>
+                        <input type="text" id="lUser" placeholder="Enter your username" class="ifield w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-slate-50/50">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
+                    <div class="relative">
+                        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"><i class="fas fa-lock text-sm"></i></span>
+                        <input type="password" id="lPass" placeholder="Enter your password" class="ifield w-full pl-10 pr-11 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-slate-50/50">
+                        <button type="button" onclick="let p=document.getElementById('lPass'),i=document.getElementById('eyeI');p.type=p.type==='password'?'text':'password';i.classList.toggle('fa-eye');i.classList.toggle('fa-eye-slash')" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"><i id="eyeI" class="fas fa-eye text-sm"></i></button>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" id="loginBtn" class="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-all shadow-lg shadow-indigo-200 active:scale-[0.98] d2">Sign In</button>
+        </form>
+        <div class="mt-6 pt-5 border-t border-slate-100 d2">
+            <p class="text-xs text-slate-400 text-center mb-3">Demo Credentials</p>
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="document.getElementById('lUser').value='teacher';document.getElementById('lPass').value='pass123';document.getElementById('loginErr').classList.add('hidden')" class="text-xs bg-slate-50 hover:bg-indigo-50 text-slate-600 hover:text-indigo-700 py-2 px-2 rounded-lg transition-colors text-center font-medium"><i class="fas fa-chalkboard-user block text-base mb-1 text-indigo-400"></i>Teacher</button>
+                <button onclick="document.getElementById('lUser').value='staff1';document.getElementById('lPass').value='pass123';document.getElementById('loginErr').classList.add('hidden')" class="text-xs bg-slate-50 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 py-2 px-2 rounded-lg transition-colors text-center font-medium"><i class="fas fa-keyboard block text-base mb-1 text-emerald-400"></i>Staff</button>
+                <button onclick="document.getElementById('lUser').value='student1';document.getElementById('lPass').value='pass123';document.getElementById('loginErr').classList.add('hidden')" class="text-xs bg-slate-50 hover:bg-amber-50 text-slate-600 hover:text-amber-700 py-2 px-2 rounded-lg transition-colors text-center font-medium"><i class="fas fa-graduation-cap block text-base mb-1 text-amber-400"></i>Student</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- ==================== TEACHER DASHBOARD ====================== -->
+<!-- ============================================================ -->
+<section id="teacherPage" class="hidden min-h-screen">
+<div class="sidebar-overlay" id="tOv" onclick="togSB('tSB','tOv')"></div>
+<aside class="sidebar sb-bg fixed top-1 left-0 bottom-0 bg-white border-r border-slate-200 flex flex-col pt-6" id="tSB">
+    <div class="px-6 mb-8"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-200"><i class="fas fa-flask text-sm"></i></div><div><h1 class="text-sm font-bold text-slate-800 leading-tight">ChemMarks</h1><p class="text-[10px] text-slate-400 font-medium tracking-wide uppercase">Analytics</p></div></div></div>
+    <nav class="flex-1 px-3 space-y-1">
+        <p class="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Main</p>
+        <a href="#" onclick="return false" class="nav-item active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm"><i class="fas fa-th-large ni text-slate-400 w-5 text-center"></i>Dashboard</a>
+        <a href="#" onclick="goPage('studentPage');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-chart-line ni text-slate-400 w-5 text-center"></i>Student Analytics</a>
+        <a href="#" onclick="goPage('staffPage');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-keyboard ni text-slate-400 w-5 text-center"></i>Staff Data Entry</a>
+        <p class="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2 mt-6">System</p>
+        <a href="#tSettings" onclick="document.getElementById('tSettings').scrollIntoView({behavior:'smooth'});if(innerWidth<1024)togSB('tSB','tOv');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-gear ni text-slate-400 w-5 text-center"></i>Settings</a>
+        <a href="#" onclick="document.getElementById('shortcutsModal').classList.remove('hidden');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-keyboard ni text-slate-400 w-5 text-center"></i>Shortcuts</a>
+    </nav>
+    <div class="px-4 py-4 border-t border-slate-100">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-semibold text-sm">T</div>
+            <div class="flex-1 min-w-0"><p class="text-sm font-semibold text-slate-800 truncate">Mr. Rajapaksa</p><p class="text-xs text-slate-400">Chemistry Teacher</p></div>
+            <a href="#" onclick="doLogout();return false" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-right-from-bracket text-sm"></i></a>
+        </div>
+    </div>
+</aside>
+
+<main class="lg:ml-[260px] pt-7">
+<!-- [FEATURE 2] NOTIFICATION BELL + [FEATURE 5] SEARCH + [FEATURE 6] DARK MODE + [FEATURE 20] SESSION TIMER -->
+<header class="hd-bg bg-white border-b border-slate-200 px-4 sm:px-8 py-4 flex items-center justify-between sticky top-1 z-30">
+    <div class="flex items-center gap-3">
+        <button onclick="togSB('tSB','tOv')" class="lg:hidden w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200"><i class="fas fa-bars text-sm"></i></button>
+        <div><h2 class="text-lg font-bold t-main">Dashboard</h2><p class="text-xs t-mut">Welcome back, Mr. Rajapaksa</p></div>
+    </div>
+    <div class="flex items-center gap-2 sm:gap-3">
+        <!-- [FEATURE 5] SEARCH -->
+        <div class="relative hidden sm:block">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"><i class="fas fa-search text-xs"></i></span>
+            <input type="text" id="tSearch" placeholder="Search student... (Ctrl+K)" oninput="doSearch(this.value)" class="ifield w-48 lg:w-56 pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 placeholder-slate-400 outline-none focus:border-indigo-500 transition-all">
+            <div id="searchRes" class="hidden absolute top-12 left-0 w-full bg-white rounded-xl shadow-xl border border-slate-100 z-50 max-h-64 overflow-y-auto"></div>
+        </div>
+        <!-- [FEATURE 20] SESSION TIMER -->
+        <span class="hidden md:inline text-xs t-mut bg-slate-50 px-3 py-1.5 rounded-lg"><i class="fas fa-clock mr-1.5"></i><span id="sessionTimer">00:00:00</span></span>
+        <!-- [FEATURE 6] DARK MODE -->
+        <button onclick="togDark()" class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center t-sub hover:bg-slate-200 transition-colors" title="Toggle Dark Mode (Ctrl+D)"><i id="darkIcon" class="fas fa-moon text-sm"></i></button>
+        <!-- [FEATURE 2] NOTIFICATIONS -->
+        <div class="relative">
+            <button onclick="document.getElementById('notifDD').classList.toggle('hidden')" class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center t-sub hover:bg-slate-200 transition-colors relative"><i class="fas fa-bell text-sm"></i><span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">4</span></button>
+            <div id="notifDD" class="hidden absolute right-0 top-12 w-80 bg-white rounded-xl shadow-xl border border-slate-100 z-50 overflow-hidden">
+                <div class="px-4 py-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between"><span class="text-sm font-bold t-main">Notifications</span><button onclick="toast('All notifications marked as read.','info');document.getElementById('notifDD').classList.add('hidden')" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Mark all read</button></div>
+                <div class="max-h-72 overflow-y-auto divide-y divide-slate-50">
+                    <div class="px-4 py-3 hover:bg-slate-50 transition-colors cursor-pointer"><div class="flex gap-2"><span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0"></span><div><p class="text-xs t-sub"><strong>Dinesh Fernando</strong> marks dropped for 3 consecutive exams</p><p class="text-[10px] t-mut mt-0.5">2 hours ago</p></div></div></div>
+                    <div class="px-4 py-3 hover:bg-slate-50 transition-colors cursor-pointer"><div class="flex gap-2"><span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0"></span><div><p class="text-xs t-sub"><strong>Tharindu Jayawardena</strong> scored below 250 in Paper 5</p><p class="text-[10px] t-mut mt-0.5">2 hours ago</p></div></div></div>
+                    <div class="px-4 py-3 hover:bg-slate-50 transition-colors cursor-pointer"><div class="flex gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span><div><p class="text-xs t-sub">Staff completed bulk upload — <strong>32 records</strong> processed</p><p class="text-[10px] t-mut mt-0.5">5 hours ago</p></div></div></div>
+                    <div class="px-4 py-3 hover:bg-slate-50 transition-colors cursor-pointer"><div class="flex gap-2"><span class="w-2 h-2 rounded-full bg-indigo-500 mt-1.5 shrink-0"></span><div><p class="text-xs t-sub"><strong>Paper 5</strong> marks have been finalized</p><p class="text-[10px] t-mut mt-0.5">1 day ago</p></div></div></div>
+                </div>
+            </div>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">T</div>
+    </div>
+</header>
+
+<div class="p-4 sm:p-8 space-y-6">
+<!-- [FEATURE 15] ANIMATED COUNTER SUMMARY CARDS -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="stat-card card p-5 anim"><div class="flex items-start justify-between"><div><p class="text-[10px] font-medium t-mut uppercase tracking-wider">Total Students</p><p class="text-3xl font-extrabold t-main mt-1 counter" data-target="32">0</p><p class="text-xs text-emerald-600 font-medium mt-2"><i class="fas fa-arrow-up mr-1"></i>+4 from last term</p></div><div class="w-11 h-11 rounded-xl bg-indigo-50 flex items-center justify-center"><i class="fas fa-users text-indigo-500"></i></div></div></div>
+    <div class="stat-card card p-5 anim d1"><div class="flex items-start justify-between"><div><p class="text-[10px] font-medium t-mut uppercase tracking-wider">Class Average</p><p class="text-2xl font-extrabold t-main mt-1"><span class="counter" data-target="347">0</span><span class="text-lg t-mut font-medium">/500</span></p><p class="text-xs text-emerald-600 font-medium mt-2"><i class="fas fa-arrow-up mr-1"></i>+12 from Paper 4</p></div><div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center"><i class="fas fa-chart-simple text-emerald-500"></i></div></div></div>
+    <div class="stat-card card p-5 anim d2"><div class="flex items-start justify-between"><div><p class="text-[10px] font-medium t-mut uppercase tracking-wider">Highest Mark</p><p class="text-2xl font-extrabold t-main mt-1"><span class="counter" data-target="480">0</span><span class="text-lg t-mut font-medium">/500</span></p><p class="text-xs t-sub font-medium mt-2"><i class="fas fa-user mr-1"></i>Nethmi Silva</p></div><div class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center"><i class="fas fa-trophy text-amber-500"></i></div></div></div>
+    <div class="stat-card card p-5 anim d3"><div class="flex items-start justify-between"><div><p class="text-[10px] font-medium t-mut uppercase tracking-wider">Pass Rate</p><p class="text-3xl font-extrabold t-main mt-1"><span class="counter" data-target="87">0</span>%</p><p class="text-xs text-emerald-600 font-medium mt-2"><i class="fas fa-arrow-up mr-1"></i>28 of 32 passed</p></div><div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center"><i class="fas fa-check-circle text-emerald-500"></i></div></div></div>
+</div>
+
+<!-- DISTRIBUTION + [FEATURE 7] PASS/FAIL DOUGHNUT -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 card p-6 anim d3"><h3 class="text-sm font-bold t-main mb-1">Class Performance Distribution</h3><p class="text-xs t-mut mb-5">Paper 5 — Mark range distribution</p><div style="height:220px"><canvas id="distChart"></canvas></div></div>
+    <div class="card p-6 anim d4"><h3 class="text-sm font-bold t-main mb-1">Pass / Fail Ratio</h3><p class="text-xs t-mut mb-4">Based on 40% pass mark (200/500)</p><div class="flex items-center justify-center" style="height:160px"><canvas id="pfChart"></canvas></div><div class="flex justify-center gap-6 mt-3"><span class="flex items-center gap-1.5 text-xs t-sub"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>Passed: 28</span><span class="flex items-center gap-1.5 text-xs t-sub"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>Failed: 4</span></div></div>
+</div>
+
+<!-- [FEATURE 1] CLASS AVG TREND + [FEATURE 3] TOP 5 LEADERBOARD -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 card p-6 anim"><h3 class="text-sm font-bold t-main mb-1">Class Average Trend</h3><p class="text-xs t-mut mb-5">Overall, Top 10, and Bottom 10 averages across exams</p><div style="height:230px"><canvas id="catChart"></canvas></div></div>
+    <div class="card p-6 anim d1"><div class="flex items-center justify-between mb-5"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center"><i class="fas fa-crown text-amber-500 text-sm"></i></div><h3 class="text-sm font-bold t-main">Top 5 Performers</h3></div><span class="text-xs t-mut">Paper 5</span></div>
+    <div class="space-y-2.5">
+        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-amber-50/60"><span class="w-7 h-7 rounded-full bg-amber-400 text-white flex items-center justify-center text-xs font-bold">1</span><div class="flex-1"><p class="text-sm font-semibold t-main">Nethmi Silva</p></div><span class="text-sm font-extrabold text-amber-600">480</span></div>
+        <div class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors"><span class="w-7 h-7 rounded-full bg-slate-300 text-white flex items-center justify-center text-xs font-bold">2</span><div class="flex-1"><p class="text-sm font-semibold t-main">Kavindu Perera</p></div><span class="text-sm font-extrabold t-sub">460</span></div>
+        <div class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors"><span class="w-7 h-7 rounded-full bg-amber-700 text-white flex items-center justify-center text-xs font-bold">3</span><div class="flex-1"><p class="text-sm font-semibold t-main">Chamari Dias</p></div><span class="text-sm font-extrabold t-sub">425</span></div>
+        <div class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors"><span class="w-7 h-7 rounded-full bg-slate-100 t-mut flex items-center justify-center text-xs font-bold">4</span><div class="flex-1"><p class="text-sm font-semibold t-main">Harsha Gunathilaka</p></div><span class="text-sm font-extrabold t-sub">361</span></div>
+        <div class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors"><span class="w-7 h-7 rounded-full bg-slate-100 t-mut flex items-center justify-center text-xs font-bold">5</span><div class="flex-1"><p class="text-sm font-semibold t-main">Sachini Bandara</p></div><span class="text-sm font-extrabold t-sub">360</span></div>
+    </div></div>
+</div>
+
+<!-- [FEATURE 12] WEAK STUDENTS + RANK CHANGES -->
+<div class="card overflow-hidden anim">
+    <div class="bg-gradient-to-r from-red-500 to-rose-500 px-6 py-4 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center"><i class="fas fa-triangle-exclamation text-white"></i></div>
+        <div><h3 class="text-sm font-bold text-white">Weak Students Alert</h3><p class="text-xs text-red-100">Consecutive mark drops over last 3 exams — <span class="font-bold">[FEATURE 12] Rank changes shown</span></p></div>
+        <span class="ml-auto bg-white/20 text-white text-xs font-bold px-2.5 py-1 rounded-lg">4</span>
+    </div>
+    <div class="divide-y divide-red-50">
+        <div class="flex items-center gap-4 px-6 py-4 bg-red-50/40 hover:bg-red-50 transition-colors"><div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-sm">DF</div><div class="flex-1 min-w-0"><p class="text-sm font-semibold t-main">Dinesh Fernando</p><p class="text-xs t-mut">2024/CHE/003</p></div><div class="hidden sm:flex items-center gap-1.5"><span class="text-xs t-mut">320</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs t-mut">310</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded">295</span></div><div class="flex items-center gap-2"><span class="text-red-600 text-xs font-bold flex items-center gap-1"><i class="fas fa-arrow-trend-down text-xs"></i>-25</span><span class="text-xs text-red-600 font-bold">Rank <i class="fas fa-arrow-down text-[9px]"></i> 15→18</span></div></div>
+        <div class="flex items-center gap-4 px-6 py-4 bg-red-50/40 hover:bg-red-50 transition-colors"><div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-sm">TJ</div><div class="flex-1 min-w-0"><p class="text-sm font-semibold t-main">Tharindu Jayawardena</p><p class="text-xs t-mut">2024/CHE/005</p></div><div class="hidden sm:flex items-center gap-1.5"><span class="text-xs t-mut">300</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs t-mut">285</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded">270</span></div><div class="flex items-center gap-2"><span class="text-red-600 text-xs font-bold flex items-center gap-1"><i class="fas fa-arrow-trend-down text-xs"></i>-30</span><span class="text-xs text-red-600 font-bold">Rank <i class="fas fa-arrow-down text-[9px]"></i> 12→16</span></div></div>
+        <div class="flex items-center gap-4 px-6 py-4 bg-red-50/40 hover:bg-red-50 transition-colors"><div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-sm">AW</div><div class="flex-1 min-w-0"><p class="text-sm font-semibold t-main">Amaya Wijesinghe</p><p class="text-xs t-mut">2024/CHE/011</p></div><div class="hidden sm:flex items-center gap-1.5"><span class="text-xs t-mut">280</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs t-mut">265</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded">250</span></div><div class="flex items-center gap-2"><span class="text-red-600 text-xs font-bold flex items-center gap-1"><i class="fas fa-arrow-trend-down text-xs"></i>-30</span><span class="text-xs text-red-600 font-bold">Rank <i class="fas fa-arrow-down text-[9px]"></i> 20→23</span></div></div>
+        <div class="flex items-center gap-4 px-6 py-4 bg-red-50/40 hover:bg-red-50 transition-colors"><div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-sm">RD</div><div class="flex-1 min-w-0"><p class="text-sm font-semibold t-main">Ruwan Dissanayake</p><p class="text-xs t-mut">2024/CHE/015</p></div><div class="hidden sm:flex items-center gap-1.5"><span class="text-xs t-mut">310</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs t-mut">295</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded">280</span></div><div class="flex items-center gap-2"><span class="text-red-600 text-xs font-bold flex items-center gap-1"><i class="fas fa-arrow-trend-down text-xs"></i>-30</span><span class="text-xs text-red-600 font-bold">Rank <i class="fas fa-arrow-down text-[9px]"></i> 13→17</span></div></div>
+    </div>
+</div>
+
+<!-- SETTINGS: [FEATURE 6] DARK MODE + [FEATURE 9] WHATSAPP PREVIEW -->
+<div id="tSettings" class="card p-6 anim">
+    <div class="flex items-center gap-3 mb-6"><div class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center"><i class="fas fa-gear text-slate-500"></i></div><div><h3 class="text-sm font-bold t-main">System Settings</h3><p class="text-xs t-mut">Configure portal features and notifications</p></div></div>
+    <div class="space-y-4">
+        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center"><i class="fas fa-graduation-cap text-amber-600 text-sm"></i></div><div><p class="text-sm font-semibold t-main">Enable Student Portal</p><p class="text-xs t-mut">Allow students to view their own analytics</p></div></div><div class="tog on" onclick="this.classList.toggle('on');toast('Student Portal '+(this.classList.contains('on')?'enabled':'disabled')+' successfully.')"><div class="tog-knob"></div></div></div>
+        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center"><i class="fab fa-whatsapp text-green-600 text-sm"></i></div><div><p class="text-sm font-semibold t-main">Enable Automated WhatsApp SMS Alerts</p><p class="text-xs t-mut">Send mark reports to parents via WhatsApp</p></div></div><div class="tog" id="waTog" onclick="toggleWA(this)"><div class="tog-knob"></div></div></div>
+        <!-- [FEATURE 9] WHATSAPP PREVIEW -->
+        <div id="waPreview" class="hidden p-4 bg-emerald-50 rounded-xl border border-emerald-200">
+            <p class="text-xs font-bold text-emerald-800 mb-3"><i class="fab fa-whatsapp mr-1"></i>Message Preview — Sample Parent Notification</p>
+            <div class="bg-white rounded-lg p-3 shadow-sm max-w-sm">
+                <p class="text-xs text-slate-500 mb-1">To: +94 77 123 4567 (Parent of Sachini Bandara)</p>
+                <div class="bg-emerald-50 rounded-lg p-3 text-xs text-slate-700 leading-relaxed">📊 <strong>ChemMarks — Paper 5 Results</strong><br><br>Student: Sachini Bandara<br>Index: 2024/CHE/004<br>Rank: #5 out of 32<br><br>MCQ: 35/50 (70%)<br>Physical: 120/150 (80%)<br>Inorganic: 95/150 (63.3%) ⚠️<br>Organic: 110/150 (73.3%)<br><br>Total: 360/500 (72%)<br>⬆️ Trend: Improving</div>
+            </div>
+        </div>
+        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-slate-800 flex items-center justify-center"><i class="fas fa-moon text-slate-200 text-sm"></i></div><div><p class="text-sm font-semibold t-main">Dark Mode</p><p class="text-xs t-mut">Reduce eye strain in low-light environments</p></div></div><div class="tog" id="darkTog" onclick="togDark()"><div class="tog-knob"></div></div></div>
+    </div>
+</div>
+
+<!-- [FEATURE 8] ACTIVITY LOG -->
+<div class="card p-6 anim"><h3 class="text-sm font-bold t-main mb-4 flex items-center gap-2"><i class="fas fa-clock-rotate-left t-mut"></i>Recent Activity Log</h3>
+    <div class="space-y-0">
+        <div class="flex gap-3 pb-4"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-check"></i></div><div class="w-px flex-1 bg-slate-100 mt-1"></div></div><div><p class="text-sm t-sub"><strong>Bulk upload</strong> processed — 32 records for Paper 5</p><p class="text-xs t-mut mt-0.5">Today, 2:30 PM — by Staff</p></div></div>
+        <div class="flex gap-3 pb-4"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-pen"></i></div><div class="w-px flex-1 bg-slate-100 mt-1"></div></div><div><p class="text-sm t-sub">Manual entry for <strong>2024/CHE/004</strong> — Total: 360/500</p><p class="text-xs t-mut mt-0.5">Today, 1:15 PM — by Staff</p></div></div>
+        <div class="flex gap-3 pb-4"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-pen"></i></div><div class="w-px flex-1 bg-slate-100 mt-1"></div></div><div><p class="text-sm t-sub">Manual entry for <strong>2024/CHE/003</strong> — Total: 250/500</p><p class="text-xs t-mut mt-0.5">Today, 12:45 PM — by Staff</p></div></div>
+        <div class="flex gap-3"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-xmark"></i></div></div><div><p class="text-sm t-sub">Upload failed — <strong>invalid format detected</strong></p><p class="text-xs t-mut mt-0.5">Today, 11:00 AM — by Staff</p></div></div>
+    </div>
+</div>
+</div>
+</main>
+</section>
+
+<!-- ============================================================ -->
+<!-- ==================== STAFF DASHBOARD ======================== -->
+<!-- ============================================================ -->
+<section id="staffPage" class="hidden min-h-screen">
+<div class="sidebar-overlay" id="sOv" onclick="togSB('sSB','sOv')"></div>
+<aside class="sidebar sb-bg fixed top-1 left-0 bottom-0 bg-white border-r border-slate-200 flex flex-col pt-6" id="sSB">
+    <div class="px-6 mb-8"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-200"><i class="fas fa-flask text-sm"></i></div><div><h1 class="text-sm font-bold text-slate-800 leading-tight">ChemMarks</h1><p class="text-[10px] text-slate-400 font-medium tracking-wide uppercase">Analytics</p></div></div></div>
+    <nav class="flex-1 px-3 space-y-1">
+        <p class="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Data Entry</p>
+        <a href="#" onclick="return false" class="nav-item active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm"><i class="fas fa-th-large ni text-slate-400 w-5 text-center"></i>Dashboard</a>
+        <a href="#sBulk" onclick="document.getElementById('sBulk').scrollIntoView({behavior:'smooth'});if(innerWidth<1024)togSB('sSB','sOv');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-cloud-arrow-up ni text-slate-400 w-5 text-center"></i>Bulk Upload</a>
+        <a href="#sManual" onclick="document.getElementById('sManual').scrollIntoView({behavior:'smooth'});if(innerWidth<1024)togSB('sSB','sOv');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-pen-to-square ni text-slate-400 w-5 text-center"></i>Manual Entry</a>
+        <p class="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2 mt-6">Navigation</p>
+        <a href="#" onclick="goPage('teacherPage');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-arrow-left ni text-slate-400 w-5 text-center"></i>Back to Teacher</a>
+    </nav>
+    <div class="px-4 py-4 border-t border-slate-100"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-semibold text-sm">S</div><div class="flex-1 min-w-0"><p class="text-sm font-semibold text-slate-800 truncate">Staff Member</p><p class="text-xs text-slate-400">Data Entry Role</p></div><a href="#" onclick="doLogout();return false" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-right-from-bracket text-sm"></i></a></div></div>
+</aside>
+
+<main class="lg:ml-[260px] pt-7">
+<header class="hd-bg bg-white border-b border-slate-200 px-4 sm:px-8 py-4 flex items-center justify-between sticky top-1 z-30">
+    <div class="flex items-center gap-3"><button onclick="togSB('sSB','sOv')" class="lg:hidden w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center t-sub hover:bg-slate-200"><i class="fas fa-bars text-sm"></i></button><div><h2 class="text-lg font-bold t-main">Staff Data Entry</h2><p class="text-xs t-mut">Upload marks or enter manually</p></div></div>
+    <div class="flex items-center gap-3"><span class="hidden sm:inline text-xs t-mut bg-slate-50 px-3 py-1.5 rounded-lg"><i class="fas fa-shield-halved mr-1.5 text-emerald-500"></i>Data Entry Access Only</span><div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">S</div></div>
+</header>
+
+<div class="p-4 sm:p-8 space-y-6">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="card p-5 anim"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center"><i class="fas fa-file-import text-indigo-500"></i></div><div><p class="text-xs t-mut font-medium">Today's Entries</p><p class="text-xl font-bold t-main">14</p></div></div></div>
+    <div class="card p-5 anim d1"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center"><i class="fas fa-cloud-arrow-up text-emerald-500"></i></div><div><p class="text-xs t-mut font-medium">Bulk Uploads</p><p class="text-xl font-bold t-main">3</p></div></div></div>
+    <div class="card p-5 anim d2"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center"><i class="fas fa-pen text-amber-500"></i></div><div><p class="text-xs t-mut font-medium">Manual Entries</p><p class="text-xl font-bold t-main">11</p></div></div></div>
+</div>
+
+<!-- BULK UPLOAD -->
+<div id="sBulk" class="card p-6 anim">
+    <div class="flex items-center gap-3 mb-5"><div class="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center"><i class="fas fa-cloud-arrow-up text-emerald-600 text-sm"></i></div><div><h3 class="text-sm font-bold t-main">Bulk Upload</h3><p class="text-xs t-mut">Upload marks from an Excel or CSV file</p></div></div>
+    <div class="upload-zone rounded-2xl p-10 text-center cursor-pointer" id="dropZone" onclick="document.getElementById('fInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="event.preventDefault();this.classList.remove('drag');pickFile(event.dataTransfer.files[0])">
+        <input type="file" id="fInput" accept=".csv,.xlsx,.xls" class="hidden" onchange="pickFile(this.files[0])">
+        <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4"><i class="fas fa-file-arrow-up text-2xl text-slate-400"></i></div>
+        <p class="text-sm font-semibold t-sub">Drop your file here or click to browse</p>
+        <p class="text-xs t-mut mt-1">Supports .xlsx, .xls, .csv — Max 5MB</p>
+        <p id="fName" class="text-sm font-medium text-indigo-600 mt-3 hidden"></p>
+    </div>
+    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-5">
+        <button onclick="simUpload()" id="upBtn" disabled class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 px-6 rounded-xl text-sm transition-all shadow-lg shadow-emerald-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"><i class="fas fa-upload mr-2"></i>Upload File</button>
+        <button class="text-sm text-indigo-600 hover:text-indigo-800 font-medium"><i class="fas fa-download mr-1.5"></i>Download Template</button>
+    </div>
+</div>
+
+<!-- [FEATURE 18] MANUAL ENTRY WITH VISUAL VALIDATION -->
+<div id="sManual" class="card p-6 anim d1">
+    <div class="flex items-center gap-3 mb-6"><div class="w-9 h-9 rounded-lg bg-indigo-100 flex items-center justify-center"><i class="fas fa-pen-to-square text-indigo-600 text-sm"></i></div><div><h3 class="text-sm font-bold t-main">Manual Marks Entry</h3><p class="text-xs t-mut">Enter marks for a single student — A/L Chemistry Paper Structure</p></div></div>
+    <form id="mkForm" onsubmit="submitMarks(event)" novalidate>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div><label class="block text-xs font-semibold t-sub mb-1.5">Student Index Number <span class="text-red-400">*</span></label><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"><i class="fas fa-hashtag text-xs"></i></span><input type="text" id="sIdx" placeholder="e.g., 2024/CHE/004" required class="ifield w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-slate-50/50" oninput="vField(this,'idx')"></div></div>
+            <div><label class="block text-xs font-semibold t-sub mb-1.5">Exam Name / Date <span class="text-red-400">*</span></label><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"><i class="fas fa-calendar text-xs"></i></span><input type="text" id="sExam" placeholder="e.g., Paper 5 — 2024 Dec" required class="ifield w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-slate-50/50" oninput="vField(this,'exam')"></div></div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-5 mb-6">
+            <h4 class="text-xs font-bold t-mut uppercase tracking-wider mb-4 flex items-center gap-2"><i class="fas fa-list-check"></i>Marks Breakdown</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div><label class="block text-xs font-semibold t-sub mb-1.5">Overall MCQ Mark</label><div class="relative"><input type="number" id="sMcq" min="0" max="50" placeholder="0" required class="ifield w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-white" oninput="vField(this,'mcq');calcTotal()"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs t-mut font-medium">/ 50</span></div></div>
+                <div><label class="block text-xs font-semibold t-sub mb-1.5">Q5 — Physical Chemistry</label><div class="relative"><input type="number" id="sQ5" min="0" max="150" placeholder="0" required class="ifield w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-white" oninput="vField(this,'q5');calcTotal()"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs t-mut font-medium">/ 150</span></div></div>
+                <div><label class="block text-xs font-semibold t-sub mb-1.5">Q6 — Inorganic Chemistry</label><div class="relative"><input type="number" id="sQ6" min="0" max="150" placeholder="0" required class="ifield w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-white" oninput="vField(this,'q6');calcTotal()"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs t-mut font-medium">/ 150</span></div></div>
+                <div><label class="block text-xs font-semibold t-sub mb-1.5">Q7 — Organic Chemistry</label><div class="relative"><input type="number" id="sQ7" min="0" max="150" placeholder="0" required class="ifield w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-white" oninput="vField(this,'q7');calcTotal()"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs t-mut font-medium">/ 150</span></div></div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between"><span class="text-sm font-semibold t-sub">Total Mark</span><div class="flex items-center gap-2"><span id="sTotal" class="text-2xl font-extrabold text-indigo-600">0</span><span class="text-sm t-mut font-medium">/ 500</span></div></div>
+        </div>
+        <div id="sErr" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4 text-sm flex items-center gap-2"><i class="fas fa-circle-exclamation"></i><span id="sErrTxt"></span></div>
+        <div class="flex items-center gap-3">
+            <button type="submit" id="sSub" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 px-8 rounded-xl text-sm transition-all shadow-lg shadow-indigo-200 active:scale-[0.98]"><i class="fas fa-check mr-2"></i>Submit Marks</button>
+            <button type="reset" onclick="resetStaffForm()" class="bg-slate-100 hover:bg-slate-200 t-sub font-semibold py-2.5 px-6 rounded-xl text-sm transition-all">Clear Form</button>
+        </div>
+    </form>
+</div>
+
+<!-- [FEATURE 8] STAFF ACTIVITY LOG -->
+<div class="card p-6 anim d2"><h3 class="text-sm font-bold t-main mb-4 flex items-center gap-2"><i class="fas fa-clock-rotate-left t-mut"></i>Your Recent Activity</h3>
+    <div class="space-y-0">
+        <div class="flex gap-3 pb-4"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-check"></i></div><div class="w-px flex-1 bg-slate-100 mt-1"></div></div><div><p class="text-sm t-sub">Bulk upload — <strong>32 records</strong> for Paper 5</p><p class="text-xs t-mut mt-0.5">Today, 2:30 PM</p></div></div>
+        <div class="flex gap-3 pb-4"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-pen"></i></div><div class="w-px flex-1 bg-slate-100 mt-1"></div></div><div><p class="text-sm t-sub">Manual entry — <strong>2024/CHE/004</strong> scored 360/500</p><p class="text-xs t-mut mt-0.5">Today, 1:15 PM</p></div></div>
+        <div class="flex gap-3 pb-4"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-pen"></i></div><div class="w-px flex-1 bg-slate-100 mt-1"></div></div><div><p class="text-sm t-sub">Manual entry — <strong>2024/CHE/003</strong> scored 250/500</p><p class="text-xs t-mut mt-0.5">Today, 12:45 PM</p></div></div>
+        <div class="flex gap-3"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-xmark"></i></div></div><div><p class="text-sm t-sub">Upload failed — <strong>invalid format</strong></p><p class="text-xs t-mut mt-0.5">Today, 11:00 AM</p></div></div>
+    </div>
+</div>
+</div>
+</main>
+</section>
+
+<!-- ============================================================ -->
+<!-- ==================== STUDENT PROFILE ======================== -->
+<!-- ============================================================ -->
+<section id="studentPage" class="hidden min-h-screen">
+<div class="sidebar-overlay" id="spOv" onclick="togSB('spSB','spOv')"></div>
+<aside class="sidebar sb-bg fixed top-1 left-0 bottom-0 bg-white border-r border-slate-200 flex flex-col pt-6" id="spSB">
+    <div class="px-6 mb-8"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-200"><i class="fas fa-flask text-sm"></i></div><div><h1 class="text-sm font-bold text-slate-800 leading-tight">ChemMarks</h1><p class="text-[10px] text-slate-400 font-medium tracking-wide uppercase">Analytics</p></div></div></div>
+    <nav class="flex-1 px-3 space-y-1">
+        <p class="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Analytics</p>
+        <a href="#" onclick="return false" class="nav-item active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm"><i class="fas fa-user ni text-slate-400 w-5 text-center"></i>Student Profile</a>
+        <a href="#spTrend" onclick="scrollTo_('spTrend');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-chart-line ni text-slate-400 w-5 text-center"></i>Performance Trend</a>
+        <a href="#spBreak" onclick="scrollTo_('spBreak');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-chart-bar ni text-slate-400 w-5 text-center"></i>Subject Breakdown</a>
+        <a href="#spRadar" onclick="scrollTo_('spRadar');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-diagram-project ni text-slate-400 w-5 text-center"></i>Class Comparison</a>
+        <p class="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2 mt-6">Navigation</p>
+        <a href="#" onclick="goPage('teacherPage');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-arrow-left ni text-slate-400 w-5 text-center"></i>Back to Dashboard</a>
+    </nav>
+    <div class="px-4 py-4 border-t border-slate-100"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-semibold text-sm">T</div><div class="flex-1 min-w-0"><p class="text-sm font-semibold text-slate-800 truncate">Teacher View</p><p class="text-xs text-slate-400">Viewing Student Data</p></div><a href="#" onclick="doLogout();return false" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-right-from-bracket text-sm"></i></a></div></div>
+</aside>
+
+<main class="lg:ml-[260px] pt-7">
+<!-- [FEATURE 4] PRINT/PDF + STUDENT SELECTOR -->
+<header class="hd-bg bg-white border-b border-slate-200 px-4 sm:px-8 py-4 flex items-center justify-between sticky top-1 z-30">
+    <div class="flex items-center gap-3"><button onclick="togSB('spSB','spOv')" class="lg:hidden w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center t-sub hover:bg-slate-200"><i class="fas fa-bars text-sm"></i></button><div><h2 class="text-lg font-bold t-main">Student Analytics</h2><p class="text-xs t-mut">Individual performance deep-dive</p></div></div>
+    <div class="flex items-center gap-3">
+        <select id="stuSel" onchange="loadStu(+this.value)" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm t-sub font-medium outline-none focus:border-indigo-500 pr-8 cursor-pointer" style="appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 12px center">
+            <option value="0">Kavindu Perera</option><option value="1">Nethmi Silva</option><option value="2" selected>Sachini Bandara</option><option value="3">Dinesh Fernando</option><option value="4">Harsha Gunathilaka</option>
+        </select>
+        <button onclick="window.print()" class="hidden sm:flex items-center gap-2 bg-slate-100 hover:bg-slate-200 t-sub font-medium py-2 px-4 rounded-xl text-sm transition-colors"><i class="fas fa-download text-xs"></i>Export PDF</button>
+    </div>
+</header>
+
+<div class="p-4 sm:p-8 space-y-6">
+<!-- STUDENT INFO: [FEATURE 10] GRADE PREDICTION + [FEATURE 12] RANK CHANGE -->
+<div class="card p-6 anim">
+    <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center text-xl font-bold shadow-lg shadow-indigo-200" id="spAvatar">SB</div>
+        <div class="flex-1">
+            <div class="flex flex-wrap items-center gap-3 mb-1"><h3 class="text-xl font-bold t-main" id="spName">Sachini Bandara</h3><span class="bpulse inline-flex items-center gap-1 bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full" id="spRank"><i class="fas fa-medal text-[10px]"></i>Rank #5</span><span id="spRankChg" class="text-xs font-bold text-emerald-600"><i class="fas fa-arrow-up text-[9px]"></i> 6→5</span></div>
+            <p class="text-sm t-mut" id="spIdx">Index: 2024/CHE/004</p>
+        </div>
+        <div class="flex gap-3 sm:gap-4 flex-wrap">
+            <div class="text-center px-4 py-2 bg-slate-50 rounded-xl"><p class="text-xs t-mut font-medium">Latest Total</p><p class="text-lg font-extrabold t-main" id="spTotal">360</p></div>
+            <div class="text-center px-4 py-2 bg-slate-50 rounded-xl"><p class="text-xs t-mut font-medium">Latest %</p><p class="text-lg font-extrabold text-indigo-600" id="spPct">72%</p></div>
+            <div class="text-center px-4 py-2 bg-slate-50 rounded-xl"><p class="text-xs t-mut font-medium">Trend</p><p class="text-lg font-extrabold" id="spTrend"><i class="fas fa-arrow-trend-up text-emerald-500"></i></p></div>
+            <!-- [FEATURE 10] GRADE PREDICTION -->
+            <div class="text-center px-4 py-2 bg-slate-50 rounded-xl"><p class="text-xs t-mut font-medium">Predicted Grade</p><p class="text-lg font-extrabold" id="spGrade"><span class="text-indigo-600">B</span></p></div>
+        </div>
+    </div>
+</div>
+
+<!-- [FEATURE 13] SUBJECT PROGRESS BARS -->
+<div class="card p-6 anim d1">
+    <h3 class="text-sm font-bold t-main mb-4 flex items-center gap-2"><i class="fas fa-bars-progress t-mut"></i>Subject Performance — Latest Exam</h3>
+    <div class="space-y-4" id="spBars"></div>
+</div>
+
+<!-- TREND LINE CHART -->
+<div id="spTrend" class="card p-6 anim d2"><h3 class="text-sm font-bold t-main mb-1">Overall Performance Trend</h3><p class="text-xs t-mut mb-5">Total marks across the last 5 exams</p><div style="height:260px"><canvas id="trendC"></canvas></div></div>
+
+<!-- BREAKDOWN BAR CHART -->
+<div id="spBreak" class="card p-6 anim d3">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-5 gap-3">
+        <div><h3 class="text-sm font-bold t-main">Subject-Level Analysis — Latest Exam</h3><p class="text-xs t-mut mt-0.5">Percentage scored in each section (Paper 5)</p></div>
+        <div class="wpulse inline-flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-xs font-bold px-3 py-1.5 rounded-lg"><i class="fas fa-triangle-exclamation"></i><span id="spWeak">Weak Area: Inorganic Chemistry (63.3%)</span></div>
+    </div>
+    <div style="height:260px"><canvas id="breakC"></canvas></div>
+</div>
+
+<!-- RADAR + [FEATURE 11] SCATTER PLOT -->
+<div id="spRadar" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="card p-6 anim"><div class="flex items-center justify-between mb-5"><div><h3 class="text-sm font-bold t-main">Compare with Class Average</h3><p class="text-xs t-mut mt-0.5">Radar comparison across all sections</p></div><div class="flex items-center gap-4 text-xs"><span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-indigo-500"></span><span class="t-sub font-medium" id="spRadarLbl">Student</span></span><span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400"></span><span class="t-sub font-medium">Class Avg</span></span></div></div><div style="height:300px" class="flex justify-center"><canvas id="radarC"></canvas></div></div>
+    <!-- [FEATURE 11] SCATTER PLOT -->
+    <div class="card p-6 anim d1"><h3 class="text-sm font-bold t-main mb-1">MCQ vs Structured Marks Correlation</h3><p class="text-xs t-mut mb-5">All 32 students in Paper 5 — highlighted student shown in indigo</p><div style="height:300px"><canvas id="scatC"></canvas></div></div>
+</div>
+
+<!-- MARKS TABLE + [FEATURE 14] EXAM DIFFICULTY STARS -->
+<div class="card p-6 anim d2">
+    <div class="flex items-center gap-3 mb-5"><div class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center"><i class="fas fa-table text-slate-500 text-sm"></i></div><div><h3 class="text-sm font-bold t-main">Detailed Marks History</h3><p class="text-xs t-mut">All exam breakdowns — [FEATURE 14] Difficulty rating shown</p></div></div>
+    <div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-slate-100"><th class="text-left py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">Exam</th><th class="text-center py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">MCQ<br><span class="font-normal normal-case">/50</span></th><th class="text-center py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">Q5 Physical<br><span class="font-normal normal-case">/150</span></th><th class="text-center py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">Q6 Inorganic<br><span class="font-normal normal-case">/150</span></th><th class="text-center py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">Q7 Organic<br><span class="font-normal normal-case">/150</span></th><th class="text-center py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">Total<br><span class="font-normal normal-case">/500</span></th><th class="text-center py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">%</th><th class="text-center py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">Difficulty</th></tr></thead><tbody id="spTbl"></tbody></table></div>
+</div>
+
+<!-- [FEATURE 16] QUICK NOTES -->
+<div class="card p-6 anim d3">
+    <div class="flex items-center gap-3 mb-4"><div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center"><i class="fas fa-sticky-note text-amber-500 text-sm"></i></div><div><h3 class="text-sm font-bold t-main">Quick Notes / Remarks</h3><p class="text-xs t-mut">Add observations about this student</p></div></div>
+    <textarea id="spNotes" rows="3" placeholder="e.g., Struggles with Inorganic chemistry — recommend extra tutoring sessions..." class="ifield w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-slate-50/50 resize-none" oninput="saveNotes()"></textarea>
+    <p class="text-xs t-mut mt-2"><i class="fas fa-circle-info mr-1"></i>Notes are saved in this session only (no backend).</p>
+</div>
+</div>
+</main>
+</section>
+
+<!-- ============================================================ -->
+<!-- ==================== JAVASCRIPT ============================ -->
+<!-- ============================================================ -->
+<script>
+// ===== GLOBAL DATA =====
+const DB={
+    teacher:{pw:'pass123',page:'teacherPage'},
+    staff1:{pw:'pass123',page:'staffPage'},
+    student1:{pw:'pass123',page:'studentPage'}
+};
+const classAvgPct={mcq:65,q5:72,q6:65,q7:70};
+// [FEATURE 14] Exam difficulty (lower class avg = harder)
+const examDiff=[{stars:4,label:'Hard'},{stars:3,label:'Moderate'},{stars:4,label:'Hard'},{stars:3,label:'Moderate'},{stars:2,label:'Easy'}];
+
+const stuDB=[
+    {name:"Kavindu Perera",idx:"2024/CHE/001",ini:"KP",rank:3,rc:'up',rp:'4→3',notes:"Strong in all areas. Push Q6 further.",
+     h:[{e:"Paper 1",mcq:38,q5:128,q6:125,q7:129},{e:"Paper 2",mcq:40,q5:132,q6:130,q7:133},{e:"Paper 3",mcq:36,q5:125,q6:120,q7:129},{e:"Paper 4",mcq:42,q5:135,q6:133,q7:135},{e:"Paper 5",mcq:44,q5:140,q6:138,q7:138}]},
+    {name:"Nethmi Silva",idx:"2024/CHE/002",ini:"NS",rank:1,rc:'stable',rp:'1→1',notes:"Consistently top performer. Excellent across all sections.",
+     h:[{e:"Paper 1",mcq:45,q5:140,q6:138,q7:142},{e:"Paper 2",mcq:46,q5:142,q6:140,q7:145},{e:"Paper 3",mcq:44,q5:138,q6:136,q7:140},{e:"Paper 4",mcq:47,q5:144,q6:142,q7:146},{e:"Paper 5",mcq:47,q5:145,q6:143,q7:145}]},
+    {name:"Sachini Bandara",idx:"2024/CHE/004",ini:"SB",rank:5,rc:'up',rp:'6→5',notes:"Improving steadily. Inorganic is the weak point — needs focused practice.",
+     h:[{e:"Paper 1",mcq:30,q5:110,q6:90,q7:105},{e:"Paper 2",mcq:33,q5:115,q6:92,q7:110},{e:"Paper 3",mcq:32,q5:118,q6:88,q7:108},{e:"Paper 4",mcq:34,q5:115,q6:90,q7:106},{e:"Paper 5",mcq:35,q5:120,q6:95,q7:110}]},
+    {name:"Dinesh Fernando",idx:"2024/CHE/003",ini:"DF",rank:18,rc:'down',rp:'15→18',notes:"Declining trend. Needs immediate intervention in all areas.",
+     h:[{e:"Paper 1",mcq:28,q5:95,q6:80,q7:90},{e:"Paper 2",mcq:26,q5:90,q6:78,q7:85},{e:"Paper 3",mcq:25,q5:88,q6:75,q7:82},{e:"Paper 4",mcq:23,q5:85,q6:72,q7:80},{e:"Paper 5",mcq:22,q5:80,q6:70,q7:78}]},
+    {name:"Harsha Gunathilaka",idx:"2024/CHE/007",ini:"HG",rank:8,rc:'up',rp:'9→8',notes:"Solid performance. Slight improvement needed in Inorganic.",
+     h:[{e:"Paper 1",mcq:34,q5:105,q6:100,q7:102},{e:"Paper 2",mcq:36,q5:108,q6:103,q7:105},{e:"Paper 3",mcq:35,q5:106,q6:101,q7:104},{e:"Paper 4",mcq:37,q5:110,q6:104,q7:108},{e:"Paper 5",mcq:38,q5:110,q6:105,q7:108}]}
+];
+
+// [FEATURE 11] Scatter data for 32 students (Paper 5)
+const scatterAll=[];
+// Add the 5 known students
+stuDB.forEach(s=>{const l=s.h[4];scatterAll.push({mcq:l.mcq,str:l.q5+l.q6+l.q7,name:s.name,known:true})});
+// Generate 27 more
+const rng=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+for(let i=0;i<27;i++){scatterAll.push({mcq:rng(10,48),str:rng(120,440),name:null,known:false})}
+scatterAll.sort((a,b)=>b.str-a.str);
+
+// [FEATURE 5] Search data
+const searchList=[
+    {name:"Nethmi Silva",idx:"2024/CHE/002"},{name:"Kavindu Perera",idx:"2024/CHE/001"},{name:"Sachini Bandara",idx:"2024/CHE/004"},
+    {name:"Dinesh Fernando",idx:"2024/CHE/003"},{name:"Tharindu Jayawardena",idx:"2024/CHE/005"},{name:"Amaya Wijesinghe",idx:"2024/CHE/011"},
+    {name:"Ruwan Dissanayake",idx:"2024/CHE/015"},{name:"Harsha Gunathilaka",idx:"2024/CHE/007"},{name:"Malini Rathnayake",idx:"2024/CHE/008"},
+    {name:"Prasanna Kumara",idx:"2024/CHE/009"},{name:"Chamari Dias",idx:"2024/CHE/006"},{name:"Saman Kumara",idx:"2024/CHE/010"},
+    {name:"Ishara Madushani",idx:"2024/CHE/012"},{name:"Kasun Madusanka",idx:"2024/CHE/013"},{name:"Dilini Perera",idx:"2024/CHE/014"},
+    {name:"Nuwan Jayasinghe",idx:"2024/CHE/016"},{name:"Sanduni Fernando",idx:"2024/CHE/017"},{name:"Ravindu Silva",idx:"2024/CHE/018"},
+    {name:"Thilini Weerasinghe",idx:"2024/CHE/019"},{name:"Asanka Perera",idx:"2024/CHE/020"},{name:"Chathurika Jayasuriya",idx:"2024/CHE/021"},
+    {name:"Dinesh Priyantha",idx:"2024/CHE/022"},{name:"Eshani Wickramasinghe",idx:"2024/CHE/023"},{name:"Farhan Mohamed",idx:"2024/CHE/024"},
+    {name:"Gayani Herath",idx:"2024/CHE/025"},{name:"Hiruna Senanayake",idx:"2024/CHE/026"},{name:"Indika Rathnayake",idx:"2024/CHE/027"},
+    {name:"Janith Liyanage",idx:"2024/CHE/028"},{name:"Kavisha De Silva",idx:"2024/CHE/029"},{name:"Lakmal Fernando",idx:"2024/CHE/030"},
+    {name:"Madhavi Jayawardena",idx:"2024/CHE/031"},{name:"Nimali Gunasekara",idx:"2024/CHE/032"}
+];
+
+// ===== CHART INSTANCES =====
+const C={};
+
+// ===== TOAST =====
+function toast(msg,type='success'){
+    const box=document.getElementById('toastBox'),t=document.createElement('div');
+    t.className='toast';
+    const bc=type==='success'?'#10b981':type==='info'?'#6366f1':'#ef4444';
+    const ic=type==='success'?'fa-circle-check text-emerald-500':type==='info'?'fa-circle-info text-indigo-500':'fa-circle-xmark text-red-500';
+    t.style.borderLeftColor=bc;
+    t.innerHTML=`<i class="fas ${ic}"></i><span class="t-sub">${msg}</span>`;
+    box.appendChild(t);
+    setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),300)},3500);
+}
+
+// ===== SIDEBAR TOGGLE =====
+function togSB(sbId,ovId){document.getElementById(sbId).classList.toggle('open');document.getElementById(ovId).classList.toggle('show')}
+
+// ===== PAGE NAVIGATION =====
+function goPage(id){
+    document.querySelectorAll('#loginPage,#teacherPage,#staffPage,#studentPage').forEach(p=>p.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    window.scrollTo(0,0);
+    requestAnimationFrame(()=>{
+        if(id==='teacherPage')initTeacher();
+        if(id==='studentPage')loadStu(+document.getElementById('stuSel').value);
+    });
+}
+
+// ===== LOGIN =====
+function doLogin(e){
+    e.preventDefault();
+    const u=document.getElementById('lUser').value.trim(),p=document.getElementById('lPass').value;
+    const err=document.getElementById('loginErr'),card=err.closest('.glass');
+    err.classList.add('hidden');
+    if(!u||!p){document.getElementById('loginErrTxt').textContent='Please enter both username and password.';err.classList.remove('hidden');card.classList.add('shake');setTimeout(()=>card.classList.remove('shake'),400);return}
+    const user=DB[u];
+    if(!user||user.pw!==p){document.getElementById('loginErrTxt').textContent='Invalid username or password.';err.classList.remove('hidden');card.classList.add('shake');setTimeout(()=>card.classList.remove('shake'),400);return}
+    const btn=document.getElementById('loginBtn');btn.innerHTML='<i class="fas fa-circle-notch fa-spin mr-2"></i>Signing in...';btn.disabled=true;
+    setTimeout(()=>{startSession();goPage(user.page)},800);
+}
+function doLogout(){stopSession();document.querySelectorAll('#loginPage,#teacherPage,#staffPage,#studentPage').forEach(p=>p.classList.add('hidden'));document.getElementById('loginPage').classList.remove('hidden');document.getElementById('lUser').value='';document.getElementById('lPass').value='';document.getElementById('loginBtn').innerHTML='Sign In';document.getElementById('loginBtn').disabled=false;document.documentElement.classList.remove('dark');syncDarkUI()}
+
+// ===== [FEATURE 20] SESSION TIMER =====
+let sessionInt=null,sessionSec=0;
+function startSession(){sessionSec=0;sessionInt=setInterval(()=>{sessionSec++;const h=String(Math.floor(sessionSec/3600)).padStart(2,'0'),m=String(Math.floor((sessionSec%3600)/60)).padStart(2,'0'),s=String(sessionSec%60).padStart(2,'0');const el=document.getElementById('sessionTimer');if(el)el.textContent=h+':'+m+':'+s},1000)}
+function stopSession(){if(sessionInt)clearInterval(sessionInt);sessionInt=null}
+
+// ===== [FEATURE 6] DARK MODE =====
+function togDark(){document.documentElement.classList.toggle('dark');syncDarkUI();toast('Dark mode '+(document.documentElement.classList.contains('dark')?'enabled':'disabled')+'.','info')}
+function syncDarkUI(){const d=document.documentElement.classList.contains('dark');const ti=document.getElementById('darkIcon');if(ti){ti.classList.toggle('fa-moon',!d);ti.classList.toggle('fa-sun',d)}const dt=document.getElementById('darkTog');if(dt){if(d)dt.classList.add('on');else dt.classList.remove('on')}}
+
+// ===== [FEATURE 5] SEARCH =====
+function doSearch(q){
+    const r=document.getElementById('searchRes');
+    if(!q.trim()){r.classList.add('hidden');return}
+    const f=searchList.filter(s=>s.name.toLowerCase().includes(q.toLowerCase())||s.idx.toLowerCase().includes(q.toLowerCase()));
+    if(!f.length){r.innerHTML='<div class="px-4 py-3 text-xs t-mut">No students found</div>'}
+    else{r.innerHTML=f.map(s=>`<div onclick="goPage('studentPage');document.getElementById('searchRes').classList.add('hidden')" class="flex items-center gap-3 px-4 py-2.5 hover:bg-indigo-50 transition-colors cursor-pointer"><div class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-[10px] font-bold">${s.name.split(' ').map(n=>n[0]).join('')}</div><div><p class="text-sm font-medium t-sub">${s.name}</p><p class="text-[10px] t-mut">${s.idx}</p></div><i class="fas fa-arrow-right text-slate-300 ml-auto text-[10px]"></i></div>`).join('')}
+    r.classList.remove('hidden');
+}
+document.addEventListener('click',e=>{if(!e.target.closest('#tSearch')&&!e.target.closest('#searchRes'))document.getElementById('searchRes')?.classList.add('hidden')});
+
+// ===== [FEATURE 9] WHATSAPP TOGGLE =====
+function toggleWA(el){el.classList.toggle('on');const on=el.classList.contains('on');document.getElementById('waPreview').classList.toggle('hidden',!on);toast('WhatsApp Alerts '+(on?'enabled':'disabled')+'.')}
+
+// ===== [FEATURE 15] ANIMATED COUNTERS =====
+function animCounters(){
+    document.querySelectorAll('.counter').forEach(el=>{
+        const target=+el.dataset.target;let cur=0;const step=Math.ceil(target/40);
+        const iv=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(iv)}el.textContent=cur},30);
+    });
+}
+
+// ===== TEACHER CHARTS =====
+function initTeacher(){
+    animCounters();
+    // Distribution
+    dc('distChart',ctx=>new Chart(ctx,{type:'bar',data:{labels:['0–100','101–200','201–300','301–350','351–400','401–450','451–500'],datasets:[{label:'Students',data:[0,2,6,8,9,5,2],backgroundColor:['#fef2f2','#fee2e2','#fecaca','#c7d2fe','#a5b4fc','#818cf8','#6366f1'],borderColor:['#fca5a5','#fca5a5','#fca5a5','#818cf8','#818cf8','#818cf8','#6366f1'],borderWidth:1,borderRadius:6,barPercentage:.7}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',cornerRadius:8,padding:10,titleFont:{family:'Inter'},bodyFont:{family:'Inter'},callbacks:{label:c=>c.parsed.y+' students'}}},scales:{y:{beginAtZero:true,ticks:{stepSize:2,font:{family:'Inter',size:11},color:'#94a3b8'},grid:{color:'#f1f5f9'},border:{display:false}},x:{ticks:{font:{family:'Inter',size:11},color:'#94a3b8'},grid:{display:false},border:{display:false}}}}}));
+    // [FEATURE 7] Pass/Fail Doughnut
+    dc('pfChart',ctx=>new Chart(ctx,{type:'doughnut',data:{labels:['Passed','Failed'],datasets:[{data:[28,4],backgroundColor:['#10b981','#ef4444'],borderWidth:0,cutout:'72%',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',cornerRadius:8,padding:10,titleFont:{family:'Inter'},bodyFont:{family:'Inter'}}}}}));
+    // [FEATURE 1] Class Avg Trend
+    dc('catChart',ctx=>{const g=ctx.createLinearGradient(0,0,0,230);g.addColorStop(0,'rgba(99,102,241,0.1)');g.addColorStop(1,'rgba(99,102,241,0.01)');return new Chart(ctx,{type:'line',data:{labels:['Paper 1','Paper 2','Paper 3','Paper 4','Paper 5'],datasets:[{label:'Class Average',data:[310,322,315,335,347],borderColor:'#6366f1',backgroundColor:g,fill:true,tension:.4,borderWidth:3,pointRadius:5,pointBackgroundColor:'#6366f1',pointBorderColor:'#fff',pointBorderWidth:2},{label:'Top 10 Average',data:[420,428,425,438,445],borderColor:'#10b981',backgroundColor:'transparent',borderDash:[5,5],tension:.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#10b981'},{label:'Bottom 10 Average',data:[200,210,195,215,220],borderColor:'#ef4444',backgroundColor:'transparent',borderDash:[5,5],tension:.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#ef4444'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{family:'Inter',size:11},usePointStyle:true,pointStyle:'circle',padding:20}},tooltip:{backgroundColor:'#1e293b',cornerRadius:8,padding:10,titleFont:{family:'Inter'},bodyFont:{family:'Inter'}}},scales:{y:{min:0,max:500,ticks:{stepSize:100,font:{family:'Inter',size:11},color:'#94a3b8'},grid:{color:'#f1f5f9'},border:{display:false}},x:{ticks:{font:{family:'Inter',size:11},color:'#64748b'},grid:{display:false},border:{display:false}}},interaction:{intersect:false,mode:'index'}})});
+}
+function dc(id,fn){if(C[id])C[id].destroy();C[id]=fn(document.getElementById(id).getContext('2d'))}
+
+// ===== STAFF =====
+let upFile=false;
+function pickFile(f){if(f){document.getElementById('fName').textContent=f.name;document.getElementById('fName').classList.remove('hidden');document.getElementById('upBtn').disabled=false;upFile=true}}
+function simUpload(){const b=document.getElementById('upBtn');b.innerHTML='<i class="fas fa-circle-notch fa-spin mr-2"></i>Uploading...';b.disabled=true;setTimeout(()=>{b.innerHTML='<i class="fas fa-check mr-2"></i>Uploaded!';toast('Bulk upload completed. 32 student records processed.');setTimeout(()=>{b.innerHTML='<i class="fas fa-upload mr-2"></i>Upload File';b.disabled=false;document.getElementById('fName').classList.add('hidden');upFile=false},3000)},1500)}
+
+// [FEATURE 18] Visual validation
+function vField(el,type){
+    el.classList.remove('valid','invalid');
+    if(type==='idx'){if(/2024\/CHE\/\d{3}/.test(el.value.trim()))el.classList.add('valid');else if(el.value.trim())el.classList.add('invalid')}
+    else if(type==='exam'){if(el.value.trim().length>=5)el.classList.add('valid');else if(el.value.trim())el.classList.add('invalid')}
+    else{const v=parseFloat(el.value);const mx=type==='mcq'?50:150;if(!isNaN(v)&&v>=0&&v<=mx)el.classList.add('valid');else if(el.value!=='')el.classList.add('invalid')}
+}
+function calcTotal(){const m=+document.getElementById('sMcq').value||0,q5=+document.getElementById('sQ5').value||0,q6=+document.getElementById('sQ6').value||0,q7=+document.getElementById('sQ7').value||0;const t=m+q5+q6+q7;const el=document.getElementById('sTotal');el.textContent=t;el.className='text-2xl font-extrabold '+(t>=350?'text-emerald-600':t>=250?'text-amber-600':t>0?'text-red-600':'text-indigo-600')}
+function submitMarks(e){
+    e.preventDefault();const err=document.getElementById('sErr');err.classList.add('hidden');
+    const idx=document.getElementById('sIdx').value.trim(),exam=document.getElementById('sExam').value.trim();
+    const mcq=parseFloat(document.getElementById('sMcq').value),q5=parseFloat(document.getElementById('sQ5').value),q6=parseFloat(document.getElementById('sQ6').value),q7=parseFloat(document.getElementById('sQ7').value);
+    if(!idx||!exam){showSErr('Please fill in Index Number and Exam Name.');return}
+    if(isNaN(mcq)||isNaN(q5)||isNaN(q6)||isNaN(q7)){showSErr('All mark fields are required.');return}
+    if(mcq<0||mcq>50){showSErr('MCQ must be 0–50.');return}
+    if(q5<0||q5>150||q6<0||q6>150||q7<0||q7>150){showSErr('Structured marks must be 0–150.');return}
+    const b=document.getElementById('sSub');b.innerHTML='<i class="fas fa-circle-notch fa-spin mr-2"></i>Submitting...';b.disabled=true;
+    setTimeout(()=>{const t=mcq+q5+q6+q7;toast(`Marks for ${idx} submitted. Total: ${t}/500`);b.innerHTML='<i class="fas fa-check mr-2"></i>Submitted';b.classList.replace('bg-indigo-600','bg-emerald-600');setTimeout(()=>{b.innerHTML='<i class="fas fa-check mr-2"></i>Submit Marks';b.classList.replace('bg-emerald-600','bg-indigo-600');b.disabled=false},2500)},1000);
+}
+function showSErr(m){document.getElementById('sErrTxt').textContent=m;document.getElementById('sErr').classList.remove('hidden')}
+function resetStaffForm(){document.getElementById('sTotal').textContent='0';document.getElementById('sTotal').className='text-2xl font-extrabold text-indigo-600';document.getElementById('sErr').classList.add('hidden');document.querySelectorAll('#sManual .ifield').forEach(f=>f.classList.remove('valid','invalid'))}
+
+// ===== STUDENT PROFILE =====
+function loadStu(i){
+    const s=stuDB[i],l=s.h[4],tot=l.mcq+l.q5+l.q6+l.q7,pct=Math.round(tot/500*100);
+    const prevTot=s.h[3].mcq+s.h[3].q5+s.h[3].q6+s.h[3].q7,trending=tot>=prevTot;
+
+    document.getElementById('spAvatar').textContent=s.ini;
+    document.getElementById('spName').textContent=s.name;
+    document.getElementById('spRank').innerHTML=`<i class="fas fa-medal text-[10px]"></i>Rank #${s.rank}`;
+    document.getElementById('spIdx').textContent='Index: '+s.idx;
+    document.getElementById('spTotal').textContent=tot;
+    document.getElementById('spPct').textContent=pct+'%';
+    document.getElementById('spPct').className='text-lg font-extrabold '+(pct>=80?'text-emerald-600':pct>=60?'text-indigo-600':pct>=40?'text-amber-600':'text-red-600');
+    document.getElementById('spTrend').innerHTML=trending?'<i class="fas fa-arrow-trend-up text-emerald-500"></i>':'<i class="fas fa-arrow-trend-down text-red-500"></i>';
+
+    // [FEATURE 12] Rank change
+    const rcEl=document.getElementById('spRankChg');
+    if(s.rc==='up'){rcEl.className='text-xs font-bold text-emerald-600';rcEl.innerHTML=`<i class="fas fa-arrow-up text-[9px]"></i> ${s.rp}`}
+    else if(s.rc==='down'){rcEl.className='text-xs font-bold text-red-600';rcEl.innerHTML=`<i class="fas fa-arrow-down text-[9px]"></i> ${s.rp}`}
+    else{rcEl.className='text-xs font-bold text-slate-500';rcEl.innerHTML=`<i class="fas fa-minus text-[9px]"></i> ${s.rp}`}
+
+    // [FEATURE 10] Grade prediction
+    let improvements=[];for(let j=1;j<s.h.length;j++){const p=s.h[j-1].mcq+s.h[j-1].q5+s.h[j-1].q6+s.h[j-1].q7,c=s.h[j].mcq+s.h[j].q5+s.h[j].q6+s.h[j].q7;improvements.push(c-p)}
+    const avgImp=improvements.reduce((a,b)=>a+b,0)/improvements.length;
+    const pred=Math.min(500,Math.max(0,tot+avgImp)),predPct=pred/500*100;
+    let grade,gc;if(predPct>=85){grade='A';gc='text-emerald-600'}else if(predPct>=75){grade='B';gc='text-indigo-600'}else if(predPct>=60){grade='C';gc='text-amber-600'}else if(predPct>=45){grade='S';gc='text-orange-600'}else{grade='W';gc='text-red-600'}
+    document.getElementById('spGrade').innerHTML=`<span class="${gc}">${grade}</span>`;
+    document.getElementById('spRadarLbl').textContent=s.name.split(' ')[0];
+
+    // [FEATURE 13] Progress bars
+    const secs=[{name:'MCQ',val:l.mcq,max:50},{name:'Physical Chemistry (Q5)',val:l.q5,max:150},{name:'Inorganic Chemistry (Q6)',val:l.q6,max:150},{name:'Organic Chemistry (Q7)',val:l.q7,max:150}];
+    const barsDiv=document.getElementById('spBars');
+    barsDiv.innerHTML=secs.map(sec=>{const p=Math.round(sec.val/sec.max*100);const col=p>=75?'bg-emerald-500':p>=60?'bg-indigo-500':p>=40?'bg-amber-500':'bg-red-500';return `<div><div class="flex justify-between mb-1"><span class="text-xs font-semibold t-sub">${sec.name}</span><span class="text-xs font-bold t-main">${sec.val}/${sec.max} (${p}%)</span></div><div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="${col} h-full rounded-full transition-all duration-700" style="width:${p}%"></div></div></div>`}).join('');
+
+    // [FEATURE 16] Notes
+    document.getElementById('spNotes').value=s.notes||'';
+
+    // Charts
+    renderTrend(s);renderBreak(l);renderRadar(l);renderScat(i);renderTbl(s);
+}
+
+function renderTrend(s){
+    const labels=s.h.map(h=>h.e),totals=s.h.map(h=>h.mcq+h.q5+h.q6+h.q7);
+    dc('trendC',ctx=>{const g=ctx.createLinearGradient(0,0,0,260);g.addColorStop(0,'rgba(99,102,241,0.15)');g.addColorStop(1,'rgba(99,102,241,0.01)');return new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Total Marks',data:totals,borderColor:'#4f46e5',backgroundColor:g,fill:true,tension:.4,pointBackgroundColor:'#4f46e5',pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:6,pointHoverRadius:8,borderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',cornerRadius:8,padding:12,titleFont:{family:'Inter',size:12,weight:'600'},bodyFont:{family:'Inter',size:12},callbacks:{label:c=>`Total: ${c.parsed.y} / 500`}}},scales:{y:{min:0,max:500,ticks:{stepSize:100,font:{family:'Inter',size:11},color:'#94a3b8'},grid:{color:'#f1f5f9'},border:{display:false}},x:{ticks:{font:{family:'Inter',size:11,weight:'500'},color:'#64748b'},grid:{display:false},border:{display:false}}},interaction:{intersect:false,mode:'index'}})});
+}
+
+function renderBreak(l){
+    const secs=['MCQ','Q5 — Physical','Q6 — Inorganic','Q7 — Organic'];
+    const mx=[50,150,150,150],marks=[l.mcq,l.q5,l.q6,l.q7];
+    const pcts=marks.map((m,i)=>Math.round(m/mx[i]*1000)/10);
+    const minP=Math.min(...pcts),minI=pcts.indexOf(minP);
+    const bg=pcts.map((p,i)=>i===minI?'#ef4444':'#6366f1');
+    const bc=pcts.map((p,i)=>i===minI?'#dc2626':'#4f46e5');
+    const snames=['MCQ','Physical Chemistry','Inorganic Chemistry','Organic Chemistry'];
+    document.getElementById('spWeak').textContent=`Weak Area: ${snames[minI]} (${minP}%)`;
+    dc('breakC',ctx=>new Chart(ctx,{type:'bar',data:{labels:secs,datasets:[{label:'%',data:pcts,backgroundColor:bg,borderColor:bc,borderWidth:1,borderRadius:8,barPercentage:.6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',cornerRadius:8,padding:12,titleFont:{family:'Inter',size:12,weight:'600'},bodyFont:{family:'Inter',size:12},callbacks:{label:c=>{const i=c.dataIndex;return `${c.parsed.y}% (${marks[i]}/${mx[i]})`},afterLabel:c=>c.dataIndex===minI?'⚠ Weakest section':''}}},scales:{y:{min:0,max:100,ticks:{stepSize:20,font:{family:'Inter',size:11},color:'#94a3b8',callback:v=>v+'%'},grid:{color:'#f1f5f9'},border:{display:false}},x:{ticks:{font:{family:'Inter',size:11,weight:'500'},color:'#64748b'},grid:{display:false},border:{display:false}}}}}));
+}
+
+function renderRadar(l){
+    const sp=[Math.round(l.mcq/50*100),Math.round(l.q5/150*100),Math.round(l.q6/150*100),Math.round(l.q7/150*100)];
+    dc('radarC',ctx=>new Chart(ctx,{type:'radar',data:{labels:['MCQ','Physical Chemistry','Inorganic Chemistry','Organic Chemistry'],datasets:[{label:'Student',data:sp,borderColor:'#4f46e5',backgroundColor:'rgba(79,70,229,0.12)',pointBackgroundColor:'#4f46e5',pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:5,borderWidth:2.5},{label:'Class Average',data:[classAvgPct.mcq,classAvgPct.q5,classAvgPct.q6,classAvgPct.q7],borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.08)',pointBackgroundColor:'#f59e0b',pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:5,borderWidth:2.5,borderDash:[5,5]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',cornerRadius:8,padding:12,titleFont:{family:'Inter'},bodyFont:{family:'Inter'},callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.r}%`}}},scales:{r:{min:0,max:100,ticks:{stepSize:20,font:{family:'Inter',size:10},color:'#94a3b8',backdropColor:'transparent',callback:v=>v+'%'},pointLabels:{font:{family:'Inter',size:12,weight:'600'},color:'#475569'},grid:{color:'#e2e8f0'},angleLines:{color:'#e2e8f0'}}}}}));
+}
+
+// [FEATURE 11] Scatter Plot
+function renderScat(stuIdx){
+    const knownIdx = scatterAll.findIndex(s => s.known && s.name === stuDB[stuIdx].name);
+    const data = scatterAll.map(s => ({ x: s.mcq, y: s.str }));
+    const bgColors = scatterAll.map((s, i) => i === knownIdx ? '#4f46e5' : s.known ? '#a5b4fc' : 'rgba(148,163,184,0.5)');
+    const brColors = scatterAll.map((s, i) => i === knownIdx ? '#4f46e5' : 'transparent');
+    const brWidths = scatterAll.map((s, i) => i === knownIdx ? 2 : 0);
+    const radii = scatterAll.map((s, i) => i === knownIdx ? 8 : s.known ? 5 : 4);
+    dc('scatC', ctx => new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Students',
+                data: data,
+                backgroundColor: bgColors,
+                borderColor: brColors,
+                borderWidth: brWidths,
+                pointRadius: radii,
+                pointHoverRadius: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1e293b',
+                    cornerRadius: 8,
+                    padding: 10,
+                    titleFont: { family: 'Inter', size: 12 },
+                    bodyFont: { family: 'Inter', size: 12 },
+                    callbacks: {
+                        title: function(items) {
+                            const idx = items[0].dataIndex;
+                            const s = scatterAll[idx];
+                            return s.name || 'Student ' + (idx + 1);
+                        },
+                        label: function(ctx) {
+                            return 'MCQ: ' + ctx.parsed.x + '/50  |  Structured: ' + ctx.parsed.y + '/450';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    min: 0, max: 50,
+                    title: { display: true, text: 'MCQ Mark (/50)', font: { family: 'Inter', size: 11, weight: '600' }, color: '#64748b' },
+                    ticks: { font: { family: 'Inter', size: 11 }, color: '#94a3b8', stepSize: 10 },
+                    grid: { color: '#f1f5f9' },
+                    border: { display: false }
+                },
+                y: {
+                    min: 0, max: 500,
+                    title: { display: true, text: 'Structured Total (/450)', font: { family: 'Inter', size: 11, weight: '600' }, color: '#64748b' },
+                    ticks: { font: { family: 'Inter', size: 11 }, color: '#94a3b8', stepSize: 100 },
+                    grid: { color: '#f1f5f9' },
+                    border: { display: false }
+                }
+            }
+        }
+    }));
+}
+
+<!-- ==================== TEACHER DASHBOARD ==================== -->
+<section id="teacherPage" class="hidden min-h-screen">
+<div class="sidebar-overlay" id="tOv" onclick="togSB('tSB','tOv')"></div>
+<aside class="sidebar sb-bg fixed top-1 left-0 bottom-0 bg-white border-r border-slate-200 flex flex-col pt-6" id="tSB">
+    <div class="px-6 mb-8"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-200"><i class="fas fa-flask text-sm"></i></div><div><h1 class="text-sm font-bold text-slate-800 leading-tight">ChemMarks</h1><p class="text-[10px] text-slate-400 font-medium tracking-wide uppercase">Analytics</p></div></div></div>
+    <nav class="flex-1 px-3 space-y-1">
+        <p class="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Main</p>
+        <a href="#" onclick="return false" class="nav-item active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm"><i class="fas fa-th-large ni text-slate-400 w-5 text-center"></i>Dashboard</a>
+        <a href="#" onclick="goPage('studentPage');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-chart-line ni text-slate-400 w-5 text-center"></i>Student Analytics</a>
+        <a href="#" onclick="goPage('staffPage');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-keyboard ni text-slate-400 w-5 text-center"></i>Staff Data Entry</a>
+        <p class="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2 mt-6">System</p>
+        <a href="#" onclick="document.getElementById('tSettings').scrollIntoView({behavior:'smooth'});if(innerWidth<1024)togSB('tSB','tOv');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-gear ni text-slate-400 w-5 text-center"></i>Settings</a>
+        <a href="#" onclick="document.getElementById('shortcutsModal').classList.remove('hidden');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-keyboard ni text-slate-400 w-5 text-center"></i>Shortcuts</a>
+    </nav>
+    <div class="px-4 py-4 border-t border-slate-100"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-semibold text-sm">T</div><div class="flex-1 min-w-0"><p class="text-sm font-semibold text-slate-800 truncate">Mr. Rajapaksa</p><p class="text-xs text-slate-400">Chemistry Teacher</p></div><a href="#" onclick="doLogout();return false" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-right-from-bracket text-sm"></i></a></div></div>
+</aside>
+<main class="lg:ml-[260px] pt-7">
+<header class="hd-bg bg-white border-b border-slate-200 px-4 sm:px-8 py-4 flex items-center justify-between sticky top-1 z-30">
+    <div class="flex items-center gap-3"><button onclick="togSB('tSB','tOv')" class="lg:hidden w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200"><i class="fas fa-bars text-sm"></i></button><div><h2 class="text-lg font-bold t-main">Dashboard</h2><p class="text-xs t-mut">Welcome back, Mr. Rajapaksa</p></div></div>
+    <div class="flex items-center gap-2 sm:gap-3">
+        <div class="relative hidden sm:block"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"><i class="fas fa-search text-xs"></i></span><input type="text" id="tSearch" placeholder="Search student... (Ctrl+K)" oninput="doSearch(this.value)" class="ifield w-48 lg:w-56 pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 placeholder-slate-400 outline-none focus:border-indigo-500 transition-all"><div id="searchRes" class="hidden absolute top-12 left-0 w-full bg-white rounded-xl shadow-xl border border-slate-100 z-50 max-h-64 overflow-y-auto"></div></div>
+        <span class="hidden md:inline text-xs t-mut bg-slate-50 px-3 py-1.5 rounded-lg"><i class="fas fa-clock mr-1.5"></i><span id="sessionTimer">00:00:00</span></span>
+        <button onclick="togDark()" class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center t-sub hover:bg-slate-200 transition-colors" title="Dark Mode (Ctrl+D)"><i id="darkIcon" class="fas fa-moon text-sm"></i></button>
+        <div class="relative">
+            <button onclick="document.getElementById('notifDD').classList.toggle('hidden')" class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center t-sub hover:bg-slate-200 transition-colors relative"><i class="fas fa-bell text-sm"></i><span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">4</span></button>
+            <div id="notifDD" class="hidden absolute right-0 top-12 w-80 bg-white rounded-xl shadow-xl border border-slate-100 z-50 overflow-hidden">
+                <div class="px-4 py-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between"><span class="text-sm font-bold t-main">Notifications</span><button onclick="toast('All notifications marked as read.','info');document.getElementById('notifDD').classList.add('hidden')" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Mark all read</button></div>
+                <div class="max-h-72 overflow-y-auto divide-y divide-slate-50">
+                    <div class="px-4 py-3 hover:bg-slate-50 transition-colors cursor-pointer"><div class="flex gap-2"><span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0"></span><div><p class="text-xs t-sub"><strong>Dinesh Fernando</strong> marks dropped for 3 consecutive exams</p><p class="text-[10px] t-mut mt-0.5">2 hours ago</p></div></div></div>
+                    <div class="px-4 py-3 hover:bg-slate-50 transition-colors cursor-pointer"><div class="flex gap-2"><span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0"></span><div><p class="text-xs t-sub"><strong>Tharindu Jayawardena</strong> scored below 250 in Paper 5</p><p class="text-[10px] t-mut mt-0.5">2 hours ago</p></div></div></div>
+                    <div class="px-4 py-3 hover:bg-slate-50 transition-colors cursor-pointer"><div class="flex gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span><div><p class="text-xs t-sub">Staff completed bulk upload — <strong>32 records</strong> processed</p><p class="text-[10px] t-mut mt-0.5">5 hours ago</p></div></div></div>
+                    <div class="px-4 py-3 hover:bg-slate-50 transition-colors cursor-pointer"><div class="flex gap-2"><span class="w-2 h-2 rounded-full bg-indigo-500 mt-1.5 shrink-0"></span><div><p class="text-xs t-sub"><strong>Paper 5</strong> marks have been finalized</p><p class="text-[10px] t-mut mt-0.5">1 day ago</p></div></div></div>
+                </div>
+            </div>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">T</div>
+    </div>
+</header>
+<div class="p-4 sm:p-8 space-y-6">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="stat-card card p-5 anim"><div class="flex items-start justify-between"><div><p class="text-[10px] font-medium t-mut uppercase tracking-wider">Total Students</p><p class="text-3xl font-extrabold t-main mt-1 counter" data-target="32">0</p><p class="text-xs text-emerald-600 font-medium mt-2"><i class="fas fa-arrow-up mr-1"></i>+4 from last term</p></div><div class="w-11 h-11 rounded-xl bg-indigo-50 flex items-center justify-center"><i class="fas fa-users text-indigo-500"></i></div></div></div>
+    <div class="stat-card card p-5 anim d1"><div class="flex items-start justify-between"><div><p class="text-[10px] font-medium t-mut uppercase tracking-wider">Class Average</p><p class="text-2xl font-extrabold t-main mt-1"><span class="counter" data-target="347">0</span><span class="text-lg t-mut font-medium">/500</span></p><p class="text-xs text-emerald-600 font-medium mt-2"><i class="fas fa-arrow-up mr-1"></i>+12 from Paper 4</p></div><div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center"><i class="fas fa-chart-simple text-emerald-500"></i></div></div></div>
+    <div class="stat-card card p-5 anim d2"><div class="flex items-start justify-between"><div><p class="text-[10px] font-medium t-mut uppercase tracking-wider">Highest Mark</p><p class="text-2xl font-extrabold t-main mt-1"><span class="counter" data-target="480">0</span><span class="text-lg t-mut font-medium">/500</span></p><p class="text-xs t-sub font-medium mt-2"><i class="fas fa-user mr-1"></i>Nethmi Silva</p></div><div class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center"><i class="fas fa-trophy text-amber-500"></i></div></div></div>
+    <div class="stat-card card p-5 anim d3"><div class="flex items-start justify-between"><div><p class="text-[10px] font-medium t-mut uppercase tracking-wider">Pass Rate</p><p class="text-3xl font-extrabold t-main mt-1"><span class="counter" data-target="87">0</span>%</p><p class="text-xs text-emerald-600 font-medium mt-2"><i class="fas fa-arrow-up mr-1"></i>28 of 32 passed</p></div><div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center"><i class="fas fa-check-circle text-emerald-500"></i></div></div></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 card p-6 anim d3"><h3 class="text-sm font-bold t-main mb-1">Class Performance Distribution</h3><p class="text-xs t-mut mb-5">Paper 5 — Mark range distribution</p><div style="height:220px"><canvas id="distChart"></canvas></div></div>
+    <div class="card p-6 anim d4"><h3 class="text-sm font-bold t-main mb-1">Pass / Fail Ratio</h3><p class="text-xs t-mut mb-4">Based on 40% pass mark (200/500)</p><div class="flex items-center justify-center" style="height:160px"><canvas id="pfChart"></canvas></div><div class="flex justify-center gap-6 mt-3"><span class="flex items-center gap-1.5 text-xs t-sub"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>Passed: 28</span><span class="flex items-center gap-1.5 text-xs t-sub"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>Failed: 4</span></div></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 card p-6 anim"><h3 class="text-sm font-bold t-main mb-1">Class Average Trend</h3><p class="text-xs t-mut mb-5">Overall, Top 10, and Bottom 10 averages</p><div style="height:230px"><canvas id="catChart"></canvas></div></div>
+    <div class="card p-6 anim d1"><div class="flex items-center justify-between mb-5"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center"><i class="fas fa-crown text-amber-500 text-sm"></i></div><h3 class="text-sm font-bold t-main">Top 5 Performers</h3></div><span class="text-xs t-mut">Paper 5</span></div>
+    <div class="space-y-2.5">
+        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-amber-50/60"><span class="w-7 h-7 rounded-full bg-amber-400 text-white flex items-center justify-center text-xs font-bold">1</span><div class="flex-1"><p class="text-sm font-semibold t-main">Nethmi Silva</p></div><span class="text-sm font-extrabold text-amber-600">480</span></div>
+        <div class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors"><span class="w-7 h-7 rounded-full bg-slate-300 text-white flex items-center justify-center text-xs font-bold">2</span><div class="flex-1"><p class="text-sm font-semibold t-main">Kavindu Perera</p></div><span class="text-sm font-extrabold t-sub">460</span></div>
+        <div class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors"><span class="w-7 h-7 rounded-full bg-amber-700 text-white flex items-center justify-center text-xs font-bold">3</span><div class="flex-1"><p class="text-sm font-semibold t-main">Chamari Dias</p></div><span class="text-sm font-extrabold t-sub">425</span></div>
+        <div class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors"><span class="w-7 h-7 rounded-full bg-slate-100 t-mut flex items-center justify-center text-xs font-bold">4</span><div class="flex-1"><p class="text-sm font-semibold t-main">Harsha Gunathilaka</p></div><span class="text-sm font-extrabold t-sub">361</span></div>
+        <div class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition-colors"><span class="w-7 h-7 rounded-full bg-slate-100 t-mut flex items-center justify-center text-xs font-bold">5</span><div class="flex-1"><p class="text-sm font-semibold t-main">Sachini Bandara</p></div><span class="text-sm font-extrabold t-sub">360</span></div>
+    </div></div>
+</div>
+<div class="card overflow-hidden anim">
+    <div class="bg-gradient-to-r from-red-500 to-rose-500 px-6 py-4 flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center"><i class="fas fa-triangle-exclamation text-white"></i></div><div><h3 class="text-sm font-bold text-white">Weak Students Alert</h3><p class="text-xs text-red-100">Consecutive mark drops — Rank changes shown</p></div><span class="ml-auto bg-white/20 text-white text-xs font-bold px-2.5 py-1 rounded-lg">4</span></div>
+    <div class="divide-y divide-red-50">
+        <div class="flex items-center gap-4 px-6 py-4 bg-red-50/40 hover:bg-red-50 transition-colors"><div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-sm">DF</div><div class="flex-1 min-w-0"><p class="text-sm font-semibold t-main">Dinesh Fernando</p><p class="text-xs t-mut">2024/CHE/003</p></div><div class="hidden sm:flex items-center gap-1.5"><span class="text-xs t-mut">320</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs t-mut">310</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded">295</span></div><div class="flex items-center gap-2"><span class="text-red-600 text-xs font-bold flex items-center gap-1"><i class="fas fa-arrow-trend-down text-xs"></i>-25</span><span class="text-xs text-red-600 font-bold">Rank <i class="fas fa-arrow-down text-[9px]"></i> 15→18</span></div></div>
+        <div class="flex items-center gap-4 px-6 py-4 bg-red-50/40 hover:bg-red-50 transition-colors"><div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-sm">TJ</div><div class="flex-1 min-w-0"><p class="text-sm font-semibold t-main">Tharindu Jayawardena</p><p class="text-xs t-mut">2024/CHE/005</p></div><div class="hidden sm:flex items-center gap-1.5"><span class="text-xs t-mut">300</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs t-mut">285</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded">270</span></div><div class="flex items-center gap-2"><span class="text-red-600 text-xs font-bold flex items-center gap-1"><i class="fas fa-arrow-trend-down text-xs"></i>-30</span><span class="text-xs text-red-600 font-bold">Rank <i class="fas fa-arrow-down text-[9px]"></i> 12→16</span></div></div>
+        <div class="flex items-center gap-4 px-6 py-4 bg-red-50/40 hover:bg-red-50 transition-colors"><div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-sm">AW</div><div class="flex-1 min-w-0"><p class="text-sm font-semibold t-main">Amaya Wijesinghe</p><p class="text-xs t-mut">2024/CHE/011</p></div><div class="hidden sm:flex items-center gap-1.5"><span class="text-xs t-mut">280</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs t-mut">265</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded">250</span></div><div class="flex items-center gap-2"><span class="text-red-600 text-xs font-bold flex items-center gap-1"><i class="fas fa-arrow-trend-down text-xs"></i>-30</span><span class="text-xs text-red-600 font-bold">Rank <i class="fas fa-arrow-down text-[9px]"></i> 20→23</span></div></div>
+        <div class="flex items-center gap-4 px-6 py-4 bg-red-50/40 hover:bg-red-50 transition-colors"><div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-sm">RD</div><div class="flex-1 min-w-0"><p class="text-sm font-semibold t-main">Ruwan Dissanayake</p><p class="text-xs t-mut">2024/CHE/015</p></div><div class="hidden sm:flex items-center gap-1.5"><span class="text-xs t-mut">310</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs t-mut">295</span><i class="fas fa-arrow-right text-[10px] text-red-400"></i><span class="text-xs font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded">280</span></div><div class="flex items-center gap-2"><span class="text-red-600 text-xs font-bold flex items-center gap-1"><i class="fas fa-arrow-trend-down text-xs"></i>-30</span><span class="text-xs text-red-600 font-bold">Rank <i class="fas fa-arrow-down text-[9px]"></i> 13→17</span></div></div>
+    </div>
+</div>
+<div id="tSettings" class="card p-6 anim">
+    <div class="flex items-center gap-3 mb-6"><div class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center"><i class="fas fa-gear text-slate-500"></i></div><div><h3 class="text-sm font-bold t-main">System Settings</h3><p class="text-xs t-mut">Configure portal features and notifications</p></div></div>
+    <div class="space-y-4">
+        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center"><i class="fas fa-graduation-cap text-amber-600 text-sm"></i></div><div><p class="text-sm font-semibold t-main">Enable Student Portal</p><p class="text-xs t-mut">Allow students to view their own analytics</p></div></div><div class="tog on" onclick="this.classList.toggle('on');toast('Student Portal '+(this.classList.contains('on')?'enabled':'disabled')+'.')"><div class="tog-knob"></div></div></div>
+        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center"><i class="fab fa-whatsapp text-green-600 text-sm"></i></div><div><p class="text-sm font-semibold t-main">Enable Automated WhatsApp SMS Alerts</p><p class="text-xs t-mut">Send mark reports to parents via WhatsApp</p></div></div><div class="tog" id="waTog" onclick="toggleWA(this)"><div class="tog-knob"></div></div></div>
+        <div id="waPreview" class="hidden p-4 bg-emerald-50 rounded-xl border border-emerald-200"><p class="text-xs font-bold text-emerald-800 mb-3"><i class="fab fa-whatsapp mr-1"></i>Message Preview — Sample Parent Notification</p><div class="bg-white rounded-lg p-3 shadow-sm max-w-sm"><p class="text-xs text-slate-500 mb-1">To: +94 77 123 4567 (Parent of Sachini Bandara)</p><div class="bg-emerald-50 rounded-lg p-3 text-xs text-slate-700 leading-relaxed">📊 <strong>ChemMarks — Paper 5 Results</strong><br><br>Student: Sachini Bandara<br>Index: 2024/CHE/004<br>Rank: #5 out of 32<br><br>MCQ: 35/50 (70%)<br>Physical: 120/150 (80%)<br>Inorganic: 95/150 (63.3%) ⚠️<br>Organic: 110/150 (73.3%)<br><br>Total: 360/500 (72%)<br>⬆️ Trend: Improving</div></div></div>
+        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-slate-800 flex items-center justify-center"><i class="fas fa-moon text-slate-200 text-sm"></i></div><div><p class="text-sm font-semibold t-main">Dark Mode</p><p class="text-xs t-mut">Reduce eye strain in low-light environments</p></div></div><div class="tog" id="darkTog" onclick="togDark()"><div class="tog-knob"></div></div></div>
+    </div>
+</div>
+<div class="card p-6 anim"><h3 class="text-sm font-bold t-main mb-4 flex items-center gap-2"><i class="fas fa-clock-rotate-left t-mut"></i>Recent Activity Log</h3>
+    <div class="space-y-0">
+        <div class="flex gap-3 pb-4"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-check"></i></div><div class="w-px flex-1 bg-slate-100 mt-1"></div></div><div><p class="text-sm t-sub"><strong>Bulk upload</strong> processed — 32 records for Paper 5</p><p class="text-xs t-mut mt-0.5">Today, 2:30 PM — by Staff</p></div></div>
+        <div class="flex gap-3 pb-4"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-pen"></i></div><div class="w-px flex-1 bg-slate-100 mt-1"></div></div><div><p class="text-sm t-sub">Manual entry for <strong>2024/CHE/004</strong> — Total: 360/500</p><p class="text-xs t-mut mt-0.5">Today, 1:15 PM — by Staff</p></div></div>
+        <div class="flex gap-3 pb-4"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-pen"></i></div><div class="w-px flex-1 bg-slate-100 mt-1"></div></div><div><p class="text-sm t-sub">Manual entry for <strong>2024/CHE/003</strong> — Total: 250/500</p><p class="text-xs t-mut mt-0.5">Today, 12:45 PM — by Staff</p></div></div>
+        <div class="flex gap-3"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-xmark"></i></div></div><div><p class="text-sm t-sub">Upload failed — <strong>invalid format detected</strong></p><p class="text-xs t-mut mt-0.5">Today, 11:00 AM — by Staff</p></div></div>
+    </div>
+</div>
+</div>
+</main>
+</section>
+
+<!-- ==================== STAFF DASHBOARD ==================== -->
+<section id="staffPage" class="hidden min-h-screen">
+<div class="sidebar-overlay" id="sOv" onclick="togSB('sSB','sOv')"></div>
+<aside class="sidebar sb-bg fixed top-1 left-0 bottom-0 bg-white border-r border-slate-200 flex flex-col pt-6" id="sSB">
+    <div class="px-6 mb-8"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-200"><i class="fas fa-flask text-sm"></i></div><div><h1 class="text-sm font-bold text-slate-800 leading-tight">ChemMarks</h1><p class="text-[10px] text-slate-400 font-medium tracking-wide uppercase">Analytics</p></div></div></div>
+    <nav class="flex-1 px-3 space-y-1">
+        <p class="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Data Entry</p>
+        <a href="#" onclick="return false" class="nav-item active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm"><i class="fas fa-th-large ni text-slate-400 w-5 text-center"></i>Dashboard</a>
+        <a href="#sBulk" onclick="document.getElementById('sBulk').scrollIntoView({behavior:'smooth'});if(innerWidth<1024)togSB('sSB','sOv');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-cloud-arrow-up ni text-slate-400 w-5 text-center"></i>Bulk Upload</a>
+        <a href="#sManual" onclick="document.getElementById('sManual').scrollIntoView({behavior:'smooth'});if(innerWidth<1024)togSB('sSB','sOv');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-pen-to-square ni text-slate-400 w-5 text-center"></i>Manual Entry</a>
+        <p class="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2 mt-6">Navigation</p>
+        <a href="#" onclick="goPage('teacherPage');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-arrow-left ni text-slate-400 w-5 text-center"></i>Back to Teacher</a>
+    </nav>
+    <div class="px-4 py-4 border-t border-slate-100"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-semibold text-sm">S</div><div class="flex-1 min-w-0"><p class="text-sm font-semibold text-slate-800 truncate">Staff Member</p><p class="text-xs text-slate-400">Data Entry Role</p></div><a href="#" onclick="doLogout();return false" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-right-from-bracket text-sm"></i></a></div></div>
+</aside>
+<main class="lg:ml-[260px] pt-7">
+<header class="hd-bg bg-white border-b border-slate-200 px-4 sm:px-8 py-4 flex items-center justify-between sticky top-1 z-30">
+    <div class="flex items-center gap-3"><button onclick="togSB('sSB','sOv')" class="lg:hidden w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center t-sub hover:bg-slate-200"><i class="fas fa-bars text-sm"></i></button><div><h2 class="text-lg font-bold t-main">Staff Data Entry</h2><p class="text-xs t-mut">Upload marks or enter manually</p></div></div>
+    <div class="flex items-center gap-3"><span class="hidden sm:inline text-xs t-mut bg-slate-50 px-3 py-1.5 rounded-lg"><i class="fas fa-shield-halved mr-1.5 text-emerald-500"></i>Data Entry Access Only</span><div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">S</div></div>
+</header>
+<div class="p-4 sm:p-8 space-y-6">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="card p-5 anim"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center"><i class="fas fa-file-import text-indigo-500"></i></div><div><p class="text-xs t-mut font-medium">Today's Entries</p><p class="text-xl font-bold t-main">14</p></div></div></div>
+    <div class="card p-5 anim d1"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center"><i class="fas fa-cloud-arrow-up text-emerald-500"></i></div><div><p class="text-xs t-mut font-medium">Bulk Uploads</p><p class="text-xl font-bold t-main">3</p></div></div></div>
+    <div class="card p-5 anim d2"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center"><i class="fas fa-pen text-amber-500"></i></div><div><p class="text-xs t-mut font-medium">Manual Entries</p><p class="text-xl font-bold t-main">11</p></div></div></div>
+</div>
+<div id="sBulk" class="card p-6 anim">
+    <div class="flex items-center gap-3 mb-5"><div class="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center"><i class="fas fa-cloud-arrow-up text-emerald-600 text-sm"></i></div><div><h3 class="text-sm font-bold t-main">Bulk Upload</h3><p class="text-xs t-mut">Upload marks from an Excel or CSV file</p></div></div>
+    <div class="upload-zone rounded-2xl p-10 text-center cursor-pointer" id="dropZone" onclick="document.getElementById('fInput').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="event.preventDefault();this.classList.remove('drag');pickFile(event.dataTransfer.files[0])">
+        <input type="file" id="fInput" accept=".csv,.xlsx,.xls" class="hidden" onchange="pickFile(this.files[0])">
+        <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4"><i class="fas fa-file-arrow-up text-2xl text-slate-400"></i></div>
+        <p class="text-sm font-semibold t-sub">Drop your file here or click to browse</p>
+        <p class="text-xs t-mut mt-1">Supports .xlsx, .xls, .csv — Max 5MB</p>
+        <p id="fName" class="text-sm font-medium text-indigo-600 mt-3 hidden"></p>
+    </div>
+    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-5">
+        <button onclick="simUpload()" id="upBtn" disabled class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 px-6 rounded-xl text-sm transition-all shadow-lg shadow-emerald-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"><i class="fas fa-upload mr-2"></i>Upload File</button>
+        <button class="text-sm text-indigo-600 hover:text-indigo-800 font-medium"><i class="fas fa-download mr-1.5"></i>Download Template</button>
+    </div>
+</div>
+<div id="sManual" class="card p-6 anim d1">
+    <div class="flex items-center gap-3 mb-6"><div class="w-9 h-9 rounded-lg bg-indigo-100 flex items-center justify-center"><i class="fas fa-pen-to-square text-indigo-600 text-sm"></i></div><div><h3 class="text-sm font-bold t-main">Manual Marks Entry</h3><p class="text-xs t-mut">A/L Chemistry Paper Structure</p></div></div>
+    <form id="mkForm" onsubmit="submitMarks(event)" novalidate>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div><label class="block text-xs font-semibold t-sub mb-1.5">Student Index Number <span class="text-red-400">*</span></label><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"><i class="fas fa-hashtag text-xs"></i></span><input type="text" id="sIdx" placeholder="e.g., 2024/CHE/004" required class="ifield w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-slate-50/50" oninput="vField(this,'idx')"></div></div>
+            <div><label class="block text-xs font-semibold t-sub mb-1.5">Exam Name / Date <span class="text-red-400">*</span></label><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"><i class="fas fa-calendar text-xs"></i></span><input type="text" id="sExam" placeholder="e.g., Paper 5 — 2024 Dec" required class="ifield w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-slate-50/50" oninput="vField(this,'exam')"></div></div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-5 mb-6">
+            <h4 class="text-xs font-bold t-mut uppercase tracking-wider mb-4 flex items-center gap-2"><i class="fas fa-list-check"></i>Marks Breakdown</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div><label class="block text-xs font-semibold t-sub mb-1.5">Overall MCQ Mark</label><div class="relative"><input type="number" id="sMcq" min="0" max="50" placeholder="0" required class="ifield w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-white" oninput="vField(this,'mcq');calcTotal()"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs t-mut font-medium">/ 50</span></div></div>
+                <div><label class="block text-xs font-semibold t-sub mb-1.5">Q5 — Physical Chemistry</label><div class="relative"><input type="number" id="sQ5" min="0" max="150" placeholder="0" required class="ifield w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-white" oninput="vField(this,'q5');calcTotal()"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs t-mut font-medium">/ 150</span></div></div>
+                <div><label class="block text-xs font-semibold t-sub mb-1.5">Q6 — Inorganic Chemistry</label><div class="relative"><input type="number" id="sQ6" min="0" max="150" placeholder="0" required class="ifield w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-white" oninput="vField(this,'q6');calcTotal()"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs t-mut font-medium">/ 150</span></div></div>
+                <div><label class="block text-xs font-semibold t-sub mb-1.5">Q7 — Organic Chemistry</label><div class="relative"><input type="number" id="sQ7" min="0" max="150" placeholder="0" required class="ifield w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-white" oninput="vField(this,'q7');calcTotal()"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs t-mut font-medium">/ 150</span></div></div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between"><span class="text-sm font-semibold t-sub">Total Mark</span><div class="flex items-center gap-2"><span id="sTotal" class="text-2xl font-extrabold text-indigo-600">0</span><span class="text-sm t-mut font-medium">/ 500</span></div></div>
+        </div>
+        <div id="sErr" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4 text-sm flex items-center gap-2"><i class="fas fa-circle-exclamation"></i><span id="sErrTxt"></span></div>
+        <div class="flex items-center gap-3">
+            <button type="submit" id="sSub" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 px-8 rounded-xl text-sm transition-all shadow-lg shadow-indigo-200 active:scale-[0.98]"><i class="fas fa-check mr-2"></i>Submit Marks</button>
+            <button type="reset" onclick="resetStaffForm()" class="bg-slate-100 hover:bg-slate-200 t-sub font-semibold py-2.5 px-6 rounded-xl text-sm transition-all">Clear Form</button>
+        </div>
+    </form>
+</div>
+<div class="card p-6 anim d2"><h3 class="text-sm font-bold t-main mb-4 flex items-center gap-2"><i class="fas fa-clock-rotate-left t-mut"></i>Your Recent Activity</h3>
+    <div class="space-y-0">
+        <div class="flex gap-3 pb-4"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-check"></i></div><div class="w-px flex-1 bg-slate-100 mt-1"></div></div><div><p class="text-sm t-sub">Bulk upload — <strong>32 records</strong> for Paper 5</p><p class="text-xs t-mut mt-0.5">Today, 2:30 PM</p></div></div>
+        <div class="flex gap-3 pb-4"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-pen"></i></div><div class="w-px flex-1 bg-slate-100 mt-1"></div></div><div><p class="text-sm t-sub">Manual entry — <strong>2024/CHE/004</strong> scored 360/500</p><p class="text-xs t-mut mt-0.5">Today, 1:15 PM</p></div></div>
+        <div class="flex gap-3 pb-4"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-pen"></i></div><div class="w-px flex-1 bg-slate-100 mt-1"></div></div><div><p class="text-sm t-sub">Manual entry — <strong>2024/CHE/003</strong> scored 250/500</p><p class="text-xs t-mut mt-0.5">Today, 12:45 PM</p></div></div>
+        <div class="flex gap-3"><div class="flex flex-col items-center"><div class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xs shrink-0"><i class="fas fa-xmark"></i></div></div><div><p class="text-sm t-sub">Upload failed — <strong>invalid format</strong></p><p class="text-xs t-mut mt-0.5">Today, 11:00 AM</p></div></div>
+    </div>
+</div>
+</div>
+</main>
+</section>
+
+<!-- ==================== STUDENT PROFILE ==================== -->
+<section id="studentPage" class="hidden min-h-screen">
+<div class="sidebar-overlay" id="spOv" onclick="togSB('spSB','spOv')"></div>
+<aside class="sidebar sb-bg fixed top-1 left-0 bottom-0 bg-white border-r border-slate-200 flex flex-col pt-6" id="spSB">
+    <div class="px-6 mb-8"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-200"><i class="fas fa-flask text-sm"></i></div><div><h1 class="text-sm font-bold text-slate-800 leading-tight">ChemMarks</h1><p class="text-[10px] text-slate-400 font-medium tracking-wide uppercase">Analytics</p></div></div></div>
+    <nav class="flex-1 px-3 space-y-1">
+        <p class="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Analytics</p>
+        <a href="#" onclick="return false" class="nav-item active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm"><i class="fas fa-user ni text-slate-400 w-5 text-center"></i>Student Profile</a>
+        <a href="#spTrend" onclick="scrollTo_('spTrend');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-chart-line ni text-slate-400 w-5 text-center"></i>Performance Trend</a>
+        <a href="#spBreak" onclick="scrollTo_('spBreak');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-chart-bar ni text-slate-400 w-5 text-center"></i>Subject Breakdown</a>
+        <a href="#spRadar" onclick="scrollTo_('spRadar');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-diagram-project ni text-slate-400 w-5 text-center"></i>Class Comparison</a>
+        <p class="px-3 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2 mt-6">Navigation</p>
+        <a href="#" onclick="goPage('teacherPage');return false" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600"><i class="fas fa-arrow-left ni text-slate-400 w-5 text-center"></i>Back to Dashboard</a>
+    </nav>
+    <div class="px-4 py-4 border-t border-slate-100"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-semibold text-sm">T</div><div class="flex-1 min-w-0"><p class="text-sm font-semibold text-slate-800 truncate">Teacher View</p><p class="text-xs text-slate-400">Viewing Student Data</p></div><a href="#" onclick="doLogout();return false" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-right-from-bracket text-sm"></i></a></div></div>
+</aside>
+<main class="lg:ml-[260px] pt-7">
+<header class="hd-bg bg-white border-b border-slate-200 px-4 sm:px-8 py-4 flex items-center justify-between sticky top-1 z-30">
+    <div class="flex items-center gap-3"><button onclick="togSB('spSB','spOv')" class="lg:hidden w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center t-sub hover:bg-slate-200"><i class="fas fa-bars text-sm"></i></button><div><h2 class="text-lg font-bold t-main">Student Analytics</h2><p class="text-xs t-mut">Individual performance deep-dive</p></div></div>
+    <div class="flex items-center gap-3">
+        <select id="stuSel" onchange="loadStu(+this.value)" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm t-sub font-medium outline-none focus:border-indigo-500 pr-8 cursor-pointer" style="appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 12px center">
+            <option value="0">Kavindu Perera</option><option value="1">Nethmi Silva</option><option value="2" selected>Sachini Bandara</option><option value="3">Dinesh Fernando</option><option value="4">Harsha Gunathilaka</option>
+        </select>
+        <button onclick="window.print()" class="hidden sm:flex items-center gap-2 bg-slate-100 hover:bg-slate-200 t-sub font-medium py-2 px-4 rounded-xl text-sm transition-colors"><i class="fas fa-download text-xs"></i>Export PDF</button>
+    </div>
+</header>
+<div class="p-4 sm:p-8 space-y-6">
+<div class="card p-6 anim">
+    <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center text-xl font-bold shadow-lg shadow-indigo-200" id="spAvatar">SB</div>
+        <div class="flex-1">
+            <div class="flex flex-wrap items-center gap-3 mb-1"><h3 class="text-xl font-bold t-main" id="spName">Sachini Bandara</h3><span class="bpulse inline-flex items-center gap-1 bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full" id="spRank"><i class="fas fa-medal text-[10px]"></i>Rank #5</span><span id="spRankChg" class="text-xs font-bold text-emerald-600"><i class="fas fa-arrow-up text-[9px]"></i> 6→5</span></div>
+            <p class="text-sm t-mut" id="spIdx">Index: 2024/CHE/004</p>
+        </div>
+        <div class="flex gap-3 sm:gap-4 flex-wrap">
+            <div class="text-center px-4 py-2 bg-slate-50 rounded-xl"><p class="text-xs t-mut font-medium">Latest Total</p><p class="text-lg font-extrabold t-main" id="spTotal">360</p></div>
+            <div class="text-center px-4 py-2 bg-slate-50 rounded-xl"><p class="text-xs t-mut font-medium">Latest %</p><p class="text-lg font-extrabold text-indigo-600" id="spPct">72%</p></div>
+            <div class="text-center px-4 py-2 bg-slate-50 rounded-xl"><p class="text-xs t-mut font-medium">Trend</p><p class="text-lg font-extrabold" id="spTrend"><i class="fas fa-arrow-trend-up text-emerald-500"></i></p></div>
+            <div class="text-center px-4 py-2 bg-slate-50 rounded-xl"><p class="text-xs t-mut font-medium">Predicted Grade</p><p class="text-lg font-extrabold" id="spGrade"><span class="text-indigo-600">B</span></p></div>
+        </div>
+    </div>
+</div>
+<div class="card p-6 anim d1"><h3 class="text-sm font-bold t-main mb-4 flex items-center gap-2"><i class="fas fa-bars-progress t-mut"></i>Subject Performance — Latest Exam</h3><div class="space-y-4" id="spBars"></div></div>
+<div id="spTrend" class="card p-6 anim d2"><h3 class="text-sm font-bold t-main mb-1">Overall Performance Trend</h3><p class="text-xs t-mut mb-5">Total marks across the last 5 exams</p><div style="height:260px"><canvas id="trendC"></canvas></div></div>
+<div id="spBreak" class="card p-6 anim d3">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-5 gap-3"><div><h3 class="text-sm font-bold t-main">Subject-Level Analysis — Latest Exam</h3><p class="text-xs t-mut mt-0.5">Percentage scored in each section (Paper 5)</p></div><div class="wpulse inline-flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-xs font-bold px-3 py-1.5 rounded-lg"><i class="fas fa-triangle-exclamation"></i><span id="spWeak">Weak Area: Inorganic Chemistry (63.3%)</span></div></div>
+    <div style="height:260px"><canvas id="breakC"></canvas></div>
+</div>
+<div id="spRadar" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="card p-6 anim"><div class="flex items-center justify-between mb-5"><div><h3 class="text-sm font-bold t-main">Compare with Class Average</h3><p class="text-xs t-mut mt-0.5">Radar comparison across all sections</p></div><div class="flex items-center gap-4 text-xs"><span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-indigo-500"></span><span class="t-sub font-medium" id="spRadarLbl">Student</span></span><span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400"></span><span class="t-sub font-medium">Class Avg</span></span></div></div><div style="height:300px" class="flex justify-center"><canvas id="radarC"></canvas></div></div>
+    <div class="card p-6 anim d1"><h3 class="text-sm font-bold t-main mb-1">MCQ vs Structured Marks Correlation</h3><p class="text-xs t-mut mb-5">All 32 students — selected student in indigo</p><div style="height:300px"><canvas id="scatC"></canvas></div></div>
+</div>
+<div class="card p-6 anim d2">
+    <div class="flex items-center gap-3 mb-5"><div class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center"><i class="fas fa-table text-slate-500 text-sm"></i></div><div><h3 class="text-sm font-bold t-main">Detailed Marks History</h3><p class="text-xs t-mut">All exam breakdowns — Difficulty rating shown</p></div></div>
+    <div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-slate-100"><th class="text-left py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">Exam</th><th class="text-center py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">MCQ<br><span class="font-normal normal-case">/50</span></th><th class="text-center py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">Q5 Physical<br><span class="font-normal normal-case">/150</span></th><th class="text-center py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">Q6 Inorganic<br><span class="font-normal normal-case">/150</span></th><th class="text-center py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">Q7 Organic<br><span class="font-normal normal-case">/150</span></th><th class="text-center py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">Total<br><span class="font-normal normal-case">/500</span></th><th class="text-center py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">%</th><th class="text-center py-3 px-3 text-xs font-semibold t-mut uppercase tracking-wider">Difficulty</th></tr></thead><tbody id="spTbl"></tbody></table></div>
+</div>
+<div class="card p-6 anim d3">
+    <div class="flex items-center gap-3 mb-4"><div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center"><i class="fas fa-sticky-note text-amber-500 text-sm"></i></div><div><h3 class="text-sm font-bold t-main">Quick Notes / Remarks</h3><p class="text-xs t-mut">Add observations about this student</p></div></div>
+    <textarea id="spNotes" rows="3" placeholder="e.g., Struggles with Inorganic chemistry — recommend extra tutoring..." class="ifield w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none transition-all focus:border-indigo-500 bg-slate-50/50 resize-none" oninput="saveNotes()"></textarea>
+    <p class="text-xs t-mut mt-2"><i class="fas fa-circle-info mr-1"></i>Notes are saved in this session only (no backend).</p>
+</div>
+</div>
+</main>
+</section>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+const DB={teacher:{pw:'pass123',page:'teacherPage'},staff1:{pw:'pass123',page:'staffPage'},student1:{pw:'pass123',page:'studentPage'}};
+const classAvgPct={mcq:65,q5:72,q6:65,q7:70};
+const examDiff=[{stars:4,label:'Hard'},{stars:3,label:'Moderate'},{stars:4,label:'Hard'},{stars:3,label:'Moderate'},{stars:2,label:'Easy'}];
+
+const stuDB=[
+    {name:"Kavindu Perera",idx:"2024/CHE/001",ini:"KP",rank:3,rc:'up',rp:'4→3',notes:"Strong in all areas. Push Q6 further.",h:[{e:"Paper 1",mcq:38,q5:128,q6:125,q7:129},{e:"Paper 2",mcq:40,q5:132,q6:130,q7:133},{e:"Paper 3",mcq:36,q5:125,q6:120,q7:129},{e:"Paper 4",mcq:42,q5:135,q6:133,q7:135},{e:"Paper 5",mcq:44,q5:140,q6:138,q7:138}]},
+    {name:"Nethmi Silva",idx:"2024/CHE/002",ini:"NS",rank:1,rc:'stable',rp:'1→1',notes:"Consistently top performer. Excellent across all sections.",h:[{e:"Paper 1",mcq:45,q5:140,q6:138,q7:142},{e:"Paper 2",mcq:46,q5:142,q6:140,q7:145},{e:"Paper 3",mcq:44,q5:138,q6:136,q7:140},{e:"Paper 4",mcq:47,q5:144,q6:142,q7:146},{e:"Paper 5",mcq:47,q5:145,q6:143,q7:145}]},
+    {name:"Sachini Bandara",idx:"2024/CHE/004",ini:"SB",rank:5,rc:'up',rp:'6→5',notes:"Improving steadily. Inorganic is the weak point.",h:[{e:"Paper 1",mcq:30,q5:110,q6:90,q7:105},{e:"Paper 2",mcq:33,q5:115,q6:92,q7:110},{e:"Paper 3",mcq:32,q5:118,q6:88,q7:108},{e:"Paper 4",mcq:34,q5:115,q6:90,q7:106},{e:"Paper 5",mcq:35,q5:120,q6:95,q7:110}]},
+    {name:"Dinesh Fernando",idx:"2024/CHE/003",ini:"DF",rank:18,rc:'down',rp:'15→18',notes:"Declining trend. Needs immediate intervention.",h:[{e:"Paper 1",mcq:28,q5:95,q6:80,q7:90},{e:"Paper 2",mcq:26,q5:90,q6:78,q7:85},{e:"Paper 3",mcq:25,q5:88,q6:75,q7:82},{e:"Paper 4",mcq:23,q5:85,q6:72,q7:80},{e:"Paper 5",mcq:22,q5:80,q6:70,q7:78}]},
+    {name:"Harsha Gunathilaka",idx:"2024/CHE/007",ini:"HG",rank:8,rc:'up',rp:'9→8',notes:"Solid performance. Slight improvement in Inorganic needed.",h:[{e:"Paper 1",mcq:34,q5:105,q6:100,q7:102},{e:"Paper 2",mcq:36,q5:108,q6:103,q7:105},{e:"Paper 3",mcq:35,q5:106,q6:101,q7:104},{e:"Paper 4",mcq:37,q5:110,q6:104,q7:108},{e:"Paper 5",mcq:38,q5:110,q6:105,q7:108}]}
+];
+
+const scatterAll=[];
+stuDB.forEach(s=>{const l=s.h[4];scatterAll.push({mcq:l.mcq,str:l.q5+l.q6+l.q7,name:s.name,known:true})});
+const rng=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+for(let i=0;i<27;i++){scatterAll.push({mcq:rng(10,48),str:rng(120,440),name:null,known:false})}
+scatterAll.sort((a,b)=>b.str-a.str);
+
+const searchList=[{name:"Nethmi Silva",idx:"2024/CHE/002"},{name:"Kavindu Perera",idx:"2024/CHE/001"},{name:"Sachini Bandara",idx:"2024/CHE/004"},{name:"Dinesh Fernando",idx:"2024/CHE/003"},{name:"Tharindu Jayawardena",idx:"2024/CHE/005"},{name:"Amaya Wijesinghe",idx:"2024/CHE/011"},{name:"Ruwan Dissanayake",idx:"2024/CHE/015"},{name:"Harsha Gunathilaka",idx:"2024/CHE/007"},{name:"Malini Rathnayake",idx:"2024/CHE/008"},{name:"Prasanna Kumara",idx:"2024/CHE/009"},{name:"Chamari Dias",idx:"2024/CHE/006"},{name:"Saman Kumara",idx:"2024/CHE/010"},{name:"Ishara Madushani",idx:"2024/CHE/012"},{name:"Kasun Madusanka",idx:"2024/CHE/013"},{name:"Dilini Perera",idx:"2024/CHE/014"},{name:"Nuwan Jayasinghe",idx:"2024/CHE/016"},{name:"Sanduni Fernando",idx:"2024/CHE/017"},{name:"Ravindu Silva",idx:"2024/CHE/018"},{name:"Thilini Weerasinghe",idx:"2024/CHE/019"},{name:"Asanka Perera",idx:"2024/CHE/020"},{name:"Chathurika Jayasuriya",idx:"2024/CHE/021"},{name:"Dinesh Priyantha",idx:"2024/CHE/022"},{name:"Eshani Wickramasinghe",idx:"2024/CHE/023"},{name:"Farhan Mohamed",idx:"2024/CHE/024"},{name:"Gayani Herath",idx:"2024/CHE/025"},{name:"Hiruna Senanayake",idx:"2024/CHE/026"},{name:"Indika Rathnayake",idx:"2024/CHE/027"},{name:"Janith Liyanage",idx:"2024/CHE/028"},{name:"Kavisha De Silva",idx:"2024/CHE/029"},{name:"Lakmal Fernando",idx:"2024/CHE/030"},{name:"Madhavi Jayawardena",idx:"2024/CHE/031"},{name:"Nimali Gunasekara",idx:"2024/CHE/032"}];
+
+const C={};
+
+function toast(msg,type='success'){
+    const box=document.getElementById('toastBox'),t=document.createElement('div');
+    t.className='toast';
+    const bc=type==='success'?'#10b981':type==='info'?'#6366f1':'#ef4444';
+    const ic=type==='success'?'fa-circle-check text-emerald-500':type==='info'?'fa-circle-info text-indigo-500':'fa-circle-xmark text-red-500';
+    t.style.borderLeftColor=bc;
+    t.innerHTML='<i class="fas '+ic+'"></i><span class="t-sub">'+msg+'</span>';
+    box.appendChild(t);
+    setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),300)},3500);
+}
+
+function togSB(sbId,ovId){document.getElementById(sbId).classList.toggle('open');document.getElementById(ovId).classList.toggle('show')}
+
+function goPage(id){
+    document.querySelectorAll('#loginPage,#teacherPage,#staffPage,#studentPage').forEach(p=>p.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    window.scrollTo(0,0);
+    requestAnimationFrame(()=>{
+        if(id==='teacherPage')initTeacher();
+        if(id==='studentPage')loadStu(+document.getElementById('stuSel').value);
+    });
+}
+
+function doLogin(e){
+    e.preventDefault();
+    const u=document.getElementById('lUser').value.trim(),p=document.getElementById('lPass').value;
+    const err=document.getElementById('loginErr'),card=err.closest('.glass');
+    err.classList.add('hidden');
+    if(!u||!p){document.getElementById('loginErrTxt').textContent='Please enter both username and password.';err.classList.remove('hidden');card.classList.add('shake');setTimeout(()=>card.classList.remove('shake'),400);return}
+    const user=DB[u];
+    if(!user||user.pw!==p){document.getElementById('loginErrTxt').textContent='Invalid username or password.';err.classList.remove('hidden');card.classList.add('shake');setTimeout(()=>card.classList.remove('shake'),400);return}
+    const btn=document.getElementById('loginBtn');btn.innerHTML='<i class="fas fa-circle-notch fa-spin mr-2"></i>Signing in...';btn.disabled=true;
+    setTimeout(()=>{startSession();goPage(user.page)},800);
+}
+
+function doLogout(){
+    stopSession();
+    document.querySelectorAll('#loginPage,#teacherPage,#staffPage,#studentPage').forEach(p=>p.classList.add('hidden'));
+    document.getElementById('loginPage').classList.remove('hidden');
+    document.getElementById('lUser').value='';document.getElementById('lPass').value='';
+    document.getElementById('loginBtn').innerHTML='Sign In';document.getElementById('loginBtn').disabled=false;
+    document.documentElement.classList.remove('dark');syncDarkUI();
+}
+
+let sessionInt=null,sessionSec=0;
+function startSession(){sessionSec=0;sessionInt=setInterval(()=>{sessionSec++;const h=String(Math.floor(sessionSec/3600)).padStart(2,'0'),m=String(Math.floor((sessionSec%3600)/60)).padStart(2,'0'),s=String(sessionSec%60).padStart(2,'0');const el=document.getElementById('sessionTimer');if(el)el.textContent=h+':'+m+':'+s},1000)}
+function stopSession(){if(sessionInt)clearInterval(sessionInt);sessionInt=null}
+
+function togDark(){document.documentElement.classList.toggle('dark');syncDarkUI();toast('Dark mode '+(document.documentElement.classList.contains('dark')?'enabled':'disabled')+'.','info')}
+function syncDarkUI(){const d=document.documentElement.classList.contains('dark');const ti=document.getElementById('darkIcon');if(ti){ti.classList.toggle('fa-moon',!d);ti.classList.toggle('fa-sun',d)}const dt=document.getElementById('darkTog');if(dt){if(d)dt.classList.add('on');else dt.classList.remove('on')}}
+
+function doSearch(q){
+    const r=document.getElementById('searchRes');
+    if(!q.trim()){r.classList.add('hidden');return}
+    const f=searchList.filter(s=>s.name.toLowerCase().includes(q.toLowerCase())||s.idx.toLowerCase().includes(q.toLowerCase()));
+    if(!f.length){r.innerHTML='<div class="px-4 py-3 text-xs t-mut">No students found</div>'}
+    else{r.innerHTML=f.map(s=>'<div onclick="goPage(\'studentPage\');document.getElementById(\'searchRes\').classList.add(\'hidden\')" class="flex items-center gap-3 px-4 py-2.5 hover:bg-indigo-50 transition-colors cursor-pointer"><div class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-[10px] font-bold">'+s.name.split(' ').map(n=>n[0]).join('')+'</div><div><p class="text-sm font-medium t-sub">'+s.name+'</p><p class="text-[10px] t-mut">'+s.idx+'</p></div><i class="fas fa-arrow-right text-slate-300 ml-auto text-[10px]"></i></div>').join('')}
+    r.classList.remove('hidden');
+}
+document.addEventListener('click',e=>{if(!e.target.closest('#tSearch')&&!e.target.closest('#searchRes')){const r=document.getElementById('searchRes');if(r)r.classList.add('hidden')}});
+
+function toggleWA(el){el.classList.toggle('on');const on=el.classList.contains('on');document.getElementById('waPreview').classList.toggle('hidden',!on);toast('WhatsApp Alerts '+(on?'enabled':'disabled')+'.')}
+
+function animCounters(){document.querySelectorAll('.counter').forEach(el=>{const target=+el.dataset.target;let cur=0;const step=Math.ceil(target/40);const iv=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(iv)}el.textContent=cur},30)})}
+
+function initTeacher(){
+    animCounters();
+    dc('distChart',ctx=>new Chart(ctx,{type:'bar',data:{labels:['0-100','101-200','201-300','301-350','351-400','401-450','451-500'],datasets:[{label:'Students',data:[0,2,6,8,9,5,2],backgroundColor:['#fef2f2','#fee2e2','#fecaca','#c7d2fe','#a5b4fc','#818cf8','#6366f1'],borderColor:['#fca5a5','#fca5a5','#fca5a5','#818cf8','#818cf8','#818cf8','#6366f1'],borderWidth:1,borderRadius:6,barPercentage:.7}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',cornerRadius:8,padding:10,titleFont:{family:'Inter'},bodyFont:{family:'Inter'},callbacks:{label:c=>c.parsed.y+' students'}}},scales:{y:{beginAtZero:true,ticks:{stepSize:2,font:{family:'Inter',size:11},color:'#94a3b8'},grid:{color:'#f1f5f9'},border:{display:false}},x:{ticks:{font:{family:'Inter',size:11},color:'#94a3b8'},grid:{display:false},border:{display:false}}}}}));
+    dc('pfChart',ctx=>new Chart(ctx,{type:'doughnut',data:{labels:['Passed','Failed'],datasets:[{data:[28,4],backgroundColor:['#10b981','#ef4444'],borderWidth:0,cutout:'72%',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',cornerRadius:8,padding:10,titleFont:{family:'Inter'},bodyFont:{family:'Inter'}}}}}));
+    dc('catChart',ctx=>{const g=ctx.createLinearGradient(0,0,0,230);g.addColorStop(0,'rgba(99,102,241,0.1)');g.addColorStop(1,'rgba(99,102,241,0.01)');return new Chart(ctx,{type:'line',data:{labels:['Paper 1','Paper 2','Paper 3','Paper 4','Paper 5'],datasets:[{label:'Class Average',data:[310,322,315,335,347],borderColor:'#6366f1',backgroundColor:g,fill:true,tension:.4,borderWidth:3,pointRadius:5,pointBackgroundColor:'#6366f1',pointBorderColor:'#fff',pointBorderWidth:2},{label:'Top 10 Average',data:[420,428,425,438,445],borderColor:'#10b981',backgroundColor:'transparent',borderDash:[5,5],tension:.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#10b981'},{label:'Bottom 10 Average',data:[200,210,195,215,220],borderColor:'#ef4444',backgroundColor:'transparent',borderDash:[5,5],tension:.4,borderWidth:2,pointRadius:4,pointBackgroundColor:'#ef4444'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{family:'Inter',size:11},usePointStyle:true,pointStyle:'circle',padding:20}},tooltip:{backgroundColor:'#1e293b',cornerRadius:8,padding:10,titleFont:{family:'Inter'},bodyFont:{family:'Inter'}}},scales:{y:{min:0,max:500,ticks:{stepSize:100,font:{family:'Inter',size:11},color:'#94a3b8'},grid:{color:'#f1f5f9'},border:{display:false}},x:{ticks:{font:{family:'Inter',size:11},color:'#64748b'},grid:{display:false},border:{display:false}}},interaction:{intersect:false,mode:'index'}})});
+}
+
+function dc(id,fn){if(C[id])C[id].destroy();C[id]=fn(document.getElementById(id).getContext('2d'))}
+
+let upFile=false;
+function pickFile(f){if(f){document.getElementById('fName').textContent=f.name;document.getElementById('fName').classList.remove('hidden');document.getElementById('upBtn').disabled=false;upFile=true}}
+function simUpload(){const b=document.getElementById('upBtn');b.innerHTML='<i class="fas fa-circle-notch fa-spin mr-2"></i>Uploading...';b.disabled=true;setTimeout(()=>{b.innerHTML='<i class="fas fa-check mr-2"></i>Uploaded!';toast('Bulk upload completed. 32 student records processed.');setTimeout(()=>{b.innerHTML='<i class="fas fa-upload mr-2"></i>Upload File';b.disabled=false;document.getElementById('fName').classList.add('hidden');upFile=false},3000)},1500)}
+
+function vField(el,type){
+    el.classList.remove('valid','invalid');
+    if(type==='idx'){if(/2024\/CHE\/\d{3}/.test(el.value.trim()))el.classList.add('valid');else if(el.value.trim())el.classList.add('invalid')}
+    else if(type==='exam'){if(el.value.trim().length>=5)el.classList.add('valid');else if(el.value.trim())el.classList.add('invalid')}
+    else{const v=parseFloat(el.value);const mx=type==='mcq'?50:150;if(!isNaN(v)&&v>=0&&v<=mx)el.classList.add('valid');else if(el.value!=='')el.classList.add('invalid')}
+}
+function calcTotal(){const m=+document.getElementById('sMcq').value||0,q5=+document.getElementById('sQ5').value||0,q6=+document.getElementById('sQ6').value||0,q7=+document.getElementById('sQ7').value||0;const t=m+q5+q6+q7;const el=document.getElementById('sTotal');el.textContent=t;el.className='text-2xl font-extrabold '+(t>=350?'text-emerald-600':t>=250?'text-amber-600':t>0?'text-red-600':'text-indigo-600')}
+function submitMarks(e){
+    e.preventDefault();const err=document.getElementById('sErr');err.classList.add('hidden');
+    const idx=document.getElementById('sIdx').value.trim(),exam=document.getElementById('sExam').value.trim();
+    const mcq=parseFloat(document.getElementById('sMcq').value),q5=parseFloat(document.getElementById('sQ5').value),q6=parseFloat(document.getElementById('sQ6').value),q7=parseFloat(document.getElementById('sQ7').value);
+    if(!idx||!exam){showSErr('Please fill in Index Number and Exam Name.');return}
+    if(isNaN(mcq)||isNaN(q5)||isNaN(q6)||isNaN(q7)){showSErr('All mark fields are required.');return}
+    if(mcq<0||mcq>50){showSErr('MCQ must be 0-50.');return}
+    if(q5<0||q5>150||q6<0||q6>150||q7<0||q7>150){showSErr('Structured marks must be 0-150.');return}
+    const b=document.getElementById('sSub');b.innerHTML='<i class="fas fa-circle-notch fa-spin mr-2"></i>Submitting...';b.disabled=true;
+    setTimeout(()=>{const t=mcq+q5+q6+q7;toast('Marks for '+idx+' submitted. Total: '+t+'/500');b.innerHTML='<i class="fas fa-check mr-2"></i>Submitted';b.classList.replace('bg-indigo-600','bg-emerald-600');setTimeout(()=>{b.innerHTML='<i class="fas fa-check mr-2"></i>Submit Marks';b.classList.replace('bg-emerald-600','bg-indigo-600');b.disabled=false},2500)},1000);
+}
+function showSErr(m){document.getElementById('sErrTxt').textContent=m;document.getElementById('sErr').classList.remove('hidden')}
+function resetStaffForm(){document.getElementById('sTotal').textContent='0';document.getElementById('sTotal').className='text-2xl font-extrabold text-indigo-600';document.getElementById('sErr').classList.add('hidden');document.querySelectorAll('#sManual .ifield').forEach(f=>f.classList.remove('valid','invalid'))}
+
+function loadStu(i){
+    const s=stuDB[i],l=s.h[4],tot=l.mcq+l.q5+l.q6+l.q7,pct=Math.round(tot/500*100);
+    const prevTot=s.h[3].mcq+s.h[3].q5+s.h[3].q6+s.h[3].q7,trending=tot>=prevTot;
+    document.getElementById('spAvatar').textContent=s.ini;
+    document.getElementById('spName').textContent=s.name;
+    document.getElementById('spRank').innerHTML='<i class="fas fa-medal text-[10px]"></i>Rank #'+s.rank;
+    document.getElementById('spIdx').textContent='Index: '+s.idx;
+    document.getElementById('spTotal').textContent=tot;
+    document.getElementById('spPct').textContent=pct+'%';
+    document.getElementById('spPct').className='text-lg font-extrabold '+(pct>=80?'text-emerald-600':pct>=60?'text-indigo-600':pct>=40?'text-amber-600':'text-red-600');
+    document.getElementById('spTrend').innerHTML=trending?'<i class="fas fa-arrow-trend-up text-emerald-500"></i>':'<i class="fas fa-arrow-trend-down text-red-500"></i>';
+    const rcEl=document.getElementById('spRankChg');
+    if(s.rc==='up'){rcEl.className='text-xs font-bold text-emerald-600';rcEl.innerHTML='<i class="fas fa-arrow-up text-[9px]"></i> '+s.rp}
+    else if(s.rc==='down'){rcEl.className='text-xs font-bold text-red-600';rcEl.innerHTML='<i class="fas fa-arrow-down text-[9px]"></i> '+s.rp}
+    else{rcEl.className='text-xs font-bold text-slate-500';rcEl.innerHTML='<i class="fas fa-minus text-[9px]"></i> '+s.rp}
+    let improvements=[];for(let j=1;j<s.h.length;j++){const p=s.h[j-1].mcq+s.h[j-1].q5+s.h[j-1].q6+s.h[j-1].q7,c=s.h[j].mcq+s.h[j].q5+s.h[j].q6+s.h[j].q7;improvements.push(c-p)}
+    const avgImp=improvements.reduce((a,b)=>a+b,0)/improvements.length;
+    const pred=Math.min(500,Math.max(0,tot+avgImp)),predPct=pred/500*100;
+    let grade,gc;if(predPct>=85){grade='A';gc='text-emerald-600'}else if(predPct>=75){grade='B';gc='text-indigo-600'}else if(predPct>=60){grade='C';gc='text-amber-600'}else if(predPct>=45){grade='S';gc='text-orange-600'}else{grade='W';gc='text-red-600'}
+    document.getElementById('spGrade').innerHTML='<span class="'+gc+'">'+grade+'</span>';
+    document.getElementById('spRadarLbl').textContent=s.name.split(' ')[0];
+    const secs=[{name:'MCQ',val:l.mcq,max:50},{name:'Physical Chemistry (Q5)',val:l.q5,max:150},{name:'Inorganic Chemistry (Q6)',val:l.q6,max:150},{name:'Organic Chemistry (Q7)',val:l.q7,max:150}];
+    document.getElementById('spBars').innerHTML=secs.map(sec=>{const p=Math.round(sec.val/sec.max*100);const col=p>=75?'bg-emerald-500':p>=60?'bg-indigo-500':p>=40?'bg-amber-500':'bg-red-500';return '<div><div class="flex justify-between mb-1"><span class="text-xs font-semibold t-sub">'+sec.name+'</span><span class="text-xs font-bold t-main">'+sec.val+'/'+sec.max+' ('+p+'%)</span></div><div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="'+col+' h-full rounded-full transition-all duration-700" style="width:'+p+'%"></div></div></div>'}).join('');
+    document.getElementById('spNotes').value=s.notes||'';
+    renderTrend(s);renderBreak(l);renderRadar(l);renderScat(i);renderTbl(s);
+}
+
+function renderTrend(s){
+    const labels=s.h.map(h=>h.e),totals=s.h.map(h=>h.mcq+h.q5+h.q6+h.q7);
+    dc('trendC',ctx=>{const g=ctx.createLinearGradient(0,0,0,260);g.addColorStop(0,'rgba(99,102,241,0.15)');g.addColorStop(1,'rgba(99,102,241,0.01)');return new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Total Marks',data:totals,borderColor:'#4f46e5',backgroundColor:g,fill:true,tension:.4,pointBackgroundColor:'#4f46e5',pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:6,pointHoverRadius:8,borderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',cornerRadius:8,padding:12,titleFont:{family:'Inter',size:12,weight:'600'},bodyFont:{family:'Inter',size:12},callbacks:{label:c=>'Total: '+c.parsed.y+' / 500'}}},scales:{y:{min:0,max:500,ticks:{stepSize:100,font:{family:'Inter',size:11},color:'#94a3b8'},grid:{color:'#f1f5f9'},border:{display:false}},x:{ticks:{font:{family:'Inter',size:11,weight:'500'},color:'#64748b'},grid:{display:false},border:{display:false}}},interaction:{intersect:false,mode:'index'}})});
+}
+
+function renderBreak(l){
+    const secs=['MCQ','Q5 - Physical','Q6 - Inorganic','Q7 - Organic'];
+    const mx=[50,150,150,150],marks=[l.mcq,l.q5,l.q6,l.q7];
+    const pcts=marks.map((m,i)=>Math.round(m/mx[i]*1000)/10);
+    const minP=Math.min(...pcts),minI=pcts.indexOf(minP);
+    const bg=pcts.map((p,i)=>i===minI?'#ef4444':'#6366f1');
+    const bc=pcts.map((p,i)=>i===minI?'#dc2626':'#4f46e5');
+    const snames=['MCQ','Physical Chemistry','Inorganic Chemistry','Organic Chemistry'];
+    document.getElementById('spWeak').textContent='Weak Area: '+snames[minI]+' ('+minP+'%)';
+    dc('breakC',ctx=>new Chart(ctx,{type:'bar',data:{labels:secs,datasets:[{label:'%',data:pcts,backgroundColor:bg,borderColor:bc,borderWidth:1,borderRadius:8,barPercentage:.6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',cornerRadius:8,padding:12,titleFont:{family:'Inter',size:12,weight:'600'},bodyFont:{family:'Inter',size:12},callbacks:{label:c=>{const i=c.dataIndex;return c.parsed.y+'% ('+marks[i]+'/'+mx[i]+')'},afterLabel:c=>c.dataIndex===minI?'Weakest section':''}}},scales:{y:{min:0,max:100,ticks:{stepSize:20,font:{family:'Inter',size:11},color:'#94a3b8',callback:v=>v+'%'},grid:{color:'#f1f5f9'},border:{display:false}},x:{ticks:{font:{family:'Inter',size:11,weight:'500'},color:'#64748b'},grid:{display:false},border:{display:false}}}}}));
+}
+
+function renderRadar(l){
+    const sp=[Math.round(l.mcq/50*100),Math.round(l.q5/150*100),Math.round(l.q6/150*100),Math.round(l.q7/150*100)];
+    dc('radarC',ctx=>new Chart(ctx,{type:'radar',data:{labels:['MCQ','Physical Chemistry','Inorganic Chemistry','Organic Chemistry'],datasets:[{label:'Student',data:sp,borderColor:'#4f46e5',backgroundColor:'rgba(79,70,229,0.12)',pointBackgroundColor:'#4f46e5',pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:5,borderWidth:2.5},{label:'Class Average',data:[classAvgPct.mcq,classAvgPct.q5,classAvgPct.q6,classAvgPct.q7],borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.08)',pointBackgroundColor:'#f59e0b',pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:5,borderWidth:2.5,borderDash:[5,5]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',cornerRadius:8,padding:12,titleFont:{family:'Inter'},bodyFont:{family:'Inter'},callbacks:{label:c=>c.dataset.label+': '+c.parsed.r+'%'}}},scales:{r:{min:0,max:100,ticks:{stepSize:20,font:{family:'Inter',size:10},color:'#94a3b8',backdropColor:'transparent',callback:v=>v+'%'},pointLabels:{font:{family:'Inter',size:12,weight:'600'},color:'#475569'},grid:{color:'#e2e8f0'},angleLines:{color:'#e2e8f0'}}}}}));
+}
+
+function renderScat(stuIdx){
+    const knownIdx=scatterAll.findIndex(s=>s.known&&s.name===stuDB[stuIdx].name);
+    const data=scatterAll.map(s=>({x:s.mcq,y:s.str}));
+    const bgColors=scatterAll.map((s,i)=>i===knownIdx?'#4f46e5':s.known?'#a5b4fc':'rgba(148,163,184,0.5)');
+    const brColors=scatterAll.map((s,i)=>i===knownIdx?'#4f46e5':'transparent');
+    const brWidths=scatterAll.map((s,i)=>i===knownIdx?2:0);
+    const radii=scatterAll.map((s,i)=>i===knownIdx?8:s.known?5:4);
+    dc('scatC',ctx=>new Chart(ctx,{type:'scatter',data:{datasets:[{label:'Students',data:data,backgroundColor:bgColors,borderColor:brColors,borderWidth:brWidths,pointRadius:radii,pointHoverRadius:10}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',cornerRadius:8,padding:10,titleFont:{family:'Inter',size:12},bodyFont:{family:'Inter',size:12},callbacks:{title:function(items){const idx=items[0].dataIndex;const s=scatterAll[idx];return s.name||'Student '+(idx+1)},label:function(ctx){return 'MCQ: '+ctx.parsed.x+'/50  |  Structured: '+ctx.parsed.y+'/450'}}}},scales:{x:{min:0,max:50,title:{display:true,text:'MCQ Mark (/50)',font:{family:'Inter',size:11,weight:'600'},color:'#64748b'},ticks:{font:{family:'Inter',size:11},color:'#94a3b8',stepSize:10},grid:{color:'#f1f5f9'},border:{display:false}},y:{min:0,max:500,title:{display:true,text:'Structured Total (/450)',font:{family:'Inter',size:11,weight:'600'},color:'#64748b'},ticks:{font:{family:'Inter',size:11},color:'#94a3b8',stepSize:100},grid:{color:'#f1f5f9'},border:{display:false}}}}}));
+}
+
+function renderTbl(s){
+    const tbody=document.getElementById('spTbl');tbody.innerHTML='';
+    s.h.forEach((h,i)=>{
+        const total=h.mcq+h.q5+h.q6+h.q7;const pct=Math.round(total/500*100);
+        const isL=i===s.h.length-1;
+        let pctClass='text-slate-700 font-semibold';
+        if(pct>=80)pctClass='text-emerald-600 font-bold';else if(pct>=60)pctClass='text-indigo-600 font-bold';else if(pct>=40)pctClass='text-amber-600 font-bold';else pctClass='text-red-600 font-bold';
+        const rowBg=isL?'bg-indigo-50/50':'';
+        const badge=isL?'<span class="text-[10px] bg-indigo-100 text-indigo-600 font-bold px-1.5 py-0.5 rounded ml-1">LATEST</span>':'';
+        const diff=examDiff[i];
+        let stars='';for(let k=0;k<5;k++){stars+='<i class="fas fa-star '+(k<diff.stars?'text-amber-400':'text-slate-200')+' text-[10px]"></i>'}
+        tbody.innerHTML+='<tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors '+rowBg+'"><td class="py-3 px-3 font-medium t-main">'+h.e+badge+'</td><td class="py-3 px-3 text-center t-sub">'+h.mcq+'</td><td class="py-3 px-3 text-center t-sub">'+h.q5+'</td><td class="py-3 px-3 text-center t-sub">'+h.q6+'</td><td class="py-3 px-3 text-center t-sub">'+h.q7+'</td><td class="py-3 px-3 text-center font-bold t-main">'+total+'</td><td class="py-3 px-3 text-center '+pctClass+'">'+pct+'%</td><td class="py-3 px-3 text-center"><div class="flex items-center justify-center gap-0.5">'+stars+'</div><span class="text-[10px] t-mut">'+diff.label+'</span></td></tr>';
+    });
+}
+
+function scrollTo_(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});if(innerWidth<1024)togSB('spSB','spOv')}
+
+function saveNotes(){const sel=+document.getElementById('stuSel').value;if(stuDB[sel])stuDB[sel].notes=document.getElementById('spNotes').value}
+
+window.addEventListener('scroll',()=>{const b=document.getElementById('btt');if(window.scrollY>300)b.classList.add('show');else b.classList.remove('show')});
+
+document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){document.getElementById('shortcutsModal').classList.add('hidden');document.getElementById('notifDD')?.classList.add('hidden');document.getElementById('searchRes')?.classList.add('hidden')}
+    if(e.key==='?'&&!e.ctrlKey&&!e.metaKey&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA'){e.preventDefault();document.getElementById('shortcutsModal').classList.remove('hidden')}
+    if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();const inp=document.getElementById('tSearch');if(inp&&!document.getElementById('loginPage').classList.contains('hidden')===false){goPage('teacherPage');setTimeout(()=>inp.focus(),100)}else if(inp)inp.focus()}
+    if((e.ctrlKey||e.metaKey)&&e.key==='1'){e.preventDefault();goPage('teacherPage')}
+    if((e.ctrlKey||e.metaKey)&&e.key==='2'){e.preventDefault();goPage('studentPage')}
+    if((e.ctrlKey||e.metaKey)&&e.key==='3'){e.preventDefault();goPage('staffPage')}
+    if((e.ctrlKey||e.metaKey)&&e.key==='d'){e.preventDefault();togDark()}
+});
+</script>
+</body>
+</html>
